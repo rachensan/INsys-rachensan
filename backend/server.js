@@ -23,7 +23,7 @@ import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 
-import examRoutes from "./A-routes/examsRoutes.js";
+import examRouter from "./A-routes/examsRoutes.js";
 
 const app = express();
 const port = process.env.PORT || 3000; // we dint have env yet
@@ -31,14 +31,20 @@ const port = process.env.PORT || 3000; // we dint have env yet
 app.use(cors()); // allow frontend to access backend
 app.use(express.json()); // parse JSON bodies
 
-app.use("/api/exams", examRoutes);
+app.use("/api", examRouter);
 
-app.get("/api/exams", (req, res) => {
-  res.json([
-    { id: 1, title: "Sample Exam", schedule: "2025-06-10" },
-    { id: 2, title: "Finals", schedule: "2025-06-15" }
-  ]);
-});
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
