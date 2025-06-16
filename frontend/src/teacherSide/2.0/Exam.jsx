@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import informations from '../../exam-info.js'
 
 
 function ExamPerContainer({ title, id, schedule }) {
@@ -15,25 +15,40 @@ function ExamPerContainer({ title, id, schedule }) {
 }
 
 
-// EXPORT
+
+
+
+
+
+
+
+
+
+
 function Exam() {
   const [examData, setExamData] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.get("http://localhost:3000/api/exams")
       .then(res => setExamData(res.data))
-      .catch(err => console.error("Failed to fetch exams", err))
+      .catch(err => console.log("Error fetching exams", err.message))
   }, [])
+
 
   return (
     <>
-      {examData.map(info => {
+      <button onClick={() => navigate("/create-exam")}>
+        Create New Exam
+      </button>
+      {examData.map(exam => {
       return (
         <ExamPerContainer 
-          key = {info.id}
-          id = {info.id}
-          title = {info.title} 
-          schedule = {info.schedule}
+          key = {exam.id}
+          id = {exam.id}
+          title = {exam.title} 
+          schedule = {exam.schedule}
         />);
       })}
     </>
