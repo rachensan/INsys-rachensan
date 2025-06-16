@@ -35,19 +35,6 @@ app.use("/api", examRouter);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 app.listen(port, () => {
   console.log(`Backend running at http://localhost:${port}`);
 })

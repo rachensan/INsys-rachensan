@@ -8,9 +8,10 @@ import WholeB from './teacherSide/2.1/WholeB.jsx'
 function App() {
     return (
         <>
+        <Routes>
             <Header />
             <WholeA />
-            
+        </Routes>
         </>
     );
 }

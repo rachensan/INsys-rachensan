@@ -39,9 +39,7 @@ function Exam() {
 
   return (
     <>
-      <button onClick={() => navigate("/create-exam")}>
-        Create New Exam
-      </button>
+      <button onClick={() => navigate("/create-exam")}> Create New Exam </button>
       {examData.map(exam => {
       return (
         <ExamPerContainer 
