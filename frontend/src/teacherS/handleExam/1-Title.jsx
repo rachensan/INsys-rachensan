@@ -1,18 +1,13 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
-
-export const Title = ({ examData: { title }, setExam }) => {
+function Title({ exam, setExam }) {
   return (
     <>
-      <form>
         <input type='text'
           placeholder='Exam Title'
-          value={title}
+          value={exam.title}
           onChange={(e)=>setExam(prev =>({...prev, title: e.target.value}))}
           required
         ></input>
-      </form>
     </>
   )
 }
+export default Title;

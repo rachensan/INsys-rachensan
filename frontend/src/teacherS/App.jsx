@@ -2,6 +2,7 @@ import {BrowserRouter, Routes, Route, useNavigate, Link} from 'react-router-dom'
 
 import Home from './Home';
 import HandleExam from './HandleExam';
+import SelectedSection from './handleExam/2-Section';
 
 function App() {
   return(

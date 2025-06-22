@@ -4,25 +4,31 @@ export const examList = [
     title: "Midterm Exam",
     schedule: "June 20, 2025 at 2:00PM",
     status: "ongoing",
+    sections: []
   },
   {
     id: 2,
     title: "Final Exam",
     schedule: "July 5, 2025 at 1:00PM",
     status: "ongoing",
+    sections: []
   },
+  /*
   {
     id: 3,
     title: "Quiz #1",
     schedule: "June 18, 2025 at 10:00AM",
     status: "done",
+    sections: []
   },
   {
     id: 4,
     title: "Activity #5",
     schedule: "June 20, 2025 at 10:00AM",
     status: "ongoing",
-  },
+    sections: []
+  }, 
+  */
 ]
 
 export const viewAllExam = (req, res) => {
@@ -41,13 +47,14 @@ export const getExamById = (req, res) => {
 }
 
 export const createExam = (req, res) => {
-  const { title, subjCode, schedule, status } = req.body //not a new declaration, kinukuha lang natin yung {title, status, schedule} sa front end
+  const { title, schedule, status, sections, subjCode } = req.body //not a new declaration, kinukuha lang natin yung {title, status, schedule} sa front end
 
   const newExam = {
     id: examList.length+1,
     title,
     schedule,
     status,
+    sections,
     subjCode,
   }
   examList.push(newExam);
@@ -55,15 +62,18 @@ export const createExam = (req, res) => {
 }
 
 export const updateExam = (req, res) => {
+  console.log('sup')
   const {id} = req.params
   const index = examList.findIndex(e=>e.id===Number(id))
 
-  if(index !== -1) {
-    examList[index] = {
+  if (index === -1) {
+    return res.status(404).json({ message: "Exam not found" });
+  }
+
+  examList[index] = {
       ...examList[index], // ✔️ existing exam object at that index na iooverwrite ni '...exam'
       ...req.body,            // ✔️ updated values from frontend
-    }
   }
-  
+
   res.status(200).json(examList[index])
 }

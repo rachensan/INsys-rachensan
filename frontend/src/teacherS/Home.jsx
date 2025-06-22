@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
 
-export const HomeCard = ({ title, subjCode, schedule, status, onClick }) => {
+export const HomeCard = ({ title, subjCode, schedule, status, sections, onClick }) => {
   return (
     <>
     <div onClick={onClick} style={{ border: "1px solid black", margin: "10px", padding: "10px" }}>
       <h2>{title}</h2>
       <p>{subjCode}</p>
       <p>{schedule}</p>
+      <p>{sections}</p>
     </div>
     </>
   )
@@ -41,6 +42,7 @@ function Home() {
           title={e.title}
           schedule={e.schedule}
           status={e.status}
+          sections={e.sections}
           onClick={()=>navigate(`/handle-exam/${e.id}`)} //search for that exam id
         />
       )
