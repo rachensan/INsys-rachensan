@@ -4,7 +4,26 @@ export const examList = [
     title: "Midterm Exam",
     schedule: "June 20, 2025 at 2:00PM",
     status: "ongoing",
-    sections: []
+    sections: [],
+    questions: [
+      {
+        type: "multiple-choice",
+        question: "What is 2 + 2?",
+        options: ["1", "2", "3", "4"],
+        answer: "4"
+      },
+      {
+        type: "true-false",
+        question: "The Earth is flat.",
+        options: ["True", "False"],
+        answer: "False"
+      },
+      {
+        type: "identification",
+        question: "Capital of France?",
+        answer: "Paris"
+      }
+    ]
   },
   {
     id: 2,
@@ -31,7 +50,6 @@ export const examList = [
   */
 ]
 
-
 //GET
 export const viewAllExam = (req, res) => {
   res.json(examList);
@@ -54,7 +72,7 @@ export const createExam = (req, res) => {
   const { title, schedule, status, sections, subjCode } = req.body //not a new declaration, kinukuha lang natin yung {title, status, schedule} sa front end
 
   const newExam = {
-    id: Date.now(),
+    id: Date.now(), //TEMPORARY SO THAT IT IS ✨UNIQUE✨ FOR NOW. LOL
     title,
     schedule,
     status,
