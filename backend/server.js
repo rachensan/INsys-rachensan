@@ -22,7 +22,7 @@
 import express from "express";
 import cors from "cors";
 
-import { viewAllExam, createExam, updateExam ,getExamById } from "./A-controllers/examControllers.js";
+import { viewAllExam, createExam, updateExam ,getExamById, deleteExam } from "./A-controllers/examControllers.js";
 
 const app = express();
 const port = process.env.PORT || 3000; // we dint have env yet
@@ -42,7 +42,7 @@ app.post('/api/exams', createExam);
 app.put('/api/exams/:id', updateExam);
 
 //DELETE
-
+app.delete('/api/exams/:id', deleteExam)
 
 
 

@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios';
 
-export const HomeCard = ({ title, subjCode, schedule, status, sections, onClick }) => {
+export const HomeCard = ({ title, subjCode, schedule, status, sections, onClickNav, onClickDel }) => {
+
   return (
     <>
-    <div onClick={onClick} style={{ border: "1px solid black", margin: "10px", padding: "10px" }}>
+    <div onClick={onClickNav} style={{ border: "1px solid black", margin: "10px", padding: "10px" }}>
+      <button onClick={(e)=>{
+        e.stopPropagation(); //stop triggering the onClickNav
+        onClickDel();
+      }
+        }>Delete</button>
       <h2>{title}</h2>
       <p>{subjCode}</p>
       <p>{schedule}</p>
       <p>{sections}</p>
+      <p>{status}</p>
     </div>
     </>
   )
@@ -29,6 +36,14 @@ function Home() {
       })
   }, []);
 
+    const handleDelete = (id) => {
+      axios.delete(`http://localhost:3000/api/exams/${id}`)
+        .then(() => {
+            setExam(prev => prev.filter(e => e.id !== id)); // update UI
+        })
+        .catch(err=>console.error(err))
+    } 
+
   return (
     <>
     <button onClick={()=>navigate('/create-exam')}>
@@ -43,7 +58,8 @@ function Home() {
           schedule={e.schedule}
           status={e.status}
           sections={e.sections}
-          onClick={()=>navigate(`/handle-exam/${e.id}`)} //search for that exam id
+          onClickDel={()=>handleDelete(e.id)}
+          onClickNav={()=>navigate(`/handle-exam/${e.id}`)} //search for that exam id
         />
       )
     })}

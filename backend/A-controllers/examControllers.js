@@ -31,13 +31,15 @@ export const examList = [
   */
 ]
 
+
+//GET
 export const viewAllExam = (req, res) => {
   res.json(examList);
 }
 
 export const getExamById = (req, res) => {
-  const {id} = req.params
-  const exam = examList.find(e=>e.id===Number(id))
+  const id = parseInt(req.params.id)
+  const exam = examList.find(e=>e.id === id)
 
   if (!exam) {
     return res.status(404).json({ message: 'Exam not found' });
@@ -46,11 +48,13 @@ export const getExamById = (req, res) => {
   res.json(exam);
 }
 
+
+//POST
 export const createExam = (req, res) => {
   const { title, schedule, status, sections, subjCode } = req.body //not a new declaration, kinukuha lang natin yung {title, status, schedule} sa front end
 
   const newExam = {
-    id: examList.length+1,
+    id: Date.now(),
     title,
     schedule,
     status,
@@ -61,19 +65,34 @@ export const createExam = (req, res) => {
   res.status(200).json(newExam);
 }
 
-export const updateExam = (req, res) => {
-  console.log('sup')
-  const {id} = req.params
-  const index = examList.findIndex(e=>e.id===Number(id))
 
-  if (index === -1) {
+//PUT
+export const updateExam = (req, res) => {
+  const id = parseInt(req.params.id)
+  const searchIndex = examList.findIndex(e=>e.id === id)
+
+  if (searchIndex === -1) {
     return res.status(404).json({ message: "Exam not found" });
   }
 
-  examList[index] = {
-      ...examList[index], // ✔️ existing exam object at that index na iooverwrite ni '...exam'
+  examList[searchIndex] = {
+      ...examList[searchIndex], // ✔️ existing exam object at that index na iooverwrite ni '...exam'
       ...req.body,            // ✔️ updated values from frontend
   }
 
-  res.status(200).json(examList[index])
+  res.status(200).json(examList[searchIndex])
+}
+
+
+//DELETE
+export const deleteExam = (req, res) => {
+  const id = parseInt(req.params.id)
+  const searchIndex = examList.findIndex(e=>e.id===id)
+
+  if (searchIndex>-1) {
+    const deletedExam = examList.splice(searchIndex, 1) //remove 1 item starting at searchIndex(id we are looking for)
+    res.status(200).json({message: `Exam: '${deletedExam[0].title}' deleted successfully`}); //[0] the first exam object we removed
+  } else {
+    res.status(404).json({err:`Exam with ID ${id} not found. No exams were deleted`})
+  }
 }
