@@ -21,9 +21,8 @@
 // });
 import express from "express";
 import cors from "cors";
-import bodyParser from "body-parser";
 
-import examRouter from "./A-routes/examsRoutes.js";
+import { viewAllExam, createExam, updateExam ,getExamById } from "./A-controllers/examControllers.js";
 
 const app = express();
 const port = process.env.PORT || 3000; // we dint have env yet
@@ -31,7 +30,13 @@ const port = process.env.PORT || 3000; // we dint have env yet
 app.use(cors()); // allow frontend to access backend
 app.use(express.json()); // parse JSON bodies
 
-app.use("/api", examRouter);
+//routes
+app.get('/api/exams', viewAllExam);
+app.post('/api/exams', createExam);
+app.put('api/exams/:id', updateExam);
+app.get('/api/exams/:id', getExamById);
+
+
 
 
 
