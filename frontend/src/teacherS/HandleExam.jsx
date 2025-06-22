@@ -14,7 +14,7 @@ function HandleExam() {
     status: 'pending',
   })
 
-//useEffect will work IF there is an existing id
+  //useEffect will work IF there is an existing id
   useEffect(()=>{
     if(id) {
       axios.get(`http://localhost:3000/api/exams/${id}`)
@@ -22,7 +22,7 @@ function HandleExam() {
         .catch(err=>{console.error(err)})
     }
   }, [id])  
-//it will be skipped, if no id seen, it will create a new one
+  //it will be skipped, if no id seen, it will create a new one
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -43,6 +43,7 @@ function HandleExam() {
   }
   return(
     <>
+      <button type='submit' onClick={handleSubmit}>Save Exam</button>
       <Title examData={exam} setExam={setExam}/>
     </>
   )

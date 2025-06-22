@@ -31,10 +31,21 @@ app.use(cors()); // allow frontend to access backend
 app.use(express.json()); // parse JSON bodies
 
 //routes
+//GET
 app.get('/api/exams', viewAllExam);
-app.post('/api/exams', createExam);
-app.put('api/exams/:id', updateExam);
 app.get('/api/exams/:id', getExamById);
+
+//POST
+app.post('/api/exams', createExam);
+
+//PUT
+app.put('/api/exams/:id', updateExam);
+
+//DELETE
+
+
+
+
 
 
 

@@ -61,7 +61,7 @@ export const updateExam = (req, res) => {
   if(index !== -1) {
     examList[index] = {
       ...examList[index], // ✔️ existing exam object at that index na iooverwrite ni '...exam'
-      ...exam,            // ✔️ updated values from frontend
+      ...req.body,            // ✔️ updated values from frontend
     }
   }
   

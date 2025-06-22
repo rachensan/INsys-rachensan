@@ -1,4 +1,4 @@
-import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import {BrowserRouter, Routes, Route, useNavigate, Link} from 'react-router-dom'
 
 import Home from './Home';
 import HandleExam from './HandleExam';
@@ -6,6 +6,7 @@ import HandleExam from './HandleExam';
 function App() {
   return(
     <BrowserRouter>
+    <Link to='/'> Home </Link>
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/create-exam' element={<HandleExam />} />
