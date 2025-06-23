@@ -25,6 +25,7 @@ export const examList = [
       }
     ]
   },
+  /*
   {
     id: 2,
     title: "Final Exam",
@@ -32,7 +33,6 @@ export const examList = [
     status: "ongoing",
     sections: []
   },
-  /*
   {
     id: 3,
     title: "Quiz #1",

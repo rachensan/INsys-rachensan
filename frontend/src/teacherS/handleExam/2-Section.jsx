@@ -27,7 +27,7 @@ function SelectedSection({ exam, setExam }) {
   console.log(`Section selected: ${savedSections}`);
 
   return (
-    <div style={{ border: "1px solid black", padding: "10px", backgroundColor: "pink" }}>
+    <div className="selectedSectionsDiv">
       <h3>Select Section</h3>
       {/* Object.entries(sectionsByYear) ==== ['First Year', ['A', 'B', 'C', 'D']], */}
       {Object.entries(sectionList).map(([year, sectionList], index) => (
