@@ -7,6 +7,10 @@ import SelectedSection from './handleExam/2-Section';
 import AllQuestions from './handleExam/3-AllQuesType';
 import { QuestionAdd } from './handleExam/3-AllQuesType';
 
+import Identification from './handleExam/3-Identification';
+import MultipleChoice from './handleExam/3-MultipleC';
+import TrueFalse from './handleExam/3-TrueFalse';
+
 function HandleExam() {
   const navigate = useNavigate();
   const {id} = useParams();
@@ -31,15 +35,24 @@ function HandleExam() {
     questions: [],
   } //for resetting the form, etc.
 
+
+
+
+
+
   //useEffect will work IF there is an existing id
   useEffect(()=>{
     if(id) {
       axios.get(`http://localhost:3000/api/exams/${id}`)
-        .then(res => {setExamData(res.data)})
+        .then(res => {
+          console.log(res.data);
+          setExamData(res.data);
+        })
         .catch(err=>{console.error(err)})
     }
   }, [id])  
   //it will be skipped, if no id seen, it will create a new one
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -52,12 +65,12 @@ function HandleExam() {
       axios.put(`http://localhost:3000/api/exams/${id}`, examData)
         .then(res=>console.log('exam updated'))
         .catch(err=>console.error(err))
+      
     } 
     else { //if NOT existing: CREATE-NEW mode
       axios.post('http://localhost:3000/api/exams', examData)
         .then(res=> {
-          setExamData({ ...defaultExamNotChanging}); //auto reset form for future creations
-          navigate('/');
+          setExamData(res.data); //auto reset form for future creations
         })
         .catch(err=> console.log(err))
     }
@@ -73,10 +86,62 @@ function HandleExam() {
 
       <SelectedSection exam={examData} setExam={setExamData} />
 
-      {questionForms.map((form) => (
+      
+{/*   Display existing questions   */}
+      {examData.questions.map((q, i) => {
+        if (q.questionType === 'identification') {
+          return <Identification 
+            key={i} 
+            exam={examData} 
+            id={q.id} 
+            {...q}
+            onSave={(updatedQ) => {
+              setExamData(prev => {
+                const updated = prev.questions.map(ques =>
+                  ques.id === q.id ? { ...ques, ...updatedQ } : ques
+                );
+                return { ...prev, questions: updated };
+              });
+            }} />
+        }
+        if (q.questionType === 'multiplechoice') {
+          return <MultipleChoice 
+            key={i} 
+            exam={examData} 
+            id={q.id} 
+            {...q} 
+            onSave={(updatedQ) => {
+              setExamData(prev => {
+                const updated = prev.questions.map(ques =>
+                  ques.id === q.id ? { ...ques, ...updatedQ } : ques
+                );
+                return { ...prev, questions: updated };
+              });
+            }} />
+        }
+        if (q.questionType === 'truefalse') {
+          return <TrueFalse 
+            key={i} 
+            exam={examData} 
+            id={q.id} 
+            {...q}
+            onSave={(updatedQ) => {
+              setExamData(prev => {
+                const updated = prev.questions.map(ques =>
+                  ques.id === q.id ? { ...ques, ...updatedQ } : ques
+                );
+                return { ...prev, questions: updated };
+              });
+            }} />
+        }
+      })}
+
+
+{/*   Adding of question FORM  */}
+      {questionForms.map((e) => (
         <AllQuestions
-          key={form.id}
-          formId={form.id} // pass unique ID
+          key={e.id}
+          formId={e.id} // pass unique ID
           exam={examData}
           setExam={setExamData} 
           onSave={(newQuestion) => {
@@ -88,13 +153,10 @@ function HandleExam() {
               };
             });
           }}
-
-
         />
       ))}
 
-
-    
+  
       <QuestionAdd onClick={() => {
         setQuestionForms(prev => [...prev, {id: questionCounter}]);
         setQuestionCounter(prev => prev + 1); //ID per click add question

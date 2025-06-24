@@ -29,17 +29,15 @@ function AllQuestions({ exam, setExam, onSave, formId }) {
         <option value="multiplechoice"> Multiple Choice </option>
         <option value="truefalse"> True or False </option>
       </select>
-            
+
       {selectedType === "identification" && (<Identification exam={exam} id={formId} onSave={(data)=> onSave({ ...data, questionType: "identification" })}/>)}
 
-      {selectedType === "multiplechoice" && (<MultipleChoice exam={exam} id={exam?.id} onSave={(data)=> onSave({ ...data, questionType: "multiplechoice" })}/>)}
+      {selectedType === "multiplechoice" && (<MultipleChoice exam={exam} id={formId} onSave={(data)=> onSave({ ...data, questionType: "multiplechoice" })}/>)}
 
-      {selectedType === "truefalse" && (<TrueFalse exam={exam} id={exam?.id} onSave={(data)=> onSave({ ...data, questionType: "truefalse"})}/>)}
-        
+      {selectedType === "truefalse" && (<TrueFalse exam={exam} id={formId} onSave={(data)=> onSave({ ...data, questionType: "truefalse"})}/>)}
     </div>
   ) //CLEAR THE DATA (layk yung sa inputs and yung saved questions/options) IN THIS SPECIFIC QUESTION WHENEVER THE USER CLICKS, CUZ IT COUNTS AS EDITING THE TYPE OF QUESTION
 }
-
 
 export default AllQuestions;
 

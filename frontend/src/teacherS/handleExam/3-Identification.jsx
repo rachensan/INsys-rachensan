@@ -1,17 +1,17 @@
 import React, {useState} from "react";
 
-function Identification({exam, id, onSave}) {
-  const [ques, setQues] = useState('');
-  const [ans, setAns] = useState('');
+function Identification({ exam, id, question: initialQuestion, correctAnswer: initialAnswer, onSave, formId }) {
+  const [question, setQuestion] = useState( initialQuestion || '' );
+  const [ans, setAns] = useState( initialAnswer  || '' );
   const [isSaving, setIsSaving] = useState(false);
 
   const handleSaveQuestion = () => {
     if (!isSaving) {
       const newQuestion = {
         id: id,
-        question: ques,
-        ans: ans, 
-        type: 'identification'
+        type: 'identification',
+        question: question,
+        correctAnswer: ans, 
       }
       onSave(newQuestion); //pass to parent
       console.log("Saved Question Object:", newQuestion);
@@ -30,8 +30,8 @@ function Identification({exam, id, onSave}) {
         <label>Question:</label>
         <input
           type="text"
-          value={ques}
-          onChange={(e) => setQues(e.target.value)}
+          value={question}
+          onChange={(e) => setQuestion(e.target.value)}
           placeholder="Type the question here"
           disabled={isSaving}
         />

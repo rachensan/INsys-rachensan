@@ -1,29 +1,29 @@
 import React, {useState} from 'react'
 
-function TrueFalse({exam, onSave}) {
-  const [isSaving, setIsSaving] = useState(false);
-  const [question, setQuestion] = useState("");
+function TrueFalse({ exam, id, question: initialQuestion, correctAnswer: initialAnswer, onSave, formId }) {
+  const [question, setQuestion] = useState( initialQuestion || '' );
+  const [correctAnswer, setCorrectAnswer] = useState(initialAnswer || '');
 
-  const [correctAnswer, setCorrectAnswer] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleSaveQuestion = () => {
-    if (!isSaving) {
-      const newQuestion = {
-          id: Date.now(),
-          question,
-          correctAnswer,
-          type: "truefalse"
-      };
-      onSave(newQuestion); // pass the saved question to parent
-      console.log("Saved Question Object:", newQuestion);
-    }
-    console.log("exam:", exam);
+    const newQuestion = {
+        id: id,
+        type: "truefalse",
+        question,
+        correctAnswer,
+    };
+    onSave( newQuestion ); // pass the saved question to parent
+    
+    console.log("Saved Question Object:", newQuestion);
+    
     setIsSaving(!isSaving);
   }
 
 
   return (
     <>
+    <div className='truefalseDiv'>
       <button type="button" className='editTitleBTN' onClick={handleSaveQuestion}>
         {isSaving ? 'Edit' : 'Save' }
       </button>
@@ -50,9 +50,8 @@ function TrueFalse({exam, onSave}) {
             <option value="False">False</option>
           </select>
       </div>
-
+    </div>
     </>
-    
   )
 }
 

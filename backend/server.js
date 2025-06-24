@@ -1,28 +1,8 @@
-// import express from "express";
-// import bodyParser from "body-parser";
-// import axios from "axios";
-// import { dirname } from "path";
-// import { fileURLToPath } from "url";
-
-// const __dirname = dirname(fileURLToPath(import.meta.url));
-
-// const app = express();
-// const port = process.env.PORT || 3000;
-
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
-
-// app.get("/", (req, res) => {
-//   res.send("Server is running!");
-// });
-
-// app.listen(port, () => {
-//   console.log(`Server listening on port ${port}`);
-// });
 import express from "express";
 import cors from "cors";
 
 import { viewAllExam, createExam, updateExam ,getExamById, deleteExam } from "./A-controllers/examControllers.js";
+import { viewAllQuestions, getQuestionsPerExamId } from "./A-controllers/questionControllers.js";
 
 const app = express();
 const port = process.env.PORT || 3000; // we dint have env yet
@@ -34,6 +14,12 @@ app.use(express.json()); // parse JSON bodies
 //GET
 app.get('/api/exams', viewAllExam);
 app.get('/api/exams/:id', getExamById);
+
+app.get('/api/exams/AllQuestions', viewAllQuestions); //only for viewing/checking if its working
+app.get('/api/exams/:id/questions', getQuestionsPerExamId)
+
+
+
 
 //POST
 app.post('/api/exams', createExam);

@@ -7,51 +7,30 @@ export const examList = [
     sections: [],
     questions: [
       {
-        type: "multiple-choice",
-        question: "What is 2 + 2?",
-        options: ["1", "2", "3", "4"],
-        answer: "4"
+        id: 1,
+        questionType: "multiplechoice",
+        question: "multiple choice question here",
+        correctAnswer: "Choice A",
+        options: ["Choice Ampota", "Choice Bonak", "Choice Chihuahua"],
       },
       {
-        type: "true-false",
-        question: "The Earth is flat.",
-        options: ["True", "False"],
-        answer: "False"
+        id: 2,
+        questionType: "truefalse",
+        question: "true or false question here",
+        correctAnswer: 'True',
       },
       {
-        type: "identification",
-        question: "Capital of France?",
-        answer: "Paris"
+        id: 3,
+        questionType: "identification",
+        question: "identification question here",
+        correctAnswer: "okay beh"
       }
     ]
   },
-  /*
-  {
-    id: 2,
-    title: "Final Exam",
-    schedule: "July 5, 2025 at 1:00PM",
-    status: "ongoing",
-    sections: []
-  },
-  {
-    id: 3,
-    title: "Quiz #1",
-    schedule: "June 18, 2025 at 10:00AM",
-    status: "done",
-    sections: []
-  },
-  {
-    id: 4,
-    title: "Activity #5",
-    schedule: "June 20, 2025 at 10:00AM",
-    status: "ongoing",
-    sections: []
-  }, 
-  */
 ]
 
 //GET
-export const viewAllExam = (req, res) => {
+export const viewAllExam = (req, res) => { //viewing list in home page
   res.json(examList);
 }
 
@@ -63,7 +42,14 @@ export const getExamById = (req, res) => {
     return res.status(404).json({ message: 'Exam not found' });
   }
 
-  res.json(exam);
+  res.json({
+    id: exam.id,
+    title: exam.title,
+    schedule: exam.schedule,
+    status: exam.status,
+    sections: exam.sections,
+    questions: exam.questions,
+  });
 }
 
 

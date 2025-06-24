@@ -1,11 +1,12 @@
 import React, {useState} from 'react'
 
-function MultipleChoice({exam, onSave}) {
-  const [isSaving, setIsSaving] = useState(false);
-  const [question, setQuestion] = useState("");
+function MultipleChoice({ exam, id, question: initialQuestion, options: initialOptions, correctAnswer: initialCorrectAnswer, onSave, formId }) {
+  const [question, setQuestion] = useState(initialQuestion || '');
+  const [correctAnswer, setCorrectAnswer] = useState(initialCorrectAnswer || '');
+  const [choices, setChoices] = useState(initialOptions || ['', '', '']);
 
-  const [correctAnswer, setCorrectAnswer] = useState("");
-  const [choices, setChoices] = useState(["", "", ""]);
+  const [isSaving, setIsSaving] = useState(false);
+  
 
   // Combine ALL wrong choices and correct answer in one array for shuffling later
   const allChoices = [...choices, correctAnswer];
@@ -13,15 +14,17 @@ function MultipleChoice({exam, onSave}) {
   const handleSaveQuestion = () => {
     if (!isSaving) {
       const newQuestion = {
-          id: Date.now(),
+          id: id,
+          type: "multiplechoice",
           question,
           options: choices,
           correctAnswer,
-          type: "multiplechoice"
+          
       };
       onSave(newQuestion); // pass the saved question to parent
       console.log("Saved Question Object:", newQuestion);
-      console.log("All Options to shuffle latur:", allChoices);
+      //we wont shuffle here pala, we shuffle sa student side para di magulo logic sa teacher-side
+      console.log("All Options to shuffle latur:", allChoices); 
     }
     console.log("exam:", exam);
     setIsSaving(!isSaving);
@@ -30,6 +33,7 @@ function MultipleChoice({exam, onSave}) {
 
   return (
     <>
+    <div className='multiplechoiceDiv'>
       <button type="button" className='editTitleBTN' onClick={handleSaveQuestion}>
         {isSaving ? 'Edit' : 'Save' }
       </button>
@@ -74,6 +78,8 @@ function MultipleChoice({exam, onSave}) {
         disabled={isSaving}
       />
       </div>
+    </div>
+      
     </>
     
   )
