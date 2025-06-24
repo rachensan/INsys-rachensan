@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 
-function Identification({exam, onSave}) {
+function Identification({exam, id, onSave}) {
   const [ques, setQues] = useState('');
   const [ans, setAns] = useState('');
   const [isSaving, setIsSaving] = useState(false);
@@ -8,7 +8,7 @@ function Identification({exam, onSave}) {
   const handleSaveQuestion = () => {
     if (!isSaving) {
       const newQuestion = {
-        id: Date.now(),
+        id: id,
         question: ques,
         ans: ans, 
         type: 'identification'
@@ -16,7 +16,7 @@ function Identification({exam, onSave}) {
       onSave(newQuestion); //pass to parent
       console.log("Saved Question Object:", newQuestion);
     }
-    console.log("exam:", exam);
+    // console.log("exam:", exam);
     setIsSaving(!isSaving);
   }
 

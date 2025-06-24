@@ -31,8 +31,6 @@ function HandleExam() {
     questions: [],
   } //for resetting the form, etc.
 
-  const [selectedSections, setSelectedSections] = useState([]);
-
   //useEffect will work IF there is an existing id
   useEffect(()=>{
     if(id) {
@@ -45,10 +43,9 @@ function HandleExam() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Data being sent:", {
-      ...examData,
-      sections: selectedSections
-    });
+    // console.log("Data being sent:", {
+    //   ...examData,
+    // });
 
 
     if (id) { //if existing: EDIT mode
@@ -57,11 +54,9 @@ function HandleExam() {
         .catch(err=>console.error(err))
     } 
     else { //if NOT existing: CREATE-NEW mode
-      const newExam = { ...examData, sections: selectedSections}
-      axios.post('http://localhost:3000/api/exams', newExam)
+      axios.post('http://localhost:3000/api/exams', examData)
         .then(res=> {
           setExamData({ ...defaultExamNotChanging}); //auto reset form for future creations
-          setSelectedSections([]); // clear the checkboxes
           navigate('/');
         })
         .catch(err=> console.log(err))
