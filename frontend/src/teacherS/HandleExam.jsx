@@ -4,9 +4,8 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import Title from "./handleExam/1-Title";
 import SelectedSection from './handleExam/2-Section';
-import AllQuestions from './handleExam/3-AllQuesType';
-import { QuestionAdd } from './handleExam/3-AllQuesType';
 
+import AllQuestions, { QuestionAdd } from './handleExam/3-AllQuesType';
 import Identification from './handleExam/3-Identification';
 import MultipleChoice from './handleExam/3-MultipleC';
 import TrueFalse from './handleExam/3-TrueFalse';
@@ -56,10 +55,6 @@ function HandleExam() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // console.log("Data being sent:", {
-    //   ...examData,
-    // });
-
 
     if (id) { //if existing: EDIT mode
       axios.put(`http://localhost:3000/api/exams/${id}`, examData)
@@ -141,18 +136,23 @@ function HandleExam() {
       {questionForms.map((e) => (
         <AllQuestions
           key={e.id}
-          formId={e.id} // pass unique ID
-          exam={examData}
+          formId={e.id} // pass unique ID (LOCAL, exists only on frontend, not tied to backend)
+          exam={examData} // comes from backend or created via POST
           setExam={setExamData} 
-          onSave={(newQuestion) => {
-            setExamData(prev => {
-              const currentQuestions = prev.questions || [];
-              return {
-                ...prev,
-                questions: [...currentQuestions, newQuestion]
-              };
-            });
+          onSave={() => {
+            axios.get(`http://localhost:3000/api/exams/${examData.id}`)
+              .then(res => setExamData(res.data))
+              .catch(err => console.error(err));
           }}
+          // onSave={(newQuestion) => {
+          //   setExamData(prev => {
+          //     const currentQuestions = prev.questions || [];
+          //     return {
+          //       ...prev,
+          //       questions: [...currentQuestions, newQuestion]
+          //     };
+          //   });
+          // }}
         />
       ))}
 

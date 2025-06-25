@@ -55,7 +55,7 @@ export const getExamById = (req, res) => {
 
 //POST
 export const createExam = (req, res) => {
-  const { title, schedule, status, sections, subjCode } = req.body //not a new declaration, kinukuha lang natin yung {title, status, schedule} sa front end
+  const { title, schedule, status, sections, subjCode } = req.body //not a new declaration, kinukuha lang natin sa front end (HomeCard())
 
   const newExam = {
     id: Date.now(), //TEMPORARY SO THAT IT IS ✨UNIQUE✨ FOR NOW. LOL

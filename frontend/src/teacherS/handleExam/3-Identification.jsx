@@ -1,4 +1,6 @@
 import React, {useState} from "react";
+import axios from 'axios';
+
 
 function Identification({ exam, id, question: initialQuestion, correctAnswer: initialAnswer, onSave, formId }) {
   const [question, setQuestion] = useState( initialQuestion || '' );
@@ -12,12 +14,23 @@ function Identification({ exam, id, question: initialQuestion, correctAnswer: in
         type: 'identification',
         question: question,
         correctAnswer: ans, 
-      }
-      onSave(newQuestion); //pass to parent
-      console.log("Saved Question Object:", newQuestion);
+      } 
+    //POST
+      axios.post(`http://localhost:3000/api/exams/${exam.id}/questions`, {
+        ...newQuestion,
+      })
+        .then ( ()=> {
+          onSave(res.data); //pass to parent
+          console.log("Saved Question Object:", res.data);
+        })
+        .catch(err => console.error(err)); 
     }
     // console.log("exam:", exam);
     setIsSaving(!isSaving);
+
+    
+
+
   }
 
   return (
