@@ -1,33 +1,5 @@
-export const examList = [
-  {
-    id: 1,
-    title: "Midterm Exam",
-    schedule: "June 20, 2025 at 2:00PM",
-    status: "ongoing",
-    sections: [],
-    questions: [
-      {
-        id: 1,
-        questionType: "multiplechoice",
-        question: "multiple choice question here",
-        correctAnswer: "Choice A",
-        options: ["Choice Ampota", "Choice Bonak", "Choice Chihuahua"],
-      },
-      {
-        id: 2,
-        questionType: "truefalse",
-        question: "true or false question here",
-        correctAnswer: 'True',
-      },
-      {
-        id: 3,
-        questionType: "identification",
-        question: "identification question here",
-        correctAnswer: "okay beh"
-      }
-    ]
-  },
-]
+import examList from "./data/examList.js";
+
 
 //GET
 export const viewAllExam = (req, res) => { //viewing list in home page
@@ -36,11 +8,18 @@ export const viewAllExam = (req, res) => { //viewing list in home page
 
 export const getExamById = (req, res) => {
   const id = parseInt(req.params.id)
+
   const exam = examList.find(e=>e.id === id)
 
   if (!exam) {
     return res.status(404).json({ message: 'Exam not found' });
   }
+
+  console.log("examList in this file:", examList);
+  console.log("Exam object found:", exam);
+  console.log("Questions inside exam:", exam.questions);
+  console.log("Reference check:", examList === globalThis.examList); 
+
 
   res.json({
     id: exam.id,

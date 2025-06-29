@@ -2,34 +2,41 @@ import React, {useState} from "react";
 import axios from 'axios';
 
 
-function Identification({ exam, id, question: initialQuestion, correctAnswer: initialAnswer, onSave, formId }) {
+function Identification({ exam, id, question: initialQuestion, correctAnswer: initialAnswer, onSave }) {
   const [question, setQuestion] = useState( initialQuestion || '' );
   const [ans, setAns] = useState( initialAnswer  || '' );
   const [isSaving, setIsSaving] = useState(false);
 
   const handleSaveQuestion = () => {
+    console.log("handleSaveQuestion called");
+
     if (!isSaving) {
+
       const newQuestion = {
         id: id,
-        type: 'identification',
+        questionType: 'identification',
         question: question,
         correctAnswer: ans, 
       } 
+      console.log("Exam ID:", exam?.id)
+      console.log("New Question:", newQuestion)
+
+
     //POST
+
+
+    
       axios.post(`http://localhost:3000/api/exams/${exam.id}/questions`, {
         ...newQuestion,
       })
-        .then ( ()=> {
-          onSave(res.data); //pass to parent
-          console.log("Saved Question Object:", res.data);
+        .then(() => {//pass to parent --- “I’m done saving, now tell the parent ( AllQuestions() ).”
+          axios.get(`http://localhost:3000/api/exams/${exam.id}`)
+            .then(res => onSave(res.data));
         })
         .catch(err => console.error(err)); 
     }
     // console.log("exam:", exam);
     setIsSaving(!isSaving);
-
-    
-
 
   }
 

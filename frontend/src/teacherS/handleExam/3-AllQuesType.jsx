@@ -30,7 +30,7 @@ function AllQuestions({ exam, setExam, onSave, formId }) {
         <option value="truefalse"> True or False </option>
       </select>
 
-      {selectedType === "identification" && (<Identification exam={exam} id={formId} onSave={(data)=> onSave({ ...data, questionType: "identification" })}/>)}
+      {selectedType === "identification" && (<Identification exam={exam} id={formId} onSave={(data) => setExam(data)} />)}
 
       {selectedType === "multiplechoice" && (<MultipleChoice exam={exam} id={formId} onSave={(data)=> onSave({ ...data, questionType: "multiplechoice" })}/>)}
 

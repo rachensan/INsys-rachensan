@@ -65,11 +65,13 @@ function HandleExam() {
     else { //if NOT existing: CREATE-NEW mode
       axios.post('http://localhost:3000/api/exams', examData)
         .then(res=> {
-          setExamData(res.data); //auto reset form for future creations
+          setExamData(res.data);
         })
         .catch(err=> console.log(err))
     }
   }
+
+  console.log('yowooo', examData);
 
 
   return(
@@ -136,6 +138,7 @@ function HandleExam() {
       {questionForms.map((e) => (
         <AllQuestions
           key={e.id}
+          //formId pass to AllQuestions()
           formId={e.id} // pass unique ID (LOCAL, exists only on frontend, not tied to backend)
           exam={examData} // comes from backend or created via POST
           setExam={setExamData} 
