@@ -1,0 +1,23 @@
+Pages
+
+- Login
+- Home
+- Exam
+  Detail
+- Student
+  - detail
+- Quiz  
+  - Detail
+
+
+  www.app.com/login
+  /home
+  /exam
+  /exam/
+  
+  /student
+  /student/id/
+  
+  
+  /quiz
+  /quiz/123232

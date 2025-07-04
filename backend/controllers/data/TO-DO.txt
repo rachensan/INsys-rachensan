@@ -1,0 +1,9 @@
+Get exam by ID (for student view)
+
+Get questions by exam ID
+
+Add score submissions
+
+User login & auth
+
+Role-based views (teacher vs student)

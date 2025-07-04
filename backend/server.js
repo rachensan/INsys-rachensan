@@ -1,8 +1,17 @@
 import express from "express";
 import cors from "cors";
 
-import { viewAllExam, createExam, updateExam ,getExamById, deleteExam } from "./A-controllers/examControllers.js";
-import { viewAllQuestions, getQuestionsPerExamId, createQuestion } from "./A-controllers/questionControllers.js";
+import { createUser } from "./controllers/userControllers.js"
+import { getAllExams, createExam } from "./controllers/examControllers.js";
+import { createQuestion } from "./controllers/questionControllers.js";
+
+/*
+
+import { viewAllExam, createExam, updateExam ,getExamById, deleteExam } from "./controllers/examControllers.js";
+import { viewAllQuestions, getQuestionsPerExamId, createQuestion } from "./controllers/questionControllers.js";
+import { createUser } from "./controllers/userControllers.js"
+
+*/
 
 const app = express();
 const port = process.env.PORT || 3000; // we dint have env yet
@@ -10,34 +19,59 @@ const port = process.env.PORT || 3000; // we dint have env yet
 app.use(cors()); // allow frontend to access backend
 app.use(express.json()); // parse JSON bodies
 
-//routes
-//GET
-app.get('/api/exams', viewAllExam);
-app.get('/api/exams/:id', getExamById);
-
-app.get('/api/exams/AllQuestions', viewAllQuestions); //only for viewing/checking if its working
-app.get('/api/exams/:id/questions', getQuestionsPerExamId)
+// ========== TEST IF BACKEND WORKING ==========
+  app.get('/', (req, res) => res.send('Backend is running UwU!'));
 
 
+// ========== USER ROUTES ==========
+
+  app.post('/api/users', createUser);
 
 
-//POST
-app.post('/api/exams', createExam);
-app.post('/api/exams/:id/questions', createQuestion);
+// ========== EXAM ROUTES ==========
+  app.get('/api/exams', getAllExams);
+  app.post('/api/exams', createExam);
 
-
-
-//PUT
-app.put('/api/exams/:id', updateExam);
-
-//DELETE
-app.delete('/api/exams/:id', deleteExam)
+// ========== QUESTION ROUTES ==========
+  app.post('/api/questions', createQuestion);
 
 
 
+/* 
+
+// ========== EXAM ROUTES ==========
+
+// GET all exams
+  app.get('/api/exams', viewAllExam);
+
+// GET exam by ID
+  app.get('/api/exams/:id', getExamById);
+
+// CREATE a new exam
+  app.post('/api/exams', createExam);
+
+// UPDATE an existing exam
+  app.put('/api/exams/:id', updateExam);
+
+// DELETE an exam
+  app.delete('/api/exams/:id', deleteExam);
 
 
 
+
+// ========== QUESTION ROUTES ==========
+
+// GET all questions (for checking/testing purposes)
+  app.get('/api/exams/AllQuestions', viewAllQuestions);
+
+// GET questions by exam ID
+  app.get('/api/exams/:id/questions', getQuestionsPerExamId);
+
+// CREATE a question under a specific exam
+  app.post('/api/exams/:id/questions', createQuestion);
+
+
+*/
 
 
 app.listen(port, () => {

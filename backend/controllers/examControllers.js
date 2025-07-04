@@ -1,10 +1,42 @@
 import examList from "./data/examList.js";
+import {db} from '../db.js';
+//create exams, lists exams
+
+export const getAllExams = async(req, res) =>{
+
+  try {
+    const result = await db.query('SELECT * FROM examination_data')
+    res.status(200).json(result.rows)
+  } catch (error) {
+    console.error('Error cant GET exams', error)
+  }
+
+} 
+
+export const createExam = async(req, res) => {
+  const { title, schedule, status } = req.body //add section_taker and subj code next time
+  try {
+    const result = await db.query('INSERT INTO examination_data (title, schedule, status) VALUES($1, $2, $3)', [title, schedule, status]
+    );
+    res.status(201).json(result.rows[0])
+  } catch (error) {
+    console.error('Error cant CREATE exams', error)
+    res.status(500).json({error: 'Failed to CREATE exam'});
+  }
+}
+
+
+
 
 
 //GET
 export const viewAllExam = (req, res) => { //viewing list in home page
   res.json(examList);
 }
+
+
+
+
 
 export const getExamById = (req, res) => {
   const id = parseInt(req.params.id)
@@ -32,21 +64,35 @@ export const getExamById = (req, res) => {
 }
 
 
-//POST
-export const createExam = (req, res) => {
-  const { title, schedule, status, sections, subjCode } = req.body //not a new declaration, kinukuha lang natin sa front end (HomeCard())
 
-  const newExam = {
-    id: Date.now(), //TEMPORARY SO THAT IT IS ✨UNIQUE✨ FOR NOW. LOL
-    title,
-    schedule,
-    status,
-    sections,
-    subjCode,
-  }
-  examList.push(newExam);
-  res.status(200).json(newExam);
-}
+
+
+
+
+
+
+
+// //POST
+// export const createExam = (req, res) => {
+//   const { title, schedule, status, sections, subjCode } = req.body //not a new declaration, kinukuha lang natin sa front end (HomeCard())
+
+//   const newExam = {
+//     id: Date.now(), //TEMPORARY SO THAT IT IS ✨UNIQUE✨ FOR NOW. LOL
+//     title,
+//     schedule,
+//     status,
+//     sections,
+//     subjCode,
+//   }
+//   examList.push(newExam); //this is a temporary array before our db
+//   res.status(200).json(newExam);
+// }
+
+
+
+
+
+
 
 
 //PUT
@@ -65,6 +111,11 @@ export const updateExam = (req, res) => {
 
   res.status(200).json(examList[searchIndex])
 }
+
+
+
+
+
 
 
 //DELETE
