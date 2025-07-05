@@ -10,7 +10,10 @@ export const createQuestion = async(req, res) => {
   const [optionA, optionB, optionC, optionD] = options || [];
 
   try {
-    const result = await db.query('INSERT INTO examination_item(exam_id, user_id, question_type, question_text, option_a, option_b, option_c, option_d, correct_answer) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [examId, userId, questionType, question, optionA, optionB, optionC, optionD, correctAnswer])
+    const result = await db.query('INSERT INTO examination_item(exam_id, user_id, question_type, question_text, option_a, option_b, option_c, option_d, correct_answer) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [examId, userId, questionType, question, optionA, optionB, optionC, optionD, correctAnswer]);
+
+    res.status(201).json(result.rows[0])
+    
   } catch (error) {
     console.error('Error cant CREATE question', error)
     res.status(500).json({error: 'Failed to CREATE question'});
@@ -43,6 +46,18 @@ export const createQuestion = async(req, res) => {
 
 
 //GET
+
+export const getQuestionsByExamId = async(req, res) => {
+  const examId = req.params.id
+  try {
+    const result = await db.query("SELECT * FROM examination_item WHERE exam_id = $1", [examId]);
+    res.status(201).json(result.rows);
+  } catch (error) {
+    console.error('Error cant GET questionsSs (plural to sis)', error)
+    res.status(500).json({error: 'Failed to GET questionsSs'});
+  }
+}
+
 export const viewAllQuestions = (req, res) => {
   res.json(examList[0].questions) //temporary [0]
 }

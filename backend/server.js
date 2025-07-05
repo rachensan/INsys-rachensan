@@ -1,9 +1,12 @@
 import express from "express";
 import cors from "cors";
 
-import { createUser } from "./controllers/userControllers.js"
-import { getAllExams, createExam } from "./controllers/examControllers.js";
-import { createQuestion } from "./controllers/questionControllers.js";
+//userCONTROLLERS
+  import { createUser, getUserById } from "./controllers/userControllers.js"
+//examCONTROLLERS
+  import { getAllExams, createExam, getExamById } from "./controllers/examControllers.js";
+//questionCONTROLLERS
+  import { createQuestion, getQuestionsByExamId } from "./controllers/questionControllers.js";
 
 /*
 
@@ -24,16 +27,21 @@ app.use(express.json()); // parse JSON bodies
 
 
 // ========== USER ROUTES ==========
-
+  app.get('/api/users/:id', getUserById);
   app.post('/api/users', createUser);
 
 
 // ========== EXAM ROUTES ==========
   app.get('/api/exams', getAllExams);
+  app.get('/api/exams/:id', getExamById); 
+      //fetch a single exam's details 
+      //teachers (to view or edit a specific exam) 
+      //students (to display exam info before starting)
   app.post('/api/exams', createExam);
 
 // ========== QUESTION ROUTES ==========
   app.post('/api/questions', createQuestion);
+  app.get('/api/exams/:id/questions', getQuestionsByExamId);
 
 
 

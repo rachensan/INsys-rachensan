@@ -1,0 +1,24 @@
+✅ Use req.params when:
+You're accessing one specific resource.
+
+Why? The URL path clearly says what you're looking for.
+
+Example:
+  GET /api/users/1
+  → req.params.id = 1
+  Meaning: “Get me the user with ID 1.”
+
+✅ Use req.query when:
+You're filtering, searching, or passing optional things.
+
+Why? You might pass multiple flexible filters.
+
+Example:
+  GET /api/users?role=student&active=true
+  → req.query.role = "student"
+  → req.query.active = "true"
+  Meaning: “Get all active students.”
+
+
+Viewing a single user? Use params.
+Searching users by role/status/etc? Use query.

@@ -25,18 +25,20 @@ export const createExam = async(req, res) => {
   }
 }
 
-
-
-
-
-//GET
-export const viewAllExam = (req, res) => { //viewing list in home page
-  res.json(examList);
+export const getExamById = async(req, res) => {
+  const examId = req.params.id;
+  try {
+    const result = await db.query("SELECT * FROM examination_data WHERE exam_id = $1", [examId]
+    );
+    res.status(200).json(result.rows[0]);
+    
+  } catch (error) {
+    console.error('Error cant GET exam', error)
+    res.status(500).json({error: 'Failed to GET exam'});
+  }
 }
 
-
-
-
+/* 
 
 export const getExamById = (req, res) => {
   const id = parseInt(req.params.id)
@@ -64,7 +66,7 @@ export const getExamById = (req, res) => {
 }
 
 
-
+*/
 
 
 
