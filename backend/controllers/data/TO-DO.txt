@@ -1,9 +1,62 @@
-Get exam by ID (for student view)
+teacher side:
+========== HOME VIEW ==========
+  exam ongoing home view (with PENDING, PUBLISHED, ONGOING(cant edit if ongoing) status):
+    GET exam title
+    GET exam scheduled date
+    GET exam status
+    GET exam short description
+    GET exam (title SEARCH BAR sorting)
+    GET exam (status view sorting (ALL, PENDING, PUBLISHED))
+    POST exam
+    POST exam timer (none or specific timer)
 
-Get questions by exam ID
+  sidebar: 
+    GET user name (teacher ofc)
 
-Add score submissions
+========== EXAM CREATION ==========
+  new exam: 
+    POST exam
+    POST exam title
+    POST/GET(?) exam_code (like a unique code for students to input before taking the exam)
+    POST question (question_type, question_text, optionabcd, correct_answer, created_at)
+    POST timer (e.g. 1hr)
+    POST schedule (schedule will end start of the (e.g. 1hr) timer)
+    POST section taker (BSCS 1-A, BSIT 2-D, BSCS 1-J)
+    GET section taker 
 
-User login & auth
+  update exam: 
+    UPDATE exam
+    UPDATE exam title
+    GET exam_code (for showing only)
+    UPDATE question (question_type, question_text, optionabcd, correct_answer, created_at)
+    UPDATE timer
+    UPDATE schedule
+    UPDATE section taker (BSCS 1-A, BSIT 2-D, BSCS 1-J)
+    GET section taker (for showing only)
 
-Role-based views (teacher vs student)
+    
+    
+
+========== EXAM ANALYTICS ==========
+  exam analytics home view (with DONE status): 
+    GET exam title 
+    GET exam schduled date
+    GET exam short description
+    GET exam (title SEARCH BAR sorting)
+
+  inside the exam analytics:
+    GET question_text
+    GET question_type
+    GET exam_item_id
+    GET correct_answer
+    GET students who got the correct answer per section (to percentage %)
+    GET essay answer (not yet in database question type)
+    GET essay question
+    POST/GET/UPDATE essay score (shown if already has score)
+
+  exam analytics per section:
+    GET student's section (from student's input before entering the exam)
+    GET student_name (fixed name in account creation)
+    GET student_score
+    GET student's answer in every question (not sure if to put yet, idk whats the importance of putting this as of now)
+
