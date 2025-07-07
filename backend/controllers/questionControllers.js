@@ -20,6 +20,25 @@ export const createQuestion = async(req, res) => {
   }
 }
 
+export const deleteQuestionById = async(req, res) => {
+  const { questionId, examId } = req.params;
+
+  try {
+    const result = await db.query('DELETE FROM examination_item WHERE exam_item_id = $1 AND exam_id = $2 RETURNING *', [questionId, examId]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Question not found for this exam' })
+    }
+
+    res.status(200).json({ message: 'Question deleted', deleted: result.rows[0] });
+
+  } catch (error) {
+    console.error('Error cant DELETE question', error)
+    res.status(500).json({error: 'Failed to DELETE question'});
+  }
+}
+
+
 // //POST
 // export const createQuestion = (req, res) => { //this is from the temporary sht cuz i dont have db yet
 //   const examId = parseInt(req.params.id);
@@ -48,7 +67,7 @@ export const createQuestion = async(req, res) => {
 //GET
 
 export const getQuestionsByExamId = async(req, res) => {
-  const examId = req.params.id
+  const {examId} = req.params
   try {
     const result = await db.query("SELECT * FROM examination_item WHERE exam_id = $1", [examId]);
     res.status(201).json(result.rows);

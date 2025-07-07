@@ -17,7 +17,6 @@ export const getUserById = async(req, res) => {
   }
 }
 
-
 export const createUser = async(req, res) => {
   const { full_name, email, role, password } = req.body; //from postman testing
 

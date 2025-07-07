@@ -8,6 +8,7 @@ CREATE TABLE users (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+
 -- 2. EXAMINATION_DATA TABLE
 CREATE TABLE examination_data (
   exam_id SERIAL PRIMARY KEY,
@@ -15,16 +16,17 @@ CREATE TABLE examination_data (
   title TEXT NOT NULL,
   schedule DATE,
   status TEXT DEFAULT 'pending',
+  timer TEXT DEFAULT 'none',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 3. EXAMINATION_ITEM TABLE
 CREATE TABLE examination_item (
   exam_item_id SERIAL PRIMARY KEY,
-  exam_id INT REFERENCES examination_data(exam_id),
+  exam_id INT REFERENCES examination_data(exam_id) ON DELETE CASCADE,
   user_id INT REFERENCES users(user_id),
-  
-  question_type TEXT CHECK (question_type IN ('multiplechoice', 'truefalse', 'identification')) NOT NULL,
+
+  question_type TEXT CHECK (question_type IN ('multiplechoice', 'truefalse', 'identification', 'essay')) NOT NULL,
   question_text TEXT NOT NULL,
 
   option_a TEXT,
@@ -32,7 +34,19 @@ CREATE TABLE examination_item (
   option_c TEXT,
   option_d TEXT,
 
-  correct_answer TEXT NOT NULL,
-
+  correct_answer TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+
+  -- 3.1 ESSAY_ANSWERS TABLE 
+      CREATE TABLE essay_answers (
+        answer_id SERIAL PRIMARY KEY,
+        exam_item_id INT REFERENCES examination_item(exam_item_id),
+        student_id INT REFERENCES users(user_id),
+
+        answer TEXT NOT NULL,
+        score INT, -- nullable until graded
+        submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+

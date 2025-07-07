@@ -4,9 +4,9 @@ import cors from "cors";
 //userCONTROLLERS
   import { createUser, getUserById } from "./controllers/userControllers.js"
 //examCONTROLLERS
-  import { getAllExams, createExam, getExamById } from "./controllers/examControllers.js";
+  import { getAllExams, createExam, getExamById, getExamsByTitle, getExamsByStatus, updateExamStatus, updateExamTimer, deleteExam, updateExamDetails } from "./controllers/examControllers.js";
 //questionCONTROLLERS
-  import { createQuestion, getQuestionsByExamId } from "./controllers/questionControllers.js";
+  import { createQuestion, deleteQuestionById, getQuestionsByExamId } from "./controllers/questionControllers.js";
 
 /*
 
@@ -32,56 +32,36 @@ app.use(express.json()); // parse JSON bodies
 
 
 // ========== EXAM ROUTES ==========
-  app.get('/api/exams', getAllExams);
-  app.get('/api/exams/:id', getExamById); 
+  app.get('/api/exams/search', getExamsByTitle); 
+      //for searchbar title search
+  app.get('/api/exams/status', getExamsByStatus);
+  app.get('/api/exams/:examId', getExamById); 
       //fetch a single exam's details 
       //teachers (to view or edit a specific exam) 
       //students (to display exam info before starting)
+  app.get('/api/exams', getAllExams);
+
   app.post('/api/exams', createExam);
+  app.patch('/api/exams/:examId/status', updateExamStatus);
+  app.patch('/api/exams/:examId/timer', updateExamTimer);
+  app.patch('/api/exams/:examId/details', updateExamDetails);
+
+  app.delete('/api/exams/:examId', deleteExam);
+    //singular... one exam deletion
 
 // ========== QUESTION ROUTES ==========
   app.post('/api/questions', createQuestion);
-  app.get('/api/exams/:id/questions', getQuestionsByExamId);
-
-
-
-/* 
-
-// ========== EXAM ROUTES ==========
-
-// GET all exams
-  app.get('/api/exams', viewAllExam);
-
-// GET exam by ID
-  app.get('/api/exams/:id', getExamById);
-
-// CREATE a new exam
-  app.post('/api/exams', createExam);
-
-// UPDATE an existing exam
-  app.put('/api/exams/:id', updateExam);
-
-// DELETE an exam
-  app.delete('/api/exams/:id', deleteExam);
-
-
-
-
-// ========== QUESTION ROUTES ==========
-
-// GET all questions (for checking/testing purposes)
-  app.get('/api/exams/AllQuestions', viewAllQuestions);
-
-// GET questions by exam ID
-  app.get('/api/exams/:id/questions', getQuestionsPerExamId);
-
-// CREATE a question under a specific exam
-  app.post('/api/exams/:id/questions', createQuestion);
-
-
-*/
+  app.get('/api/exams/:examId/questions', getQuestionsByExamId);
+  app.delete('/api/exams/:examId/questions/:questionId', deleteQuestionById);
 
 
 app.listen(port, () => {
   console.log(`Backend running at http://localhost:${port}`);
 })
+
+
+const routeNotes = [
+  {
+    
+  }
+]

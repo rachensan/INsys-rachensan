@@ -1,62 +1,60 @@
 teacher side:
-========== HOME VIEW ==========
-  exam ongoing home view (with PENDING, PUBLISHED, ONGOING(cant edit if ongoing) status):
-    GET exam title
-    GET exam scheduled date
-    GET exam status
-    GET exam short description
-    GET exam (title SEARCH BAR sorting)
-    GET exam (status view sorting (ALL, PENDING, PUBLISHED))
-    POST exam
-    POST exam timer (none or specific timer)
+========== HOME VIEW ==========  
+  Exam ongoing home view (statuses: PENDING, PUBLISHED, ONGOING — cannot edit if ONGOING):
 
-  sidebar: 
-    GET user name (teacher ofc)
+    GET exams (includes: title, schedule, status, short description)
+    GET exams by title (search bar)
+    GET exams by status (ALL, PENDING, PUBLISHED)
 
-========== EXAM CREATION ==========
-  new exam: 
-    POST exam
-    POST exam title
-    POST/GET(?) exam_code (like a unique code for students to input before taking the exam)
-    POST question (question_type, question_text, optionabcd, correct_answer, created_at)
-    POST timer (e.g. 1hr)
-    POST schedule (schedule will end start of the (e.g. 1hr) timer)
-    POST section taker (BSCS 1-A, BSIT 2-D, BSCS 1-J)
-    GET section taker 
+    POST exam (default timer: "none")
+    PATCH exam status (e.g. publish, cancel → pending)
+    PATCH exam timer (set/edit timer)
 
-  update exam: 
-    UPDATE exam
-    UPDATE exam title
-    GET exam_code (for showing only)
-    UPDATE question (question_type, question_text, optionabcd, correct_answer, created_at)
-    UPDATE timer
-    UPDATE schedule
-    UPDATE section taker (BSCS 1-A, BSIT 2-D, BSCS 1-J)
-    GET section taker (for showing only)
+    DELETE exam
 
-    
-    
+    Future: Copy whole exam (prompt rename + change subjcode)
+
+  Sidebar:
+    GET teacher name
+
+========== EXAM CREATION ==========  
+  New / Editing Exam:
+
+    POST exam (creates exam with default values)
+    PATCH exam details (title, timer, schedule)
+
+    GET exam_code (for display only)
+    POST exam_code (if generating or customizing code)
+
+    POST question (question_type, question_text, options a–d, correct_answer, points, created_at)
+    PATCH question
+    DELETE question
+
+    POST section_taker (e.g., BSCS 1-A, BSIT 2-D)
+    PATCH section_taker (add/remove sections)
+    GET section_taker (view only)
+
 
 ========== EXAM ANALYTICS ==========
-  exam analytics home view (with DONE status): 
-    GET exam title 
-    GET exam schduled date
-    GET exam short description
-    GET exam (title SEARCH BAR sorting)
+  Exam analytics Home view (for DONE exams only): 
+  
+    GET exams (title, schedule, description)
+    GET exams by title (search bar)
 
-  inside the exam analytics:
-    GET question_text
-    GET question_type
-    GET exam_item_id
-    GET correct_answer
-    GET students who got the correct answer per section (to percentage %)
-    GET essay answer (not yet in database question type)
-    GET essay question
-    POST/GET/UPDATE essay score (shown if already has score)
+  Inside the specific exam:
 
-  exam analytics per section:
-    GET student's section (from student's input before entering the exam)
-    GET student_name (fixed name in account creation)
-    GET student_score
-    GET student's answer in every question (not sure if to put yet, idk whats the importance of putting this as of now)
+    GET questions (text, type, item_id, correct_answer)
+    GET % of students (per section) who answered correctly
+
+    GET essay answers (linked to essay-type questions)
+    POST/GET/PATCH essay score (only visible if score exists)
+
+
+  Per section view:
+
+    GET student's section (from student before entering the exam)
+    GET student name (fixed name in account creation)
+    GET student total score
+
+    GET student answers per question (optional; only if needed for review/audit)
 
