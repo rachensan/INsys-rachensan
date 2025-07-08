@@ -10,7 +10,7 @@ export const createQuestion = async(req, res) => {
   const [optionA, optionB, optionC, optionD] = options || [];
 
   try {
-    const result = await db.query('INSERT INTO examination_item(exam_id, user_id, question_type, question_text, option_a, option_b, option_c, option_d, correct_answer) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [examId, userId, questionType, question, optionA, optionB, optionC, optionD, correctAnswer]);
+    const result = await db.query('INSERT INTO questions(exam_id, user_id, question_type, question_text, option_a, option_b, option_c, option_d, correct_answer) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [examId, userId, questionType, question, optionA, optionB, optionC, optionD, correctAnswer]);
 
     res.status(201).json(result.rows[0])
     
@@ -24,7 +24,7 @@ export const deleteQuestionById = async(req, res) => {
   const { questionId, examId } = req.params;
 
   try {
-    const result = await db.query('DELETE FROM examination_item WHERE exam_item_id = $1 AND exam_id = $2 RETURNING *', [questionId, examId]);
+    const result = await db.query('DELETE FROM questions WHERE exam_item_id = $1 AND exam_id = $2 RETURNING *', [questionId, examId]);
 
     if (result.rows.length === 0) {
       return res.status(404).json({ message: 'Question not found for this exam' })
@@ -38,6 +38,17 @@ export const deleteQuestionById = async(req, res) => {
   }
 }
 
+
+export const getQuestionsByExamId = async(req, res) => {
+  const {examId} = req.params
+  try {
+    const result = await db.query("SELECT * FROM questions WHERE exam_id = $1", [examId]);
+    res.status(201).json(result.rows);
+  } catch (error) {
+    console.error('Error cant GET questionsSs (plural to sis)', error)
+    res.status(500).json({error: 'Failed to GET questionsSs'});
+  }
+}
 
 // //POST
 // export const createQuestion = (req, res) => { //this is from the temporary sht cuz i dont have db yet
@@ -61,33 +72,3 @@ export const deleteQuestionById = async(req, res) => {
 //   console.log("fkn hell", examList[0].questions)
 //   res.status(200).json(newQuestion);
 // }
-
-
-
-//GET
-
-export const getQuestionsByExamId = async(req, res) => {
-  const {examId} = req.params
-  try {
-    const result = await db.query("SELECT * FROM examination_item WHERE exam_id = $1", [examId]);
-    res.status(201).json(result.rows);
-  } catch (error) {
-    console.error('Error cant GET questionsSs (plural to sis)', error)
-    res.status(500).json({error: 'Failed to GET questionsSs'});
-  }
-}
-
-export const viewAllQuestions = (req, res) => {
-  res.json(examList[0].questions) //temporary [0]
-}
-
-export const getQuestionsPerExamId = (req, res) => {
-  const id = parseInt(req.params.id);
-  const exam = examList.find(e => e.id === id)
-
-  if (!exam) {
-    return res.status(404).json({message: 'Exam not found'})
-  }
-
-  res.json(exam.questions)
-}

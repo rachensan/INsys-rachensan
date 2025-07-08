@@ -9,21 +9,29 @@ CREATE TABLE users (
 );
 
 
--- 2. EXAMINATION_DATA TABLE
-CREATE TABLE examination_data (
+-- 2. examinations TABLE
+CREATE TABLE examinations (
   exam_id SERIAL PRIMARY KEY,
   user_id INT REFERENCES users(user_id),
   title TEXT NOT NULL,
   schedule DATE,
   status TEXT DEFAULT 'pending',
   timer TEXT DEFAULT 'none',
+  exam_code TEXT, -- used for students to enter the exam
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+  -- 2.1 SECTION TAKER TABLE
+      CREATE TABLE section_takerss (
+        section_id SERIAL PRIMARY KEY,
+        exam_id INT REFERENCES examinations(exam_id) ON DELETE CASCADE,
+        section_name TEXT NOT NULL
+      );
 
--- 3. EXAMINATION_ITEM TABLE
-CREATE TABLE examination_item (
+
+-- 3. questions TABLE
+CREATE TABLE questions (
   exam_item_id SERIAL PRIMARY KEY,
-  exam_id INT REFERENCES examination_data(exam_id) ON DELETE CASCADE,
+  exam_id INT REFERENCES examinations(exam_id) ON DELETE CASCADE,
   user_id INT REFERENCES users(user_id),
 
   question_type TEXT CHECK (question_type IN ('multiplechoice', 'truefalse', 'identification', 'essay')) NOT NULL,
@@ -42,7 +50,7 @@ CREATE TABLE examination_item (
   -- 3.1 ESSAY_ANSWERS TABLE 
       CREATE TABLE essay_answers (
         answer_id SERIAL PRIMARY KEY,
-        exam_item_id INT REFERENCES examination_item(exam_item_id),
+        exam_item_id INT REFERENCES questions(exam_item_id),
         student_id INT REFERENCES users(user_id),
 
         answer TEXT NOT NULL,

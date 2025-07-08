@@ -4,7 +4,7 @@ import cors from "cors";
 //userCONTROLLERS
   import { createUser, getUserById } from "./controllers/userControllers.js"
 //examCONTROLLERS
-  import { getAllExams, createExam, getExamById, getExamsByTitle, getExamsByStatus, updateExamStatus, updateExamTimer, deleteExam, updateExamDetails } from "./controllers/examControllers.js";
+  import { getAllExams, createExam, getExamById, getExamsByTitle, getExamsByStatus, updateExamStatus, updateExamTimer, deleteExam, updateExamDetails, updateExamCode, getExamCode, updateSectionTakers, getSectionTakersByExamId } from "./controllers/examControllers.js";
 //questionCONTROLLERS
   import { createQuestion, deleteQuestionById, getQuestionsByExamId } from "./controllers/questionControllers.js";
 
@@ -40,11 +40,26 @@ app.use(express.json()); // parse JSON bodies
       //teachers (to view or edit a specific exam) 
       //students (to display exam info before starting)
   app.get('/api/exams', getAllExams);
+  app.get('/api/exams/:examId/code', getExamCode);
+      //or destructure the getExamById in frontend like:
+      //const [exam, setExam] = useState(null);
+      //useEffect(() => {
+      //  axios.get(`/api/exams/${examId}`)
+      //    .then(res => setExam(res.data));
+      //}, []);
+      //<p>Exam Code: {exam?.exam_code}</p>
+  app.get('/api/exams/:examId/sections', getSectionTakersByExamId);
 
   app.post('/api/exams', createExam);
+
+  app.put('/api/exams/:examId/sections', updateSectionTakers);
+      //can be null at first, when published without sections, will show popup alert... imma fix it later, im sleepy
+
   app.patch('/api/exams/:examId/status', updateExamStatus);
   app.patch('/api/exams/:examId/timer', updateExamTimer);
   app.patch('/api/exams/:examId/details', updateExamDetails);
+  app.patch('/api/exams/:examId/code', updateExamCode);
+      //not really needed, cuz we create the exam code at exam creation
 
   app.delete('/api/exams/:examId', deleteExam);
     //singular... one exam deletion

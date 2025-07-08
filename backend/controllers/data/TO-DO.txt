@@ -30,9 +30,9 @@ teacher side:
     PATCH question
     DELETE question
 
-    POST section_taker (e.g., BSCS 1-A, BSIT 2-D)
-    PATCH section_taker (add/remove sections)
-    GET section_taker (view only)
+    POST section_takers (e.g., BSCS 1-A, BSIT 2-D)
+    PATCH section_takers (add/remove sections)
+    GET section_takers (view only)
 
 
 ========== EXAM ANALYTICS ==========

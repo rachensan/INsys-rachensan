@@ -22,3 +22,28 @@ Example:
 
 Viewing a single user? Use params.
 Searching users by role/status/etc? Use query.
+
+
+✅ Use if (result.rows.length === 0) {
+        return res.status(404).json({ message: 'Exam not found' })
+      }
+when:
+GET/UPDATE/DELETE
+
+✅ Use RETURNING * when:
+INSERT/UPDATE/DELETE
+
+
+✅ Use ON DELETE CASCADE when:
+
+The child data is meaningless without the parent.
+
+Use it if:
+You don’t need to keep orphan records
+
+You always want related data wiped automatically
+
+Example:
+section_takers depends on examinations
+
+questions depends on examinations

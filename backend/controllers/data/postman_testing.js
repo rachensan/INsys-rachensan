@@ -131,10 +131,37 @@ const postmanLinks = [ //NOT usable, just a note
     },
     link: "http://localhost:3000/api/exams/1/details",
   },
-
-
-
-
+  {
+    WHAT: "Update Exam Code",
+    FUNC: updateExamCode,
+    CRUD: "PATCH",
+    path: "/api/exams/:examId/code",
+    link: "http://localhost:3000/api/exams/1/code"
+  },
+  {
+    WHAT: "Get Exam Code",
+    FUNC: getExamCode,
+    CRUD: "GET",
+    path: "/api/exams/:examId/code",
+    link: "http://localhost:3000/api/exams/1/code"
+  },
+  {
+    WHAT: "Update Section Takers",
+    FUNC: updateSectionTakers,
+    CRUD: "PATCH",
+    path: "/api/exams/:examId/sections",
+    body: {
+      "sections": ["BSIT 1-A", "BSCS 2-B"]
+    },
+    link: "http://localhost:3000/api/exams/1/sections"
+  },
+  {
+    WHAT: "Get Sections Assigned to Exam",
+    FUNC: getSectionTakersByExamId,
+    CRUD: "GET",
+    path: "/api/exams/:examId/sections",
+    link: "http://localhost:3000/api/exams/1/sections"
+  }
   
 ];
 
