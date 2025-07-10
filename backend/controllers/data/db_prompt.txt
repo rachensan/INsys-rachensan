@@ -28,9 +28,9 @@ CREATE TABLE examinations (
       );
 
 
--- 3. questions TABLE
+-- 3. QUESTIONS TABLE
 CREATE TABLE questions (
-  exam_item_id SERIAL PRIMARY KEY,
+  question_id SERIAL PRIMARY KEY,
   exam_id INT REFERENCES examinations(exam_id) ON DELETE CASCADE,
   user_id INT REFERENCES users(user_id),
 
@@ -46,15 +46,35 @@ CREATE TABLE questions (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- 4. STUDENT QUERY
+  -- 4.1 STUDENT_ANSWERS TABLE
+      CREATE TABLE student_answers (
+        answer_id SERIAL PRIMARY KEY,
+        exam_id INT REFERENCES examinations(exam_id) ON DELETE CASCADE,
+        question_id INT REFERENCES questions(question_id) ON DELETE CASCADE,
+        student_id INT REFERENCES users(user_id),
+        student_answer TEXT,
+        is_correct BOOLEAN,  -- for auto-checking non-essay types
+        submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
 
-  -- 3.1 ESSAY_ANSWERS TABLE 
+  -- 4.2 ESSAY_ANSWERS TABLE 
       CREATE TABLE essay_answers (
         answer_id SERIAL PRIMARY KEY,
-        exam_item_id INT REFERENCES questions(exam_item_id),
+        question_id INT REFERENCES questions(question_id),
         student_id INT REFERENCES users(user_id),
-
-        answer TEXT NOT NULL,
+        student_answer TEXT, 
         score INT, -- nullable until graded
         submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
 
+
+  -- 4.3 STUDENT_SCORES TABLE
+      CREATE TABLE student_scores (
+        score_id SERIAL PRIMARY KEY,
+        exam_id INT REFERENCES examinations(exam_id) ON DELETE CASCADE,
+        student_id INT REFERENCES users(user_id),
+        total_score INT DEFAULT 0,
+        section_name TEXT,
+        submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );

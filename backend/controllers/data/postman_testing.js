@@ -161,6 +161,13 @@ const postmanLinks = [ //NOT usable, just a note
     CRUD: "GET",
     path: "/api/exams/:examId/sections",
     link: "http://localhost:3000/api/exams/1/sections"
+  }, 
+  {
+    WHAT: "Verify Code and Section Input",
+    FUNC: verifyExamAccess,
+    CRUD: "POST",
+    path: "/api/exams/verify",
+    link: "http://localhost:3000/api/exams/verify"
   }
   
 ];

@@ -1,6 +1,5 @@
-import examList from "./data/examList.js";
-import {db} from '../db.js';
-//create exams, lists exams
+import examList from "../data/examList.js";
+import {db} from '../../db.js';
 
 export const getAllExams = async(req, res) =>{
 
@@ -101,7 +100,6 @@ export const getSectionTakersByExamId = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch section takers' });
   }
 };
-
 
 
 export const createExam = async(req, res) => {

@@ -1,12 +1,41 @@
 import express from "express";
 import cors from "cors";
 
+//verify
+  import { verifyExamAccess } from "./controllers/studentVerification.js";
+
 //userCONTROLLERS
-  import { createUser, getUserById } from "./controllers/userControllers.js"
+  //GET
+    import { getUserById } from './controllers/userControllers/GET.js'
+  //POST
+    import { createUser } from './controllers/userControllers/POST.js'
+  //UPDATE
+    import {  } from './controllers/userControllers/UPDATE.js'
+  //DELETE
+    import {  } from "./controllers/userControllers/DELETE.js";
+
+
 //examCONTROLLERS
-  import { getAllExams, createExam, getExamById, getExamsByTitle, getExamsByStatus, updateExamStatus, updateExamTimer, deleteExam, updateExamDetails, updateExamCode, getExamCode, updateSectionTakers, getSectionTakersByExamId } from "./controllers/examControllers.js";
+  //GET
+    import { getAllExams, getExamById, getExamsByTitle, getExamsByStatus, getExamCode, getSectionTakersByExamId } from './controllers/examControllers/GET.js'
+  //POST
+    import { createExam } from './controllers/examControllers/POST.js'
+  //UPDATE
+    import { updateExamDetails, updateExamCode, updateExamStatus, updateExamTimer, updateSectionTakers } from './controllers/examControllers/UPDATE.js'
+  //DELETE
+    import { deleteExam } from "./controllers/examControllers/DELETE.js";
+
+
 //questionCONTROLLERS
-  import { createQuestion, deleteQuestionById, getQuestionsByExamId } from "./controllers/questionControllers.js";
+  //GET
+    import { getQuestionsByExamId } from './controllers/questionControllers/GET.js'
+  //POST
+    import { createQuestion } from './controllers/questionControllers/POST.js'
+  //UPDATE
+    import {  } from './controllers/questionControllers/UPDATE.js'
+  //DELETE
+    import { deleteQuestionById } from "./controllers/questionControllers/DELETE.js";
+
 
 /*
 
@@ -68,6 +97,13 @@ app.use(express.json()); // parse JSON bodies
   app.post('/api/questions', createQuestion);
   app.get('/api/exams/:examId/questions', getQuestionsByExamId);
   app.delete('/api/exams/:examId/questions/:questionId', deleteQuestionById);
+
+
+
+
+
+
+app.post('/api/exams/verify', verifyExamAccess);
 
 
 app.listen(port, () => {
