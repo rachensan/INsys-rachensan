@@ -1,8 +1,8 @@
 import express from "express";
 import cors from "cors";
 
-//verify
-  import { verifyExamAccess } from "./controllers/studentVerification.js";
+//verify student
+  import { verifyExamAccess, answerSubmission, essaySubmission, automaticScoring } from "./controllers/studentQuery.js";
 
 //userCONTROLLERS
   //GET
@@ -99,11 +99,12 @@ app.use(express.json()); // parse JSON bodies
   app.delete('/api/exams/:examId/questions/:questionId', deleteQuestionById);
 
 
+// ========== STUDENT ROUTES ==========
+  app.post('/api/students/verify', verifyExamAccess);
+  app.post('/api/student/answer', answerSubmission);
+  app.post('/api/student/essay', essaySubmission);
 
-
-
-
-app.post('/api/exams/verify', verifyExamAccess);
+  app.put('/api/student-scores/score', automaticScoring);
 
 
 app.listen(port, () => {
