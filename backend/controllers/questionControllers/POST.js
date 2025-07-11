@@ -6,6 +6,13 @@ export const createQuestion = async(req, res) => {
   //from front-end so keep it camelCase
   const [optionA, optionB, optionC, optionD] = options || [];
 
+  if (options && options.length > 0) {
+    const choices = [optionA, optionB, optionC, optionD];
+    if (!choices.includes(correctAnswer)) {
+      return res.status(400).json({ error: 'correct_answer must match one of the choices' });
+    }
+  }
+  
   try {
     const result = await db.query('INSERT INTO questions(exam_id, user_id, question_type, question_text, option_a, option_b, option_c, option_d, correct_answer) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [examId, userId, questionType, question, optionA, optionB, optionC, optionD, correctAnswer]);
 

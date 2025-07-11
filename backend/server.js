@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 
 //verify student
-  import { verifyExamAccess, answerSubmission, essaySubmission, automaticScoring } from "./controllers/studentQuery.js";
+  import { verifyExamAccess, answerSubmission, essaySubmission, autoScoringTemplate } from "./controllers/studentQuery.js";
 
 //userCONTROLLERS
   //GET
@@ -101,10 +101,13 @@ app.use(express.json()); // parse JSON bodies
 
 // ========== STUDENT ROUTES ==========
   app.post('/api/students/verify', verifyExamAccess);
-  app.post('/api/student/answer', answerSubmission);
+  app.post('/api/student-answers/submit', answerSubmission);
+      //autoScoringLogic works here
   app.post('/api/student/essay', essaySubmission);
-
-  app.put('/api/student-scores/score', automaticScoring);
+  app.put('/api/student-scores/score', autoScoringTemplate); //idk where to use yet
+      //backup tool
+      //admin suspects incorrect scoring
+      //wants to force re-check
 
 
 app.listen(port, () => {

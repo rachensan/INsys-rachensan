@@ -167,23 +167,30 @@ const postmanLinks = [ //NOT usable, just a note
     FUNC: verifyExamAccess,
     CRUD: "POST",
     path: "/api/students/verify",
-    link: "http://localhost:3000/api/student/verify"
+    link: "http://localhost:3000/api/student/verify",
+    body: {
+      "inputCode": "sintoCode",
+      "inputSection": "BSIT 1-D",
+      "studentName": "Lila Ma",
+      "studentSchoolId": 2021307605
+    }
   }, 
   {
     WHAT: "After Verification, then Enters Exam",
     FUNC: answerSubmission,
     CRUD: "POST",
-    path: "/api/student/answer",
+    path: "/api/student-answers/submit",
     body: {
       "examId": 1,
       "questionId": 2,
       "studentSchoolId": 2021307605,
       "studentAnswer": "4"
     },
-    link: "http://localhost:3000/api/student/answer" 
+    link: "http://localhost:3000/api/student-answers/submit" 
   }, 
-  {
-    WHAT: "Automatic Score After Submission",
+  { //not needed for now, we already automating the scoring in answerSubmission
+    //i already found something i need it for...
+    WHAT: "Automatic Scoring",
     FUNC: automaticScoring,
     CRUD: "PUT",
     path: "/api/student-scores/score",

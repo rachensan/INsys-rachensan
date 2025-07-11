@@ -50,7 +50,10 @@ export const answerSubmission = async(req, res) => {
       `INSERT INTO student_answers (exam_id, question_id, student_school_id, student_answer, is_correct) VALUES ($1, $2, $3,$4, $5) RETURNING *`,
        [examId, questionId, studentSchoolId, studentAnswer, isCorrect]);
 
-      res.status(201).json(result.rows[0]);
+//trigger auto score
+    await autoScoringHelper(examId, studentSchoolId);
+
+    res.status(201).json(result.rows[0]);
   } catch (error) {
     console.error('Error saving exam entry:', error);
     res.status(500).json({ error: 'Failed to save answers' });
@@ -73,29 +76,54 @@ export const essaySubmission = async(req, res) => {
   }
 }
 
+
+
 //CALCULATE SCORE
-export const automaticScoring = async(req, res) => {
+export const autoScoringTemplate = async(req, res) => { 
   const { examId, studentSchoolId } = req.body
 
   try {
-    const result = await db.query(
-      `SELECT COUNT(*) AS correct_count
-       FROM student_answers
-       WHERE exam_id = $1 AND student_school_id = $2 AND is_correct = true`,
-      [examId, studentSchoolId]
-    );
-
-    const score = parseInt(result.rows[0].correct_count);
-
-    await db.query(
-      `UPDATE student_scores
-       SET total_score = $1
-       WHERE exam_id = $2 AND student_school_id = $3`,
-      [score, examId, studentSchoolId]
-    );
+    const score = await autoScoringHelper(examId, studentSchoolId)
     res.status(200).json({ message: 'Score updated', score });
   } catch (error) {
     console.error('Automatic scoring failed:', error);
     res.status(500).json({ error: 'Failed to update score' });
   }
 }
+  //helper function:
+      async function autoScoringHelper(examId, studentSchoolId) { // use examId & studentSchoolId from autoScoringTemplate
+
+        // const result = await db.query(
+        //   `SELECT COUNT(*) AS correct_count
+        //     FROM student_answers
+        //     WHERE exam_id = $1 AND student_school_id = $2 AND is_correct = true`,
+        //   [examId, studentSchoolId]
+        // );
+
+        const result = await db.query(
+          `SELECT questions.points
+            FROM student_answers, questions
+            WHERE student_answers.exam_id = $1
+              AND student_answers.student_school_id = $2
+              AND student_answers.is_correct = true
+              AND student_answers.question_id = questions.question_id`,
+          [examId, studentSchoolId]
+        ) //will list pts for each correct answers (true)
+
+        let totalScore = 0;
+
+        result.rows.forEach(row => {
+          totalScore = totalScore + row.points;
+        })
+
+        const score = parseInt(totalScore);
+
+        await db.query(
+          `UPDATE student_scores
+            SET total_score = $1
+            WHERE exam_id = $2 AND student_school_id = $3`,
+          [score, examId, studentSchoolId]
+        );
+
+        return score;
+      }
