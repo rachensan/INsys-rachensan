@@ -10,10 +10,11 @@ const postmanLinks = [ //NOT usable, just a note
     path: "/api/users",
     link: "http://localhost:3000/api/users",
     body: {
-      "full_name": "Juan Dela Cruz",
+      "fullName": "Juan Dela Cruz",
       "email": "juan@example.com",
       "password": "123456",
-      "role": "teacher"
+      "role": "teacher",
+      "schoolId": "2021307605" 
     }
   },
   { 
@@ -196,10 +197,40 @@ const postmanLinks = [ //NOT usable, just a note
     path: "/api/student-scores/score",
     body: {
       "examId": 1,
-      "studentSchoolId": 2021307605,
+      "studentSchoolId": 2021307605
     },
     link: "http://localhost:3000/api/student-scores/score" 
-  }
+  }, 
+  {
+    WHAT: "Viewing Scores and Name Per Section",
+    FUNC: getAllScoresByExam,
+    CRUD: "GET",
+    path: "/api/exams/:examId/scores/:sectionTaker",
+    link: "http://localhost:3000/api/exams/1/scores/BSIT%201-D" 
+  }, 
+  {
+    WHAT: "Viewing Essay Per Student",
+    FUNC: getEssayPerStudent,
+    CRUD: "GET",
+    path: "/api/exams/:examId/essays/:studentSchoolId",
+    link: "http://localhost:3000/api/exams/1/essays/2021307605" 
+  }, 
+  {
+    WHAT: "Grading Essay Per Student",
+    FUNC: manualEssayScoring,
+    CRUD: "PATCH",
+    path: "/api/student-score/essay/:examId/:questionId",
+    link: "http://localhost:3000/api/student-score/essay/1/12",
+    body: {
+      "studentSchoolId": 2021307605,
+      "essayScore": 35
+    } 
+  }, 
 ];
+
+
+
+
+
 
 

@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 
 //verify student
-  import { verifyExamAccess, answerSubmission, essaySubmission, autoScoringTemplate } from "./controllers/studentQuery.js";
+  import { verifyExamAccess, answerSubmission, autoScoringTemplate, manualEssayScoring } from "./controllers/studentQuery.js";
 
 //userCONTROLLERS
   //GET
@@ -17,7 +17,7 @@ import cors from "cors";
 
 //examCONTROLLERS
   //GET
-    import { getAllExams, getExamById, getExamsByTitle, getExamsByStatus, getExamCode, getSectionTakersByExamId } from './controllers/examControllers/GET.js'
+    import { getAllExams, getExamById, getExamsByTitle, getExamsByStatus, getExamCode, getSectionTakersByExamId, getAllScoresByExam, getEssayPerStudent } from './controllers/examControllers/GET.js'
   //POST
     import { createExam } from './controllers/examControllers/POST.js'
   //UPDATE
@@ -36,14 +36,6 @@ import cors from "cors";
   //DELETE
     import { deleteQuestionById } from "./controllers/questionControllers/DELETE.js";
 
-
-/*
-
-import { viewAllExam, createExam, updateExam ,getExamById, deleteExam } from "./controllers/examControllers.js";
-import { viewAllQuestions, getQuestionsPerExamId, createQuestion } from "./controllers/questionControllers.js";
-import { createUser } from "./controllers/userControllers.js"
-
-*/
 
 const app = express();
 const port = process.env.PORT || 3000; // we dint have env yet
@@ -69,6 +61,7 @@ app.use(express.json()); // parse JSON bodies
       //teachers (to view or edit a specific exam) 
       //students (to display exam info before starting)
   app.get('/api/exams', getAllExams);
+  app.get('/api/exams/:examId/essays/:studentSchoolId', getEssayPerStudent);
   app.get('/api/exams/:examId/code', getExamCode);
       //or destructure the getExamById in frontend like:
       //const [exam, setExam] = useState(null);
@@ -78,7 +71,7 @@ app.use(express.json()); // parse JSON bodies
       //}, []);
       //<p>Exam Code: {exam?.exam_code}</p>
   app.get('/api/exams/:examId/sections', getSectionTakersByExamId);
-
+  app.get('/api/exams/:examId/scores/:sectionTaker', getAllScoresByExam);
   app.post('/api/exams', createExam);
 
   app.put('/api/exams/:examId/sections', updateSectionTakers);
@@ -100,23 +93,19 @@ app.use(express.json()); // parse JSON bodies
 
 
 // ========== STUDENT ROUTES ==========
-  app.post('/api/students/verify', verifyExamAccess);
-  app.post('/api/student-answers/submit', answerSubmission);
+  app.post('/api/student/verify', verifyExamAccess);
+  app.post('/api/student-answers/submit', answerSubmission); 
       //autoScoringLogic works here
-  app.post('/api/student/essay', essaySubmission);
-  app.put('/api/student-scores/score', autoScoringTemplate); //idk where to use yet
+  app.put('/api/student-scores/score', autoScoringTemplate); 
       //backup tool
       //admin suspects incorrect scoring
       //wants to force re-check
 
+// ========== TEACHER ROUTES ==========
+  app.patch('/api/student-score/essay/:examId/:questionId', manualEssayScoring);
+  
 
+   
 app.listen(port, () => {
   console.log(`Backend running at http://localhost:${port}`);
 })
-
-
-const routeNotes = [
-  {
-    
-  }
-]

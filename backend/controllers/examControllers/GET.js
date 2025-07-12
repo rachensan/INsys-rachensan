@@ -99,3 +99,47 @@ export const getSectionTakersByExamId = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch section takers' });
   }
 };
+
+export const getAllScoresByExam = async(req, res) => {
+  const {examId, sectionTaker } = req.params;
+  try {
+    const result = await db.query(`
+      SELECT total_score, submitted_at, student_school_id, student_name, objective_score, essay_score 
+      FROM student_scores WHERE exam_id = $1 AND section_name = $2`, [examId, sectionTaker]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Invalid section' });
+    }
+    res.status(200).json(result.rows)
+  } catch (error) {
+    console.error('Error fetching section scores/info idk:', error);
+    res.status(500).json({ error: 'Failed to fetch section scores' });
+  }
+}
+
+export const getEssayPerStudent = async(req, res) => {
+  const {examId, studentSchoolId } = req.params;
+  try {
+    const result = await db.query(
+      `SELECT 
+        q.question_id,
+        q.question_text,
+        q.points,
+        e.student_answer,
+        e.essay_score
+      FROM questions q
+      JOIN essay_answers e ON q.question_id = e.question_id 
+      WHERE q.exam_id = $1 
+        AND e.student_school_id = $2
+        AND q.question_type = 'essay'`,
+      [examId, studentSchoolId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Invalid' });
+    }
+    res.status(200).json(result.rows)
+  } catch (error) {
+    console.error('Error fetching section scores/info idk:', error);
+    res.status(500).json({ error: 'Failed to fetch section scores' });
+  }
+}

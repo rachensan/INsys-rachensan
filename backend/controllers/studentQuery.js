@@ -26,12 +26,12 @@ export const verifyExamAccess = async(req, res) => {
     res.status(200).json({ message: 'Exam entry granted', exam: result.rows[0] });
   } catch (error) {
     console.error('Error verifying exam entry:', error);
-    res.status(500).json({ error: 'Failed to enter exam' });
+    res.status(500).json({ error: error.details || 'Failed to enter exam' });
   }
   
 }
 
-//NOT ESSAY
+//ALL QUESTION TYPE
 export const answerSubmission = async(req, res) => {
   const { questionId, studentSchoolId, studentAnswer, examId } = req.body;
       //no req.params because we get the info if they are validated/verified examinee
@@ -44,41 +44,29 @@ export const answerSubmission = async(req, res) => {
     );
     const correctAnswer = correctAnswerFromDB.rows[0]?.correct_answer;
 
+    const questionTypeFromDB = await db.query(`SELECT question_type FROM questions WHERE exam_id = $1 AND question_id = $2`, [examId, questionId]);
+    const questionType = questionTypeFromDB.rows[0]?.question_type;
+
     const isCorrect = correctAnswer && correctAnswer.trim().toLowerCase() === studentAnswer.trim().toLowerCase(); //1 or 0
 
-    const result = await db.query(
-      `INSERT INTO student_answers (exam_id, question_id, student_school_id, student_answer, is_correct) VALUES ($1, $2, $3,$4, $5) RETURNING *`,
-       [examId, questionId, studentSchoolId, studentAnswer, isCorrect]);
+    if (questionType === 'essay') {
+      const result = await db.query(`INSERT INTO essay_answers 
+      (question_id, student_school_id, student_answer) VALUES ($1, $2, $3) RETURNING *`, [questionId, studentSchoolId, studentAnswer]);
 
-//trigger auto score
-    await autoScoringHelper(examId, studentSchoolId);
-
-    res.status(201).json(result.rows[0]);
+       res.status(201).json(result.rows[0]);
+    } else {
+      const result = await db.query(`INSERT INTO student_answers (exam_id, question_id, student_school_id, student_answer, is_correct) VALUES ($1, $2, $3,$4, $5) RETURNING *`,[examId, questionId, studentSchoolId, studentAnswer, isCorrect]);
+  //trigger auto score
+      await autoScoringHelper(examId, studentSchoolId);
+      res.status(201).json(result.rows[0]);
+    }
   } catch (error) {
     console.error('Error saving exam entry:', error);
     res.status(500).json({ error: 'Failed to save answers' });
   }
 }
 
-//ESSAY
-export const essaySubmission = async(req, res) => {
-  const { questionId, studentSchoolId, studentAnswer } = req.body
-
-  try {
-    const result = await db.query(
-      `INSERT INTO essay_answers (question_id, student_school_id, student_answer) VALUES ($1, $2, $3) RETURNING *`,
-       [questionId, studentSchoolId, studentAnswer]);
-
-      res.status(201).json(result.rows[0]);
-  } catch (error) {
-    console.error('Error saving essay entry:', error);
-    res.status(500).json({ error: 'Failed to save essay' });
-  }
-}
-
-
-
-//CALCULATE SCORE
+//NON-ESSAY SCORING
 export const autoScoringTemplate = async(req, res) => { 
   const { examId, studentSchoolId } = req.body
 
@@ -90,15 +78,9 @@ export const autoScoringTemplate = async(req, res) => {
     res.status(500).json({ error: 'Failed to update score' });
   }
 }
+
   //helper function:
       async function autoScoringHelper(examId, studentSchoolId) { // use examId & studentSchoolId from autoScoringTemplate
-
-        // const result = await db.query(
-        //   `SELECT COUNT(*) AS correct_count
-        //     FROM student_answers
-        //     WHERE exam_id = $1 AND student_school_id = $2 AND is_correct = true`,
-        //   [examId, studentSchoolId]
-        // );
 
         const result = await db.query(
           `SELECT questions.points
@@ -108,22 +90,76 @@ export const autoScoringTemplate = async(req, res) => {
               AND student_answers.is_correct = true
               AND student_answers.question_id = questions.question_id`,
           [examId, studentSchoolId]
-        ) //will list pts for each correct answers (true)
+        ) //will list the points for each correct answers (true)
 
         let totalScore = 0;
 
         result.rows.forEach(row => {
           totalScore = totalScore + row.points;
         })
-
         const score = parseInt(totalScore);
 
         await db.query(
           `UPDATE student_scores
-            SET total_score = $1
+            SET objective_score = $1,
+                total_score = $1 + essay_score
             WHERE exam_id = $2 AND student_school_id = $3`,
           [score, examId, studentSchoolId]
         );
 
         return score;
       }
+
+//ESSAY SCORING
+export const manualEssayScoring = async(req, res) => {
+  const {questionId, examId} = req.params;
+  const {studentSchoolId, essayScore} = req.body;
+
+  try {
+    const result = await db.query(
+      `UPDATE essay_answers
+        SET essay_score = $1
+        WHERE question_id = $2
+          AND student_school_id = $3
+        RETURNING *`,
+      [essayScore, questionId, studentSchoolId]
+    );
+    
+    if (result.rows.length === 0) {
+      await db.query(
+        `INSERT INTO essay_answers (question_id, student_school_id, student_answer, essay_score)
+        VALUES ($1, $2, '', 0)`,
+        [questionId, studentSchoolId]
+      );
+    }
+
+    await essayScoringHelper(examId, studentSchoolId);
+    
+    res.status(200).json(result.rows[0]);
+  } catch (error) {
+    console.error('Error updating essay score:', error);
+    res.status(500).json({ error: 'Failed to update score' });
+  }
+}
+    async function essayScoringHelper(examId, studentSchoolId) { 
+
+      const result = await db.query(
+        `SELECT SUM(essay_score) AS total_essay_score
+        FROM essay_answers
+        JOIN questions ON essay_answers.question_id = questions.question_id
+        WHERE questions.exam_id = $1 AND essay_answers.student_school_id = $2`,
+        [examId, studentSchoolId]
+      );
+
+      const totalEssayScore = parseInt(result.rows[0].total_essay_score) || 0;
+
+      await db.query(
+        `UPDATE student_scores
+          SET essay_score = $1,
+              total_score = $1 + objective_score
+          WHERE exam_id = $2 AND student_school_id = $3`,
+        [totalEssayScore, examId, studentSchoolId]
+      );
+
+      return totalEssayScore;
+    }
