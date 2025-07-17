@@ -26,7 +26,8 @@ CREATE TABLE examinations (
         section_id SERIAL PRIMARY KEY,
         exam_id INT REFERENCES examinations(exam_id) ON DELETE CASCADE,
         section_name TEXT NOT NULL
-        scheduled_datetime TIMESTAMP,
+        start_datetime TIMESTAMP,
+        end_datetime TIMESTAMP,
         timer_minutes INT,
         is_finalized BOOLEAN DEFAULT FALSE
       );

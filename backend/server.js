@@ -17,11 +17,11 @@ import cors from "cors";
 
 //examCONTROLLERS
   //GET
-    import { getAllExams, getExamById, getExamsByTitle, getExamsByStatus, getExamCode, getSectionTakersByExamId, getAllScoresByExam, getEssayPerStudent } from './controllers/examControllers/GET.js'
+    import { getAllExams, getExamById, getExamsByTitle, getExamsByStatus, getExamCode, getSectionTakersByExamId, getAllScoresByExam, getEssayPerStudent, getExamSchedule } from './controllers/examControllers/GET.js'
   //POST
     import { createExam } from './controllers/examControllers/POST.js'
   //UPDATE
-    import { updateExamDetails, updateExamCode, updateExamStatus, updateExamTimer, updateSectionTakers } from './controllers/examControllers/UPDATE.js'
+    import { updateExamDetails, updateExamCode, updateExamStatus, updateExamTimer, updateSectionTakers, finalizeExamSchedule } from './controllers/examControllers/UPDATE.js'
   //DELETE
     import { deleteExam } from "./controllers/examControllers/DELETE.js";
 
@@ -82,6 +82,8 @@ app.use(express.json()); // parse JSON bodies
   app.patch('/api/exams/:examId/details', updateExamDetails);
   app.patch('/api/exams/:examId/code', updateExamCode);
       //not really needed, cuz we create the exam code at exam creation
+  app.get('/api/exams/:examId/schedule', getExamSchedule);
+  app.put('/api/exams/:examId/schedule', finalizeExamSchedule);
 
   app.delete('/api/exams/:examId', deleteExam);
     //singular... one exam deletion

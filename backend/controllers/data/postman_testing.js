@@ -240,7 +240,27 @@ const postmanLinks = [ //NOT usable, just a note
     path: "/api/students/:studentId/exam-history",
     link: "http://localhost:3000/api/student/2021307605/exam-history" 
   }, 
+  {
+    WHAT: "Setting/Updating the Schedule Exam per Section",
+    FUNC: finalizeExamSchedule,
+    CRUD: "PUT",
+    path: "/api/exams/1/schedule",
+    link: "http://localhost:3000/api/exams/1/schedule",
+    body: {
+      "sectionName": "BSIT 1-D",
+      "scheduledDate": "2025-07-18T01:52:00",
+      "addTimerMinutes": 5
+    }
+  }, 
+  {
+    WHAT: "Getting the Schedule Exam per Section",
+    FUNC: getExamSchedule,
+    CRUD: "GET",
+    path: "/api/exams/1/schedule",
+    link: "http://localhost:3000/api/exams/1/schedule"
+  },
 ];
+
 
 
 

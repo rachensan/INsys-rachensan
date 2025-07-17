@@ -137,30 +137,41 @@ export const updateExamCode = async(req, res) => {
   }
 }
 
-export const finalizeExamEntry = async(req, res) => {
+export const finalizeExamSchedule = async(req, res) => {
   const {examId} = req.params;
-  const {scheduledDate, addTimerMinutes, sectionName} = req.body;
+  const {scheduledDate, addTimerMinutes, sectionName} = req.body; 
+        //scheduledDate here is a string... convert to date 
 
-  scheduledDate.setMinutes(scheduledDate.getMinutes() + addTimerMinutes);
+  const startExamDate = new Date(scheduledDate + "+08:00"); //start date
+  const endExamDate = new Date(startExamDate); //cloning startDate and add the timer
+        endExamDate.setMinutes(endExamDate.getMinutes() + addTimerMinutes);
+
+  const dateNow = new Date();
+  const shouldFinalize = dateNow >= endExamDate; //true or false
 
   try {
     const result = await db.query(`
       UPDATE section_takers s
       SET 
-        scheduled_datetime = $1, 
-        timer_minutes = $2
-      FROM examinations e
+        start_datetime = $1, 
+        timer_minutes = $2,
+        end_datetime = $3
       WHERE 
-        s.exam_id = e.exam_id
-        AND s.section_name = $3
-        AND e.exam_id = $4
+        exam_id = $4
+        AND section_name = $5
         RETURNING s.*`, 
-      [scheduledDate, addTimerMinutes, sectionName, examId]);
+      [startExamDate, addTimerMinutes, endExamDate, examId, sectionName]);
 
-      if (dateNow < scheduledDate) {
-        await db.query(`
-          UPDATE section_takers SET is_finalized = $1`, [true])
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({ error: "No matching section or exam found" });
       }
+
+      await db.query(`
+        UPDATE section_takers
+        SET is_finalized = $1
+        WHERE exam_id = $2
+          AND section_name = $3`, [shouldFinalize, examId, sectionName])
 
       res.status(200).json(result.rows[0]);
   } catch (error) {
