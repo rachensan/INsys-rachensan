@@ -136,3 +136,35 @@ export const updateExamCode = async(req, res) => {
     res.status(500).json({ error: "Failed to create exam code" });
   }
 }
+
+export const finalizeExamEntry = async(req, res) => {
+  const {examId} = req.params;
+  const {scheduledDate, addTimerMinutes, sectionName} = req.body;
+
+  scheduledDate.setMinutes(scheduledDate.getMinutes() + addTimerMinutes);
+
+  try {
+    const result = await db.query(`
+      UPDATE section_takers s
+      SET 
+        scheduled_datetime = $1, 
+        timer_minutes = $2
+      FROM examinations e
+      WHERE 
+        s.exam_id = e.exam_id
+        AND s.section_name = $3
+        AND e.exam_id = $4
+        RETURNING s.*`, 
+      [scheduledDate, addTimerMinutes, sectionName, examId]);
+
+      if (dateNow < scheduledDate) {
+        await db.query(`
+          UPDATE section_takers SET is_finalized = $1`, [true])
+      }
+
+      res.status(200).json(result.rows[0]);
+  } catch (error) {
+    console.error("Error updating finalized schedule", error);
+    res.status(500).json({ error: "Failed to update finalized timer schedule???" });
+  }
+}

@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 
 //verify student
-  import { verifyExamAccess, answerSubmission, autoScoringTemplate, manualEssayScoring } from "./controllers/studentQuery.js";
+  import { verifyExamAccess, answerSubmission, autoScoringTemplate, manualEssayScoring, getInfoPerExam, getStudentExamHistory } from "./controllers/studentQuery.js";
 
 //userCONTROLLERS
   //GET
@@ -93,6 +93,9 @@ app.use(express.json()); // parse JSON bodies
 
 
 // ========== STUDENT ROUTES ==========
+  app.get('/api/student/:studentId/exams/:examId/info', getInfoPerExam);
+  app.get('/api/student/:studentId/exam-history', getStudentExamHistory);
+
   app.post('/api/student/verify', verifyExamAccess);
   app.post('/api/student-answers/submit', answerSubmission); 
       //autoScoringLogic works here

@@ -126,11 +126,7 @@ export const manualEssayScoring = async(req, res) => {
     );
     
     if (result.rows.length === 0) {
-      await db.query(
-        `INSERT INTO essay_answers (question_id, student_school_id, student_answer, essay_score)
-        VALUES ($1, $2, '', 0)`,
-        [questionId, studentSchoolId]
-      );
+      return res.status(400).json({ message: "No essay found to score" });
     }
 
     await essayScoringHelper(examId, studentSchoolId);
@@ -163,3 +159,62 @@ export const manualEssayScoring = async(req, res) => {
 
       return totalEssayScore;
     }
+
+
+//this is for one exam info 
+export const getInfoPerExam = async(req, res) => {
+  const { studentId, examId } = req.params;
+
+  try {
+    const result = await db.query(`
+      SELECT
+        e.exam_id, e.title,
+        u.full_name AS teacher_name,
+        s.section_name, s.submitted_at, s.total_score
+      FROM student_scores s
+      JOIN examinations e ON s.exam_id = e.exam_id
+      JOIN users u ON e.user_id = u.user_id
+      WHERE e.exam_id = $1 
+        AND s.student_school_id = $2
+      `, [examId, studentId]);
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({error: 'No Exam detail fetched'})
+      }
+
+      res.status(200).json(result.rows[0])
+  } catch (error) {
+    console.error('Error getting exam details:', error);
+    res.status(500).json({ error: error.details || 'Failed to get exam detail' });
+  }
+}
+
+export const getStudentExamHistory = async(req, res) => {
+  const { studentId } = req.params;
+
+  try {
+    const result = await db.query(`
+      SELECT
+        e.exam_id,
+        e.title,
+        u.full_name AS teacher_name,
+        s.section_name,
+        s.submitted_at,
+        s.total_score
+      FROM student_scores s
+      JOIN examinations e ON s.exam_id = e.exam_id
+      JOIN users u ON e.user_id = u.user_id
+      WHERE s.student_school_id = $1
+      ORDER BY s.submitted_at DESC;
+      `, [studentId]);
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({error: 'No Exam detail fetched'})
+      }
+
+      res.status(200).json(result.rows)
+  } catch (error) {
+    console.error('Error getting exam history details:', error);
+    res.status(500).json({ error: error.details || 'Failed to get exam history details' });
+  }
+}

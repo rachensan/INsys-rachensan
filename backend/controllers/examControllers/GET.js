@@ -143,3 +143,55 @@ export const getEssayPerStudent = async(req, res) => {
     res.status(500).json({ error: 'Failed to fetch section scores' });
   }
 }
+
+
+
+
+
+
+
+// export const finalizeExamEntry = async(req, res) => {
+//   const {examId} = req.params;
+//   const {scheduledDate, addTimerMinutes, sectionName} = req.body;
+
+//     scheduledDate.setMinutes(scheduledDate.getMinutes() + addTimerMinutes);
+
+//     //format example: "July 16 2025 23:30"
+//     const formatOptions = {
+//       year: 'numeric',
+//       month: 'long',
+//       day: 'numeric',
+//       hour: '2-digit',
+//       minute: '2-digit',
+//       hour12: false
+//     };
+//     const examFinalized = scheduledDate.toLocaleString('en-US', formatOptions).replace(',', '');
+
+//     const now = new Date();
+//     const dateNow = now.toLocaleString('en-US', options).replace(',', '');
+
+//   try {
+//     const result = await db.query(`
+//       UPDATE section_takers s
+//       SET 
+//         scheduled_datetime = $1, 
+//         timer_minutes = $2
+//       FROM examinations e
+//       WHERE 
+//         s.exam_id = e.exam_id
+//         AND s.section_name = $3
+//         AND e.exam_id = $4
+//         RETURNING s.*`, 
+//       [`${scheduledDate} to ${formatted}`, addTimerMinutes, sectionName, examId]);
+
+//       if (dateNow < examFinalized) {
+//         await db.query(`
+//           UPDATE section_takers SET is_finalized = $1`, [true])
+//       }
+
+//       res.status(200).json(result.rows[0]);
+//   } catch (error) {
+//     console.error("Error updating finalized schedule", error);
+//     res.status(500).json({ error: "Failed to update finalized timer schedule???" });
+//   }
+// }

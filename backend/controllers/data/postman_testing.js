@@ -225,6 +225,20 @@ const postmanLinks = [ //NOT usable, just a note
       "studentSchoolId": 2021307605,
       "essayScore": 35
     } 
+  },
+  {
+    WHAT: "Showing One Exam Details",
+    FUNC: getInfoPerExam,
+    CRUD: "GET",
+    path: "/api/students/:studentId/exams/:examId/info",
+    link: "http://localhost:3000/api/student/2021307605/exams/1/info" 
+  }, 
+  {
+    WHAT: "Showing Exam History, Student POV",
+    FUNC: getStudentExamHistory,
+    CRUD: "GET",
+    path: "/api/students/:studentId/exam-history",
+    link: "http://localhost:3000/api/student/2021307605/exam-history" 
   }, 
 ];
 
