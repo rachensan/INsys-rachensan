@@ -148,6 +148,13 @@ export const finalizeExamSchedule = async(req, res) => {
 
   const dateNow = new Date();
   const shouldFinalize = dateNow >= endExamDate; //true or false
+  //we compare numbers (date) Unix Epoch
+      /*
+      example: it's been 1758103200000 milliseconds since Jan 1, 1970 UTC
+      It’s a timestamp (called the Unix Epoch).
+
+      so the bigger the number--- much later in time
+      */
 
   try {
     const result = await db.query(`
