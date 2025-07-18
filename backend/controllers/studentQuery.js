@@ -78,6 +78,16 @@ export const answerSubmission = async(req, res) => {
       //no req.params because we get the info if they are validated/verified examinee
 
   try {
+
+    const isSubmitted = await db.query(`
+    SELECT is_submitted FROM student_scores
+    WHERE exam_id = $1 AND student_school_id = $2`, 
+    [examId, studentSchoolId]);
+
+    if (isSubmitted.rows[0]?.is_submitted) {
+      return res.status(400).json({ error: 'Already submitted' });
+    }
+
     const correctAnswerFromDB = await db.query(
       `SELECT correct_answer FROM questions 
        WHERE exam_id = $1 AND question_id = $2`, 
@@ -107,6 +117,7 @@ export const answerSubmission = async(req, res) => {
        res.status(201).json(result.rows[0]);
     } else {
       const result = await db.query(`INSERT INTO student_answers (exam_id, question_id, student_school_id, student_answer, is_correct) VALUES ($1, $2, $3,$4, $5) RETURNING *`,[examId, questionId, studentSchoolId, studentAnswer, isCorrect]);
+
   //trigger auto score
       await autoScoringHelper(examId, studentSchoolId);
       res.status(201).json(result.rows[0]);
@@ -269,3 +280,30 @@ export const getStudentExamHistory = async(req, res) => {
     res.status(500).json({ error: error.details || 'Failed to get exam history details' });
   }
 }
+
+
+export const submitAllAnswers = async (req, res) => {
+  const { examId, studentSchoolId } = req.params;
+
+  try {
+    const isSubmitted = await db.query(`
+      SELECT is_submitted FROM student_scores
+      WHERE exam_id = $1 AND student_school_id = $2`, 
+      [examId, studentSchoolId]);
+
+    if (isSubmitted.rows[0]?.is_submitted) {
+      return res.status(400).json({ error: 'Already submitted' });
+    }
+    await db.query(
+      `UPDATE student_scores
+       SET is_submitted = true
+       WHERE exam_id = $1 AND student_school_id = $2`,
+      [examId, studentSchoolId]
+    );
+    
+    res.status(200).json({ message: 'Exam marked as submitted' });
+  } catch (error) {
+    console.error('Error submitting student exam', error);
+    res.status(500).json({ error: 'Failed to mark exam as submitted' });
+  }
+};

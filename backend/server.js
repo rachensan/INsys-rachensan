@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 
 //verify student
-  import { verifyExamAccess, answerSubmission, autoScoringTemplate, manualEssayScoring, getInfoPerExam, getStudentExamHistory } from "./controllers/studentQuery.js";
+  import { verifyExamAccess, answerSubmission, autoScoringTemplate, manualEssayScoring, getInfoPerExam, getStudentExamHistory, autoSubmitAllAnswers } from "./controllers/studentQuery.js";
 
 //userCONTROLLERS
   //GET
@@ -98,6 +98,7 @@ app.use(express.json()); // parse JSON bodies
   app.get('/api/student/:studentId/exams/:examId/info', getInfoPerExam);
   app.get('/api/student/:studentId/exam-history', getStudentExamHistory);
 
+  app.post('/api/student/:studentId/exams/:examId/auto-submit', autoSubmitAllAnswers);
   app.post('/api/student/verify', verifyExamAccess);
   app.post('/api/student-answers/submit', answerSubmission); 
       //autoScoringLogic works here
@@ -105,6 +106,8 @@ app.use(express.json()); // parse JSON bodies
       //backup tool
       //admin suspects incorrect scoring
       //wants to force re-check
+
+  
 
 // ========== TEACHER ROUTES ==========
   app.patch('/api/student-score/essay/:examId/:questionId', manualEssayScoring);

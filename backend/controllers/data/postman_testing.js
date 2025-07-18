@@ -192,7 +192,7 @@ const postmanLinks = [ //NOT usable, just a note
   { //not needed for now, we already automating the scoring in answerSubmission
     //i already found something i need it for...
     WHAT: "Automatic Scoring",
-    FUNC: automaticScoring,
+    FUNC: autoScoringTemplate,
     CRUD: "PUT",
     path: "/api/student-scores/score",
     body: {
@@ -259,6 +259,19 @@ const postmanLinks = [ //NOT usable, just a note
     path: "/api/exams/1/schedule",
     link: "http://localhost:3000/api/exams/1/schedule"
   },
+  {
+    WHAT: "Auto Submit Exam When Time Ends",
+    FUNC: autoSubmitAllAnswers,
+    CRUD: "POST",
+    path: "/api/student/:studentId/exams/:examId/auto-submit",
+    link: "http://localhost:3000/api/student/2021307605/exams/1/auto-submit"
+  },
+
+
+
+
+
+  
 ];
 
 
