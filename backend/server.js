@@ -17,7 +17,7 @@ import cors from "cors";
 
 //examCONTROLLERS
   //GET
-    import { getAllExams, getExamById, getExamsByTitle, getExamsByStatus, getExamCode, getSectionTakersByExamId, getAllScoresByExam, getEssayPerStudent, getExamSchedule } from './controllers/examControllers/GET.js'
+    import { getAllExams, getExamById, getExamsByTitle, getExamsByStatus, getExamCode, getSectionTakersByExamId, getAllScoresByExam, getEssayPerStudent, getExamSchedule, getSectionSchedule } from './controllers/examControllers/GET.js'
   //POST
     import { createExam } from './controllers/examControllers/POST.js'
   //UPDATE
@@ -97,6 +97,7 @@ app.use(express.json()); // parse JSON bodies
 // ========== STUDENT ROUTES ==========
   app.get('/api/student/:studentId/exams/:examId/info', getInfoPerExam);
   app.get('/api/student/:studentId/exam-history', getStudentExamHistory);
+  app.get('/api/exams/:examId/section-schedule', getSectionSchedule);
 
   app.post('/api/student/:studentId/exams/:examId/auto-submit', autoSubmitAllAnswers);
   app.post('/api/student/verify', verifyExamAccess);

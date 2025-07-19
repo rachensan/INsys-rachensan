@@ -145,12 +145,12 @@ export const autoScoringTemplate = async(req, res) => {
       async function autoScoringHelper(examId, studentSchoolId) { // use examId & studentSchoolId from autoScoringTemplate
 
         const result = await db.query(
-          `SELECT questions.points
-            FROM student_answers, questions
-            WHERE student_answers.exam_id = $1
-              AND student_answers.student_school_id = $2
-              AND student_answers.is_correct = true
-              AND student_answers.question_id = questions.question_id`,
+          `SELECT q.points
+            FROM student_answers s, questions q
+            WHERE s.exam_id = $1
+              AND s.student_school_id = $2
+              AND s.is_correct = true
+              AND s.question_id = q.question_id`,
           [examId, studentSchoolId]
         ) //will list the points for each correct answers (true)
 
@@ -282,14 +282,50 @@ export const getStudentExamHistory = async(req, res) => {
 }
 
 
-export const submitAllAnswers = async (req, res) => {
-  const { examId, studentSchoolId } = req.params;
+export const autoSubmitAllAnswers = async (req, res) => {
+  const { examId, studentId } = req.params;
 
   try {
+
+//====== objective questions
+    const questionType_Obj = ['multiplechoice', 'identification', 'truefalse']
+    const unansweredQuestions_Obj =  await db.query(`
+      SELECT q.question_id, s.student_answer
+      FROM questions q LEFT JOIN student_answers s
+        ON q.question_id = s.question_id
+        AND s.student_school_id = $1
+      WHERE q.question_type = ANY ($2)
+        AND q.exam_id = $3
+        AND s.student_school_id IS NULL`, 
+      [studentId, questionType_Obj, examId]);
+
+      for (const row of unansweredQuestions_Obj.rows) {
+        await db.query(`
+          INSERT INTO student_answers (student_school_id, exam_id, question_id, student_answer, is_correct) VALUES ($1, $2, $3, $4, $5) RETURNING *`, 
+          [studentId, examId, row.question_id, ' ', false]);
+      }
+//=======
+//+++++++ subjective questions
+    const unansweredQuestions_Ess =  await db.query(`
+      SELECT q.question_id, e.student_answer
+      FROM questions q LEFT JOIN essay_answers e
+        ON q.question_id = e.question_id
+        AND e.student_school_id = $1
+      WHERE q.question_type = $2
+        AND q.exam_id = $3
+        AND e.student_school_id IS NULL`, 
+      [studentId, 'essay', examId]);
+
+      for (const row of unansweredQuestions_Ess.rows) {
+        await db.query(`
+          INSERT INTO essay_answers (student_school_id, exam_id, question_id, student_answer, essay_score) VALUES ($1, $2, $3, $4, $5) RETURNING *`, 
+          [studentId, examId, row.question_id, ' ', 0]);
+      }
+//+++++++
     const isSubmitted = await db.query(`
       SELECT is_submitted FROM student_scores
       WHERE exam_id = $1 AND student_school_id = $2`, 
-      [examId, studentSchoolId]);
+      [examId, studentId]);
 
     if (isSubmitted.rows[0]?.is_submitted) {
       return res.status(400).json({ error: 'Already submitted' });
@@ -298,7 +334,7 @@ export const submitAllAnswers = async (req, res) => {
       `UPDATE student_scores
        SET is_submitted = true
        WHERE exam_id = $1 AND student_school_id = $2`,
-      [examId, studentSchoolId]
+      [examId, studentId]
     );
     
     res.status(200).json({ message: 'Exam marked as submitted' });

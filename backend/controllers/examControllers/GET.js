@@ -144,7 +144,7 @@ export const getEssayPerStudent = async(req, res) => {
   }
 }
 
-export const getExamSchedule = async(req, res) => {
+export const getExamSchedule = async(req, res) => { //for teacher side, to see ALL(sections) schdule in an exam
   const {examId} = req.params;
 /*     
 //format example: "July 16 2025 23:30"
@@ -173,5 +173,27 @@ export const getExamSchedule = async(req, res) => {
   } catch (error) {
     console.error("Error getting finalized schedule", error);
     res.status(500).json({ error: "Failed to get exam schedule" });
+  }
+}
+
+export const getSectionSchedule = async(req, res) => { //one section schedule
+  const { examId } = req.params;
+  const { sectionName } = req.body;
+
+  try {
+    const result = await db.query(`
+      SELECT start_datetime, end_datetime
+      FROM section_takers 
+      WHERE exam_id = $1
+        AND section_name = $2`, [examId, sectionName]);
+  
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "No matching section or exam found" });
+    }
+
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error("Error getting finalized schedule", error);
+    res.status(500).json({ error: "Failed to get section exam schedule" });
   }
 }

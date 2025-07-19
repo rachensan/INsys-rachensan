@@ -253,11 +253,21 @@ const postmanLinks = [ //NOT usable, just a note
     }
   }, 
   {
-    WHAT: "Getting the Schedule Exam per Section",
+    WHAT: "Getting Schedules per Exam",
     FUNC: getExamSchedule,
     CRUD: "GET",
-    path: "/api/exams/1/schedule",
+    path: "/api/exams/:examId/schedule",
     link: "http://localhost:3000/api/exams/1/schedule"
+  },
+  {
+    WHAT: "Getting the Exam Schedule per Section",
+    FUNC: getSectionSchedule,
+    CRUD: "GET",
+    path: "/api/exams/:examId/section-schedule",
+    link: "http://localhost:3000/api/exams/1/section-schedule",
+    body: {
+      "sectionName" : "BSIT 1-D"
+    }
   },
   {
     WHAT: "Auto Submit Exam When Time Ends",
@@ -266,6 +276,32 @@ const postmanLinks = [ //NOT usable, just a note
     path: "/api/student/:studentId/exams/:examId/auto-submit",
     link: "http://localhost:3000/api/student/2021307605/exams/1/auto-submit"
   },
+        /*
+        useEffect(() => {
+        const fetchExamInfo = async () => {
+          const res = await axios.get(`/api/exams/${examId}`);
+          const { start_time, duration_minutes } = res.data;
+
+          const startTime = new Date(start_time);
+          const endTime = new Date(startTime.getTime() + duration_minutes * 60000);
+          const now = new Date();
+
+          const timeLeft = endTime - now;
+
+          if (timeLeft > 0) {
+            setTimeout(() => {
+              axios.post(`/api/student/${studentId}/exams/${examId}/auto-submit`);
+            }, timeLeft);
+          } else {
+            // already past, submit immediately
+            axios.post(`/api/student/${studentId}/exams/${examId}/auto-submit`);
+          }
+        };
+
+        fetchExamInfo();
+      }, []);
+
+        */
 
 
 
