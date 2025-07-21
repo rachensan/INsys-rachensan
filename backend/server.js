@@ -1,5 +1,36 @@
 import express from "express";
 import cors from "cors";
+import dotenv from 'dotenv';
+dotenv.config({ path: '../.env', quiet: true });
+
+import session from "express-session";
+import passport from "passport";
+
+import authRoutes from "./auth.js";
+
+const app = express();
+const port = process.env.PORT || 3000; // we dint have env yet
+
+//prep frontend:
+app.use(cors()); // allow frontend to access backend
+app.use(express.json()); // parse JSON bodies
+app.use(express.urlencoded({ extended: true })); 
+
+//authentication
+app.use(
+  session({
+    secret: 'TOPSECRET-UWU',
+    resave: false, 
+    saveUninitialized: true,
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+//authentication
+app.use('/api', authRoutes);
+
 
 //verify student
   import { verifyExamAccess, answerSubmission, autoScoringTemplate, manualEssayScoring, getInfoPerExam, getStudentExamHistory, autoSubmitAllAnswers } from "./controllers/studentQuery.js";
@@ -37,11 +68,7 @@ import cors from "cors";
     import { deleteQuestionById } from "./controllers/questionControllers/DELETE.js";
 
 
-const app = express();
-const port = process.env.PORT || 3000; // we dint have env yet
 
-app.use(cors()); // allow frontend to access backend
-app.use(express.json()); // parse JSON bodies
 
 // ========== TEST IF BACKEND WORKING ==========
   app.get('/', (req, res) => res.send('Backend is running UwU!'));
@@ -112,8 +139,6 @@ app.use(express.json()); // parse JSON bodies
 
 // ========== TEACHER ROUTES ==========
   app.patch('/api/student-score/essay/:examId/:questionId', manualEssayScoring);
-  
-
    
 app.listen(port, () => {
   console.log(`Backend running at http://localhost:${port}`);

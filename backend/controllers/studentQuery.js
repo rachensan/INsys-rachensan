@@ -286,7 +286,6 @@ export const autoSubmitAllAnswers = async (req, res) => {
   const { examId, studentId } = req.params;
 
   try {
-
 //====== objective questions
     const questionType_Obj = ['multiplechoice', 'identification', 'truefalse']
     const unansweredQuestions_Obj =  await db.query(`
@@ -337,6 +336,7 @@ export const autoSubmitAllAnswers = async (req, res) => {
       [examId, studentId]
     );
     
+    await autoScoringHelper(examId, studentId);
     res.status(200).json({ message: 'Exam marked as submitted' });
   } catch (error) {
     console.error('Error submitting student exam', error);

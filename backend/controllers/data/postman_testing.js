@@ -302,12 +302,34 @@ const postmanLinks = [ //NOT usable, just a note
       }, []);
 
         */
+  {
+    WHAT: "Register New User", //malamang new, kaya nga register
+    FUNC: authRoutes,
+    CRUD: "POST",
+    path: "api/register",
+    link: "http://localhost:3000/api/register",
+    body: { //duplicate example
+      "email": "2021307@student.com",
+      "password": "securePass123",
+      "firstName": "Lila",
+      "lastName": "Marino",
+      "schoolId": "2021307601",
+      "userGender": "Female",
+      "college": "CCS"
+    }
+  },
+  {
+    WHAT: "Log In: Check Credentials",
+    FUNC: authRoutes,
+    CRUD: "POST",
+    path: "api/login",
+    link: "http://localhost:3000/api/login",
+    body: {
+      "email": "2021307@student.com",
+      "inputPassword": "securePass123"
+    }
+  },
 
-
-
-
-
-  
 ];
 
 
