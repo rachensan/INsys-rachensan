@@ -6,7 +6,7 @@ dotenv.config({ path: '../.env', quiet: true });
 import session from "express-session";
 import passport from "passport";
 
-import authRoutes from "./auth.js";
+import authRoutes from "./utils/auth.js";
 
 const app = express();
 const port = process.env.PORT || 3000; // we dint have env yet

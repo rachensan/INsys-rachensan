@@ -1,11 +1,10 @@
 import express from "express";
 import bcrypt from 'bcryptjs';
 import { Strategy } from "passport-local";
-import {db} from './db.js';
+import {db} from '../db.js';
 import passport from "passport";
 
 const authRoutes = express.Router();
-
 const saltRounds = 5;
 
 authRoutes.post ('/register', async(req, res) => {
@@ -13,6 +12,8 @@ authRoutes.post ('/register', async(req, res) => {
   const {email, password, firstName, lastName, schoolId} = req.body;
   //optional
   const {userGender, college} = req.body;
+
+  const email1 = `${schoolId} + @pampangastateu.edu.ph`
 
   try {
     //check email if used or not
@@ -47,6 +48,11 @@ authRoutes.post ('/register', async(req, res) => {
   }
 });
 
+
+
+
+//passport
+/* 
 authRoutes.post('/login', (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) return next(err);
@@ -103,7 +109,7 @@ passport.serializeUser((user, cb) => { //runs after successful login
 passport.deserializeUser((user, cb) => { 
   cb(null, user)
 })
-
+*/
 
 
 export default authRoutes;
