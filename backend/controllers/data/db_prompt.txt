@@ -6,7 +6,7 @@ CREATE TABLE users (
   email TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL,
   contact_number VARCHAR(15),
-  gender VARCHAR(20) DEFAULT 'N/A', 
+  gender VARCHAR(20) DEFAULT 'N/A',
   college VARCHAR(50),
   school_id BIGINT UNIQUE,
   role TEXT CHECK (role IN ('student', 'teacher', 'admin')) NOT NULL DEFAULT 'student',
@@ -22,14 +22,14 @@ CREATE TABLE examinations (
   schedule DATE,
   status TEXT DEFAULT 'pending',
   timer TEXT DEFAULT 'none',
-  exam_code TEXT, -- used for students to enter the exam
+  exam_code TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
   -- 2.1 SECTION TAKER TABLE
       CREATE TABLE section_takers (
         section_id SERIAL PRIMARY KEY,
         exam_id INT REFERENCES examinations(exam_id) ON DELETE CASCADE,
-        section_name TEXT NOT NULL
+        section_name TEXT NOT NULL,
         start_datetime TIMESTAMP,
         end_datetime TIMESTAMP,
         timer_minutes INT,
@@ -50,7 +50,7 @@ CREATE TABLE questions (
   option_b TEXT,
   option_c TEXT,
   option_d TEXT,
-
+  
   correct_answer TEXT,
   points INT DEFAULT 1,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -62,9 +62,9 @@ CREATE TABLE questions (
         answer_id SERIAL PRIMARY KEY,
         exam_id INT REFERENCES examinations(exam_id) ON DELETE CASCADE,
         question_id INT REFERENCES questions(question_id) ON DELETE CASCADE,
-        student_school_id BIGINT REFERENCES users(school_id),
+        student_school_id BIGINT REFERENCES users(school_id) ON DELETE CASCADE,
         student_answer TEXT,
-        is_correct BOOLEAN,  -- for auto-checking non-essay types
+        is_correct BOOLEAN,
         submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
 
@@ -72,9 +72,9 @@ CREATE TABLE questions (
       CREATE TABLE essay_answers (
         answer_id SERIAL PRIMARY KEY,
         question_id INT REFERENCES questions(question_id) ON DELETE CASCADE,
-        student_school_id BIGINT REFERENCES users(school_id),
-        student_answer TEXT, 
-        essay_score INT, -- nullable until graded
+        student_school_id BIGINT REFERENCES users(school_id) ON DELETE CASCADE,
+        student_answer TEXT,
+        essay_score INT,
         submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
 
@@ -82,14 +82,13 @@ CREATE TABLE questions (
       CREATE TABLE student_scores (
         score_id SERIAL PRIMARY KEY,
         exam_id INT REFERENCES examinations(exam_id) ON DELETE CASCADE,
-        student_school_id BIGINT REFERENCES users(school_id),
+        student_school_id BIGINT, CONSTRAINT student_scores_student_school_id_fkey FOREIGN KEY (student_school_id) REFERENCES users(school_id) ON DELETE CASCADE,
         student_name TEXT NOT NULL,
         total_score INT DEFAULT 0,
         objective_score INT DEFAULT 0,
         essay_score INT DEFAULT 0,
         section_name TEXT,
         submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
         UNIQUE (exam_id, student_school_id) --  prevent duplicate scores per student per exam
       );
 
