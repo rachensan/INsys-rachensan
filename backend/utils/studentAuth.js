@@ -1,17 +1,17 @@
 import express from "express";
 import bcrypt from 'bcryptjs';
-import { Strategy } from "passport-local";
 import {db} from '../db.js';
-import passport from "passport";
 import { generateOTP, verifyOTP } from "./generateOTP.js";
 import { sendUserEmail } from "./nodemailer.js";
 import redisClient from "./redisClient.js";
 
+import passport from "passport";
+import { Strategy } from "passport-local";
 
-const authRoutes = express.Router();
+const studentAuthRoutes = express.Router();
 const saltRounds = 5;
 
-authRoutes.post ('/student-register-request', async(req, res) => {
+studentAuthRoutes.post ('/register-request', async(req, res) => {
   //needed
   const {schoolId, password, firstName, lastName} = req.body;
   const email = `${schoolId}@pampangastateu.edu.ph`;
@@ -53,7 +53,7 @@ authRoutes.post ('/student-register-request', async(req, res) => {
 
 
 
-authRoutes.post('/student-register-verify', async (req, res) => {
+studentAuthRoutes.post('/register-verify', async (req, res) => {
   const { code, schoolId } = req.body;
   //code from input ni user so we can compare sa generateOTP.js
   if (!schoolId || !code) return res.status(400).json({ message: 'Missing school ID or code' });
@@ -72,8 +72,8 @@ authRoutes.post('/student-register-verify', async (req, res) => {
 
     //registering details to database
     await db.query(`
-      INSERT INTO users (email, password, first_name, last_name, school_id, gender, college ) VALUES ($1, $2, $3 ,$4 ,$5 ,$6 ,$7) RETURNING *
-    `, [email, hash, firstName, lastName, schoolId, userGender, college]); //changed password to hash (hashed password)
+      INSERT INTO users (email, password, first_name, last_name, school_id, gender, college, role ) VALUES ($1, $2, $3 ,$4 ,$5 ,$6 ,$7, $8) RETURNING *
+    `, [email, hash, firstName, lastName, schoolId, userGender, college, 'student']); //changed password to hash (hashed password)
 
     await redisClient.del(`pendingUser:${email}`); //delete temporary user info
 
@@ -147,4 +147,4 @@ passport.deserializeUser((user, cb) => {
 */
 
 
-export default authRoutes;
+export default studentAuthRoutes;

@@ -303,13 +303,13 @@ const postmanLinks = [ //NOT usable, just a note
 
         */
   {
-    WHAT: "Register Send OTP", //malamang new, kaya nga register
-    FUNC: authRoutes,
+    WHAT: "STUDENT: Register Send OTP", //malamang new, kaya nga register
+    FUNC: studentAuthRoutes,
     CRUD: "POST",
-    path: "api/student-register",
-    link: "http://localhost:3000/api/student-register-request",
+    path: "api/student/register-request",
+    link: "http://localhost:3000/api/student/register-request",
     body: { //duplicate example
-      "schoolId": "2021307601",
+      "schoolId": "2021307605",
       "password": "securePass123",
       "firstName": "Lila",
       "lastName": "Marino",
@@ -318,11 +318,37 @@ const postmanLinks = [ //NOT usable, just a note
     }
   },
   {
-    WHAT: "Register Verify OTP", //malamang new, kaya nga register
-    FUNC: authRoutes,
+    WHAT: "STUDENT: Register Verify OTP", //malamang new, kaya nga register
+    FUNC: studentAuthRoutes,
     CRUD: "POST",
-    path: "api/student-register-verify",
-    link: "http://localhost:3000/api/student-register-verify",
+    path: "api/student/register-verify",
+    link: "http://localhost:3000/api/student/register-verify",
+    body: {
+        "code": "468950",
+        "schoolId": "2021307605"
+    }
+  },
+  {
+    WHAT: "TEACHER: Register Send OTP", //malamang new, kaya nga register
+    FUNC: teacherAuthRoutes,
+    CRUD: "POST",
+    path: "api/teacher/register-request",
+    link: "http://localhost:3000/api/teacher/register-request",
+    body: { //duplicate example
+      "schoolId": "2021307605",
+      "password": "securePass123",
+      "firstName": "Lila",
+      "lastName": "Marino",
+      "userGender": "Female",
+      "college": "CCS"
+    }
+  },
+  {
+    WHAT: "TEACHER: Register Verify OTP", //malamang new, kaya nga register
+    FUNC: teacherAuthRoutes,
+    CRUD: "POST",
+    path: "api/teacher/register-verify",
+    link: "http://localhost:3000/api/teacher/register-verify",
     body: {
         "code": "468950",
         "schoolId": "2021307605"
@@ -330,7 +356,7 @@ const postmanLinks = [ //NOT usable, just a note
   },
   {
     WHAT: "Log In: Check Credentials",
-    FUNC: authRoutes,
+    FUNC: authRoutes, //put in jwt or other
     CRUD: "POST",
     path: "api/login",
     link: "http://localhost:3000/api/login",

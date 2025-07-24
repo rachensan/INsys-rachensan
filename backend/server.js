@@ -6,7 +6,8 @@ dotenv.config({ path: '../.env', quiet: true });
 import session from "express-session";
 import passport from "passport";
 
-import authRoutes from "./utils/auth.js";
+import teacherAuthRoutes from "./utils/teacherAuth.js";
+import studentAuthRoutes from "./utils/studentAuth.js";
 
 const app = express();
 const port = process.env.PORT || 3000; // we dint have env yet
@@ -29,7 +30,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //authentication
-app.use('/api', authRoutes);
+app.use('/api/student', studentAuthRoutes);
+app.use('/api/teacher', teacherAuthRoutes);
 
 
 //verify student
@@ -66,6 +68,7 @@ app.use('/api', authRoutes);
     import {  } from './controllers/questionControllers/UPDATE.js'
   //DELETE
     import { deleteQuestionById } from "./controllers/questionControllers/DELETE.js";
+
 
 
 
