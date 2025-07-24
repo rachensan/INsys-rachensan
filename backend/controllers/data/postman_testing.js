@@ -309,16 +309,16 @@ const postmanLinks = [ //NOT usable, just a note
     path: "api/student/register-request",
     link: "http://localhost:3000/api/student/register-request",
     body: { //duplicate example
-      "schoolId": "2021307605",
-      "password": "securePass123",
-      "firstName": "Lila",
-      "lastName": "Marino",
-      "userGender": "Female",
-      "college": "CCS"
+        "username": "2021307605",
+        "password": "Yla123",
+        "firstName": "Yla",
+        "lastName": "Marino",
+        "userGender": "Female",
+        "college": "CCS"
     }
   },
   {
-    WHAT: "STUDENT: Register Verify OTP", //malamang new, kaya nga register
+    WHAT: "STUDENT: Register Verify OTP", 
     FUNC: studentAuthRoutes,
     CRUD: "POST",
     path: "api/student/register-verify",
@@ -329,22 +329,23 @@ const postmanLinks = [ //NOT usable, just a note
     }
   },
   {
-    WHAT: "TEACHER: Register Send OTP", //malamang new, kaya nga register
+    WHAT: "TEACHER: Register Send OTP",
     FUNC: teacherAuthRoutes,
     CRUD: "POST",
     path: "api/teacher/register-request",
     link: "http://localhost:3000/api/teacher/register-request",
-    body: { //duplicate example
-      "schoolId": "2021307605",
-      "password": "securePass123",
-      "firstName": "Lila",
-      "lastName": "Marino",
-      "userGender": "Female",
-      "college": "CCS"
+    body:  { //username can't have numbers kase their emails only have initials
+        "username": "2021307605",
+        "schoolId": "2021307605",
+        "password": "Yla123",
+        "firstName": "Yla",
+        "lastName": "Marino",
+        "userGender": "Female",
+        "college": "CCS"
     }
   },
   {
-    WHAT: "TEACHER: Register Verify OTP", //malamang new, kaya nga register
+    WHAT: "TEACHER: Register Verify OTP",
     FUNC: teacherAuthRoutes,
     CRUD: "POST",
     path: "api/teacher/register-verify",

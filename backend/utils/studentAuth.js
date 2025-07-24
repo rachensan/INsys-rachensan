@@ -13,12 +13,15 @@ const saltRounds = 5;
 
 studentAuthRoutes.post ('/register-request', async(req, res) => {
   //needed
-  const {schoolId, password, firstName, lastName} = req.body;
+  const {username, password, firstName, lastName} = req.body;
+  const schoolId = username
   const email = `${schoolId}@pampangastateu.edu.ph`;
   //optional
   const {userGender, college} = req.body;
   
   if (!schoolId) return res.status(400).json({ message: 'Missing school ID' });
+
+  if (!/^\d+$/.test(schoolId)) return res.status(400).json({ message: "Invalid username. Teachers cannot use this route." }); //only numbers allowed
 
   try {
     //check email if used or not

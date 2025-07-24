@@ -17,6 +17,8 @@ teacherAuthRoutes.post ('/register-request', async(req, res) => {
   if (!username) return res.status(400).json({ message: 'Missing username' });
   if (!schoolId) return res.status(400).json({ message: 'Missing school ID' });
 
+  if (/^\d+$/.test(username)) return res.status(400).json({ message: "Students cannot use this route." }); //if username have number in it, not allowed to register here
+
   try {
     //check email if used or not
     const checkEmail = await db.query (`SELECT  * FROM users WHERE email = $1`, [email]);
@@ -57,6 +59,9 @@ teacherAuthRoutes.post('/register-verify', async (req, res) => {
 
   const email = `${schoolId}@pampangastateu.edu.ph`;
   if (!email) return res.status(400).json({ message: 'Invalid or expired code' });
+
+  if (/^\d+$/.test(username)) return res.status(400).json({ message: "Students cannot use this route." }); 
+
   try {
     const isValid = await verifyOTP(email, code); //send to generateOTP.js
             console.log(`isValid: ${isValid}`)
