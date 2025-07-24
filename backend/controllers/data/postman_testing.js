@@ -303,19 +303,29 @@ const postmanLinks = [ //NOT usable, just a note
 
         */
   {
-    WHAT: "Register New User", //malamang new, kaya nga register
+    WHAT: "Register Send OTP", //malamang new, kaya nga register
     FUNC: authRoutes,
     CRUD: "POST",
-    path: "api/register",
-    link: "http://localhost:3000/api/register",
+    path: "api/student-register",
+    link: "http://localhost:3000/api/student-register-request",
     body: { //duplicate example
-      "email": "2021307@student.com",
+      "schoolId": "2021307601",
       "password": "securePass123",
       "firstName": "Lila",
       "lastName": "Marino",
-      "schoolId": "2021307601",
       "userGender": "Female",
       "college": "CCS"
+    }
+  },
+  {
+    WHAT: "Register Verify OTP", //malamang new, kaya nga register
+    FUNC: authRoutes,
+    CRUD: "POST",
+    path: "api/student-register-verify",
+    link: "http://localhost:3000/api/student-register-verify",
+    body: {
+        "code": "468950",
+        "schoolId": "2021307605"
     }
   },
   {
