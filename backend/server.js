@@ -8,6 +8,7 @@ import passport from "passport";
 
 import teacherAuthRoutes from "./utils/teacherAuth.js";
 import studentAuthRoutes from "./utils/studentAuth.js";
+import authRoutes from "./utils/login.js";
 
 const app = express();
 const port = process.env.PORT || 3000; // we dint have env yet
@@ -30,6 +31,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //authentication
+app.use('/api', authRoutes);
 app.use('/api/student', studentAuthRoutes);
 app.use('/api/teacher', teacherAuthRoutes);
 

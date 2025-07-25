@@ -335,7 +335,7 @@ const postmanLinks = [ //NOT usable, just a note
     path: "api/teacher/register-request",
     link: "http://localhost:3000/api/teacher/register-request",
     body:  { //username can't have numbers kase their emails only have initials
-        "username": "2021307605",
+        "username": "ykrjm", //wala naman ako gantong email
         "schoolId": "2021307605",
         "password": "Yla123",
         "firstName": "Yla",
