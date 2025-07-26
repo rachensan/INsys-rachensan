@@ -39,9 +39,7 @@ authRoutes.post('/login', async (req, res) => {
   
 });
 
-
-
-
+//request otp and input new password
 authRoutes.post('/forgot-password/request-otp/:userId/:schoolId', async (req, res) => {
   const { userId, schoolId } = req.params;
   const { newPassword } = req.body; //inputted new password
@@ -71,7 +69,7 @@ authRoutes.post('/forgot-password/request-otp/:userId/:schoolId', async (req, re
 
 })
 
-//verify and reset password
+//verify and confirm reset password
 authRoutes.post('/forgot-password/reset-password/:userId/:schoolId', async(req, res) => {
   const { userId, schoolId } = req.params;
   const { code } = req.body;
@@ -111,11 +109,61 @@ authRoutes.post('/forgot-password/reset-password/:userId/:schoolId', async(req, 
     console.error('OTP Verification Error:', err);
     return res.status(500).json({ message: 'Server error during verification' });
   }
+});
+
+//verify passwordMatch - only used in frontend
+authRoutes.post('/verify-password/:userId', async (req, res) => {
+  const { userId } = req.params;
+  const { currentPassword } = req.body;
+
+  if (!currentPassword) return res.status(400).json({ error: 'Please enter your current password' });
+
+  try {
+    const result = await db.query(`SELECT password FROM users WHERE user_id = $1`, [userId]);
+    console.log(result)
+    if (result.rows.length === 0) return res.status(404).json({ error: 'User does not exist' });
+
+    const user = result.rows[0];
+    const passwordMatch = await bcrypt.compare(currentPassword, user.password);
+
+    if (!passwordMatch) return res.status(401).json({ error: 'Incorrect Password' });
+
+    return res.status(200).json({ passwordMatch: true });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to verify password' });
+  }
+});
+
+//verify if passwordMatch before changing password
+authRoutes.post('/change-password/:userId', async(req, res) => {
+  const { userId } = req.params;
+  const { currentPassword, newPassword } = req.body;
+
+  if (!currentPassword) return res.status(400).json({ error: 'Please enter your current password' });
+
+  if (!newPassword) return res.status(400).json({ error: 'Please enter your new password' });
+
+  try {
+    const result = await db.query(`SELECT password FROM users WHERE user_id = $1`, [userId]);
+
+    if (result.rows.length === 0) return res.status(404).json({ error: 'User does not exist' });
+
+    const user = result.rows[0];
+    const passwordMatch = await bcrypt.compare(currentPassword, user.password ) //true or false
+
+    if (!passwordMatch) { //if false (password did not match)
+      return res.status(401).json({error: `Incorrect Password`})
+    }
+    const hash = await bcrypt.hash(newPassword, saltRounds);
+    
+    await db.query (`UPDATE users SET password = $1 WHERE user_id = $2 RETURNING *`, [hash, userId]);
+
+    return res.status(200).json({ message: "Password change successful"});
+  } catch (error) {
+    console.error('Error changing password', error);
+    res.status(500).json({ error: 'Failed to change password' });
+  }
 })
-
-
-
-
 
 
 export default authRoutes;

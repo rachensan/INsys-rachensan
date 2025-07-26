@@ -362,11 +362,51 @@ const postmanLinks = [ //NOT usable, just a note
     path: "api/login",
     link: "http://localhost:3000/api/login",
     body: {
-      "email": "2021307@student.com",
-      "inputPassword": "securePass123"
+        "email": "2021307605@pampangastateu.edu.ph",
+        "password": "Yla123"
     }
   },
-
+  {
+    WHAT: "AUTH: Forgot Password Request OTP", //inputting new password here
+    FUNC: authRoutes,
+    CRUD: "POST",
+    path: "/api/forgot-password/request-otp/:userId/:schoolId",
+    link: "http://localhost:3000/api/forgot-password/request-otp/38/2021307605",
+    body: {
+        "newPassword": "Yla123"
+    }
+  },
+  {
+    WHAT: "AUTH: Forgot Password Verify OTP and Reset Password", //confirm and update/insert the new password
+    FUNC: authRoutes,
+    CRUD: "POST",
+    path: "/api/forgot-password/request-otp/:userId/:schoolId",
+    link: "http://localhost:3000/api/forgot-password/request-otp/38/2021307605",
+    body: {
+        "code": "855106"
+    }
+  },
+  {
+    WHAT: "AUTH: Verify Current Password before Changing Password", //for frontend, idk if i can use (if maalala ko)
+    FUNC: authRoutes,
+    CRUD: "POST",
+    path: "/api/verify-password/:userId",
+    link: "http://localhost:3000/api/verify-password/38",
+    body:{
+        "currentPassword": "ylayla"
+    }
+  },
+  {
+    WHAT: "AUTH: Verify AND Change Password",
+    FUNC: authRoutes,
+    CRUD: "POST",
+    path: "/api/change-password/:userId",
+    link: "http://localhost:3000/api/change-password/38",
+    body: {
+        "currentPassword": "ylayla",
+        "newPassword": "Yla123"
+    }
+  },
 ];
 
 
