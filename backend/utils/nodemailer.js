@@ -4,7 +4,7 @@ dotenv.config({ path: '../../.env', quiet: true });
 
 
 // Create a test account or replace with real credentials.
-export const sendUserEmail = async({email, token}) => {
+export const sendUserEmail = async({email, token, context }) => {
   const transporter = nodemailer.createTransport({
     service:"gmail",
     auth: {
@@ -19,14 +19,22 @@ export const sendUserEmail = async({email, token}) => {
       address: process.env.NDM_USER,
     },
     to: email,
-    subject: "INsys confirmation code TESTER",
-    text: `Your verification code is: ${token}`,
+    subject: context === "forgot" 
+      ? "INsys password reset code"
+      : "INsys confirmation code TESTER",
+    text: context === "forgot"
+      ? `Use this code to reset your password: ${token}`
+      : `Your verification code is: ${token}`,
     html: `<div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4;">
       <div style="max-width: 600px; margin: auto; background-color: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); text-align: center;">
-        <h1 style="font-size: 28px; font-weight: bold; color: #333; margin: 0 0 20px;">Welcome to your account!</h1>
-        <p style="font-size: 16px; color: #666; margin: 0 0 20px;">
-          Thank you for creating an account. To complete your registration, please use the verification code below:
+
+        <h1 style="...">${context === "forgot" ? "Password Reset Request" : "Welcome to your account!"}</h1>
+        <p style="...">
+          ${context === "forgot"
+            ? "You requested a password reset. Use the code below to proceed:"
+            : "Thank you for creating an account. To complete your registration, please use the verification code below:"}
         </p>
+
         <div style="display: inline-block; background: #f0f0f0; padding: 15px 40px; border-radius: 8px; font-size: 30px; font-weight: bold; color: #101010; margin: 15px 0 20px;">
           ${token}
         </div>

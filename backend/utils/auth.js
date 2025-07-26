@@ -1,0 +1,121 @@
+import express from "express";
+import bcrypt from 'bcryptjs';
+import {db} from '../db.js';
+import { generateOTP, verifyOTP } from "./otp.js";
+import { sendUserEmail } from "./nodemailer.js";
+import redisClient from "./redisClient.js";
+
+const authRoutes = express.Router();
+const saltRounds = 5;
+
+authRoutes.post('/login', async (req, res) => {
+  const { email, password } = req.body
+
+  if (!email && !password) return res.status(400).json({ error: 'Missing credentials. Please fill all the missing field' });
+
+  if (!email || !password) {
+    const missingField = !email ? 'email' : 'password';
+    return res.status(400).json({ error: `Please enter your ${missingField}.` });
+  }
+
+  try {
+    const result = await db.query(`SELECT * FROM users WHERE email = $1`, [email]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'This email is not associated with an account. Please register to continue.' });
+    }
+
+    const user = result.rows[0];
+    const passwordMatch = await bcrypt.compare(password, user.password ) //true or false
+
+    if (!passwordMatch) { //if false (password did not match)
+      return res.status(401).json({error: `Incorrect Password`})
+    }
+    return res.status(200).json({ message: "Login successful", user });
+  } catch (error) {
+    console.error('Error Logging In', error);
+    res.status(500).json({ error: 'Failed to Log in' });
+  }
+  
+});
+
+
+
+
+authRoutes.post('/forgot-password/request-otp/:userId/:schoolId', async (req, res) => {
+  const { userId, schoolId } = req.params;
+  const { newPassword } = req.body; //inputted new password
+  const email = `${schoolId}@pampangastateu.edu.ph`;
+
+  try {
+    const result = await db.query(`
+      SELECT user_id, school_id FROM users WHERE user_id = $1 AND school_id = $2`, [userId, schoolId]);
+
+    if (result.rows.length === 0) return res.status(404).json({ message: "User not found." });
+
+    //password hashing uwu
+    const hash = await bcrypt.hash(newPassword, saltRounds) ;
+
+    //generate OTP and send email
+    const otp = await generateOTP(email, "forgot"); //wait for redis to store this
+    await sendUserEmail({ email, token: otp, context: "forgot" }); //nodemailer
+
+    //temporarily store user info in Redis (optional,, to auto-insert after verify)
+    await redisClient.setEx(`pendingUser:${email}`, 300, JSON.stringify({ hash }));
+
+    return res.status(200).json({ message: 'OTP sent. Verify to reset password.' });
+  } catch (error) {
+    console.error('Error Reset Password', error);
+    res.status(500).json({ error: 'Failed to reset password' });
+  }
+
+})
+
+//verify and reset password
+authRoutes.post('/forgot-password/reset-password/:userId/:schoolId', async(req, res) => {
+  const { userId, schoolId } = req.params;
+  const { code } = req.body;
+  const email = `${schoolId}@pampangastateu.edu.ph`;
+  
+  try {
+    const result = await db.query(`
+      SELECT user_id, school_id FROM users WHERE user_id = $1 AND school_id = $2`, [userId, schoolId]);
+
+    if (result.rows.length === 0) return res.status(404).json({ message: "User not found." });
+    
+    const isValid = await verifyOTP(email, code); //send to generateOTP.js
+            console.log(`isValid: ${isValid}`)
+    if (!isValid) return res.status(400).json({ message: 'Invalid or expired code' });
+
+    const userDataRaw = await redisClient.get(`pendingUser:${email}`);
+    if (!userDataRaw) return res.status(400).json({ message: 'No password input found' });
+
+    const { hash } = JSON.parse(userDataRaw);
+
+    //registering details to database
+    await db.query(
+      `UPDATE users
+        SET password = $1
+        WHERE user_id = $2
+          AND school_id = $3 RETURNING *`,
+      [hash, userId, schoolId]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "User not found or school ID mismatch." });
+    }
+    
+    await redisClient.del(`pendingUser:${email}`); //delete temporary user info
+
+    return res.status(201).json({ message: "Reset successfully." });
+  } catch (err) {
+    console.error('OTP Verification Error:', err);
+    return res.status(500).json({ message: 'Server error during verification' });
+  }
+})
+
+
+
+
+
+
+export default authRoutes;

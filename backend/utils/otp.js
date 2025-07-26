@@ -12,8 +12,9 @@ export const generateOTP = async(email) => {
   return code;
 }
 
-export const verifyOTP = async(email, code) => {
-  const key = `otp:${email}`;
+export const verifyOTP = async(email, code, context = "otp") => {
+                          //context either "register" or "forgot", but if no passed context, the default will be 'otp'
+  const key = `${context}:${email}`;
   const storedCode = await redisClient.get(key);
         console.log(`key: ${key}`)
         console.log(`stoderedCode: ${storedCode}`)

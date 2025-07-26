@@ -1,7 +1,7 @@
 import express from "express";
 import bcrypt from 'bcryptjs';
 import {db} from '../db.js';
-import { generateOTP, verifyOTP } from "./generateOTP.js";
+import { generateOTP, verifyOTP } from "./otp.js";
 import { sendUserEmail } from "./nodemailer.js";
 import redisClient from "./redisClient.js";
 
@@ -38,8 +38,8 @@ studentAuthRoutes.post ('/register-request', async(req, res) => {
     const hash = await bcrypt.hash(password, saltRounds) ;
 
     //generate OTP and send email
-    const otp = await generateOTP(email); //wait for redis to store this
-    await sendUserEmail({ email, token: otp }); //nodemailer
+    const otp = await generateOTP(email, "register"); //wait for redis to store this
+    await sendUserEmail({ email, token: otp, context: "register" }); //nodemailer
 
     //temporarily store user info in Redis (optional,, to auto-insert after verify)
     await redisClient.setEx(`pendingUser:${email}`, 300, JSON.stringify({ hash, firstName, lastName, userGender, college, schoolId }));
