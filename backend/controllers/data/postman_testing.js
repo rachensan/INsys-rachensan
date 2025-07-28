@@ -320,7 +320,7 @@ const postmanLinks = [ //NOT usable, just a note
     link: "http://localhost:3000/api/student/register/verify-otp",
     body: {
         "code": "468950",
-        "schoolId": "2021307605"
+        "username": "2021307605"
     }
   },
   {

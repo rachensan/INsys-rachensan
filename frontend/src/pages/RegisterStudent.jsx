@@ -10,14 +10,47 @@ function RegisterStudent() {
     password: "",
     firstName: "",
     lastName: "",
-    userGender: "",
+    userGender: "N/A",
     college: ""
   });
 
-  const handleSubmit = (e) => { //i just grabbed this from my old shyt
-    e.preventDefault();
+  const [isVerified, setIsVerified] = useState(false);
+  const [code, setCode] = useState(""); //otp
+  const username = formRegister.username;
 
-    console.log(formRegister);
+  const handleSendOtp = async () => {
+    try {
+      const res = await axios.post("http://localhost:3000/api/student/register/email-otp", { username: username });
+      alert(res.data.message);
+    } catch (err) {
+      console.log(err.response?.data);
+      alert("Failed to send OTP");
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    try {
+      const res = await axios.post("http://localhost:3000/api/student/register/verify-otp", { username, code });
+      alert(res.data.message);
+      setIsVerified(true);
+    } catch (err) {
+      console.log(err.response?.data);
+      alert("Invalid OTP");
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!isVerified) return alert("Verify your email first");
+
+    axios.post("http://localhost:3000/api/student/register/user-info", formRegister)
+      .then(res => {
+        console.log(res.data.message);
+        alert(res.data.message);
+      })
+      .catch(err => {
+        console.log(err.response?.data);
+      });
   }
 
   const handleChange = (e) => {
@@ -31,13 +64,21 @@ function RegisterStudent() {
   return (
     <>
     <InputField 
-        label="School Id"
-        name="username"
-        value={formRegister.username} 
-        onChange={handleChange}
-        placeholder="Enter student id" 
+      label="School Id"
+      name="username"
+      value={formRegister.username} 
+      onChange={handleChange}
+      placeholder="Enter student id" 
     />
-    <button>Verify</button>
+    <button onClick={handleSendOtp}>Send OTP</button>
+    <InputField 
+      name="code" //otp
+      value={code}
+      onChange={(e) => setCode(e.target.value)}
+      placeholder="Enter OTP"
+    />
+    <button onClick={handleVerifyOtp}>Verify</button>
+
     <form onSubmit={handleSubmit}>
       <h2> Registration Form </h2>
       <InputField 
@@ -55,9 +96,9 @@ function RegisterStudent() {
         placeholder="Enter your last name"
       />
       <SelectField
-        label="Gender"
-        name="userGender"
-        value={formRegister.userGender}
+        label="College Department"
+        name="college"
+        value={formRegister.college}
         onChange={handleChange}
         options={[
           { label: "CCS", value: "CCS" },
@@ -68,9 +109,9 @@ function RegisterStudent() {
         ]}
       />
       <RadioButton
-        label="College Department"
-        name="college"
-        value={formRegister.college}
+        label="Gender"
+        name="userGender"
+        value={formRegister.userGender}
         onChange={handleChange}
         options={[
           { label: "Male", value: "male" },
@@ -78,6 +119,8 @@ function RegisterStudent() {
           { label: "Other", value: "other" }
         ]}
       />
+      <button type="submit">Submit Registration idk</button>
+      {/* triggers <form onSubmit={handleSubmit}/> */}
     </form>
     
     </>

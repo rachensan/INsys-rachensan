@@ -43,10 +43,10 @@ studentAuthRoutes.post ('/register/email-otp', async(req, res) => { //email inpu
 })
 
 studentAuthRoutes.post('/register/verify-otp', async (req, res) => { //verify code only
-  const { code, schoolId } = req.body; //code from input ni user so we can compare sa generateOTP.js
-  const email = `${schoolId}@pampangastateu.edu.ph`;
+  const { code, username } = req.body; //code from input ni user so we can compare sa generateOTP.js
+  const email = `${username}@pampangastateu.edu.ph`;
   
-  if (!schoolId || !code) return res.status(400).json({ message: 'Missing school ID or code' });
+  if (!username || !code) return res.status(400).json({ message: 'Missing school ID or code' });
 
   if (!email) return res.status(400).json({ message: 'Invalid or expired code' });
 
