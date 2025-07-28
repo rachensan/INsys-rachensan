@@ -303,29 +303,39 @@ const postmanLinks = [ //NOT usable, just a note
 
         */
   {
-    WHAT: "STUDENT: Register Send OTP", //malamang new, kaya nga register
+    WHAT: "STUDENT Register: Input Email and Send OTP", //input email only, send OTP nodemailer
     FUNC: studentAuthRoutes,
     CRUD: "POST",
-    path: "api/student/register-request",
-    link: "http://localhost:3000/api/student/register-request",
+    path: "api/student/register/email-otp",
+    link: "http://localhost:3000/api/student/register/email-otp",
     body: { //duplicate example
+        "username": "2021307605"
+    }
+  },
+  {
+    WHAT: "STUDENT Register: Verify OTP", 
+    FUNC: studentAuthRoutes,
+    CRUD: "POST",
+    path: "api/student/register/verify-otp",
+    link: "http://localhost:3000/api/student/register/verify-otp",
+    body: {
+        "code": "468950",
+        "schoolId": "2021307605"
+    }
+  },
+  {
+    WHAT: "STUDENT Register: Complete Information", //input all needed info
+    FUNC: studentAuthRoutes,
+    CRUD: "POST",
+    path: "api/student/register/user-info",
+    link: "http://localhost:3000/api/student/register/user-info",
+    body: {
         "username": "2021307605",
         "password": "Yla123",
         "firstName": "Yla",
         "lastName": "Marino",
         "userGender": "Female",
         "college": "CCS"
-    }
-  },
-  {
-    WHAT: "STUDENT: Register Verify OTP", 
-    FUNC: studentAuthRoutes,
-    CRUD: "POST",
-    path: "api/student/register-verify",
-    link: "http://localhost:3000/api/student/register-verify",
-    body: {
-        "code": "468950",
-        "schoolId": "2021307605"
     }
   },
   {
@@ -336,7 +346,7 @@ const postmanLinks = [ //NOT usable, just a note
     link: "http://localhost:3000/api/teacher/register-request",
     body:  { //username can't have numbers kase their emails only have initials
         "username": "ykrjm", //wala naman ako gantong email
-        "schoolId": "2021307605",
+        "schoolId": "2021307605", 
         "password": "Yla123",
         "firstName": "Yla",
         "lastName": "Marino",
