@@ -339,30 +339,40 @@ const postmanLinks = [ //NOT usable, just a note
     }
   },
   {
-    WHAT: "TEACHER: Register Send OTP",
+    WHAT: "TEACHER Register: Input Email and Send OTP", 
     FUNC: teacherAuthRoutes,
     CRUD: "POST",
-    path: "api/teacher/register-request",
-    link: "http://localhost:3000/api/teacher/register-request",
+    path: "api/teacher/register/email-otp",
+    link: "http://localhost:3000/api/teacher/register/email-otp",
+    body: { //not existing email example
+        "username": "ykrjm" 
+    }
+  },
+  {
+    WHAT: "TEACHER Register: Verify OTP", 
+    FUNC: teacherAuthRoutes,
+    CRUD: "POST",
+    path: "api/teacher/register/verify-otp",
+    link: "http://localhost:3000/api/teacher/register/verify-otp",
+    body: {
+        "code": "468950",
+        "username": "2021307605"
+    }
+  },
+  {
+    WHAT: "TEACHER Register: Complete Information",
+    FUNC: teacherAuthRoutes,
+    CRUD: "POST",
+    path: "api/teacher/register/user-info",
+    link: "http://localhost:3000/api/teacher/register/user-info",
     body:  { //username can't have numbers kase their emails only have initials
-        "username": "ykrjm", //wala naman ako gantong email
+        "username": "2021307605", //use teacher email here
         "schoolId": "2021307605", 
         "password": "Yla123",
         "firstName": "Yla",
         "lastName": "Marino",
         "userGender": "Female",
         "college": "CCS"
-    }
-  },
-  {
-    WHAT: "TEACHER: Register Verify OTP",
-    FUNC: teacherAuthRoutes,
-    CRUD: "POST",
-    path: "api/teacher/register-verify",
-    link: "http://localhost:3000/api/teacher/register-verify",
-    body: {
-        "code": "468950",
-        "schoolId": "2021307605"
     }
   },
   {
