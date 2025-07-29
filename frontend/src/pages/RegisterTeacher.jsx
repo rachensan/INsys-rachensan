@@ -1,0 +1,139 @@
+import axios from 'axios';
+import { useEffect, useState } from "react";
+import InputField from "../components/InputFields.jsx"
+import RadioButton from "../components/RadioButton.jsx";
+import SelectField from "../components/SelectFields.jsx";
+
+function RegisterTeacher() {
+  const [formRegister, setFormRegister] = useState({
+    username: "",
+    schoolId: "",
+    password: "",
+    firstName: "",
+    lastName: "",
+    userGender: "",
+    college: ""
+  });
+
+
+  const [isVerified, setIsVerified] = useState(false);
+  const [code, setCode] = useState(""); //otp
+  const username = formRegister.username;
+
+  const handleSendOtp = async () => {
+    try {
+      const res = await axios.post("http://localhost:3000/api/teacher/register/email-otp", { username: username });
+      alert(res.data.message);
+    } catch (err) {
+      console.log(err.response?.data);
+      alert("Failed to send OTP");
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    try {
+      const res = await axios.post("http://localhost:3000/api/teacher/register/verify-otp", { username, code });
+      alert(res.data.message);
+      setIsVerified(true);
+    } catch (err) {
+      console.log(err.response?.data);
+      alert("Invalid OTP");
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!isVerified) return alert("Verify your email first");
+
+    axios.post("http://localhost:3000/api/teacher/register/user-info", formRegister)
+      .then(res => {
+        console.log(res.data.message);
+        alert(res.data.message);
+      })
+      .catch(err => {
+        console.log(err.response?.data);
+      });
+  }
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormRegister((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  return (
+    <>
+    <InputField 
+      label="School Id"
+      name="username"
+      value={formRegister.username} 
+      onChange={handleChange}
+      placeholder="Enter student id" 
+    />
+    <button onClick={handleSendOtp}>Send OTP</button>
+
+    <InputField 
+      name="code" //otp
+      value={code}
+      onChange={(e) => setCode(e.target.value)}
+      placeholder="Enter OTP"
+    />
+    <button onClick={handleVerifyOtp}>Verify</button>
+
+    <form onSubmit={handleSubmit}>
+      <h2> Registration Form </h2>
+      <InputField 
+        label="First Name"
+        name="firstName"
+        value={formRegister.firstName}
+        onChange={handleChange}
+        placeholder="Enter your first name"
+      /> 
+      <InputField 
+        label="Last Name"
+        name="lastName"
+        value={formRegister.lastName}
+        onChange={handleChange}
+        placeholder="Enter your last name"
+      />
+      <InputField 
+        label="School ID"
+        name="schoolId"
+        value={formRegister.schoolId}
+        onChange={handleChange}
+        placeholder="Enter your school ID"
+      /> 
+      <SelectField
+        label="College Department"
+        name="college"
+        value={formRegister.college}
+        onChange={handleChange}
+        options={[
+          { label: "CCS", value: "CCS" },
+          { label: "CEA", value: "CEA" },
+          { label: "CBA", value: "CBA" },
+          { label: "CHM", value: "CHM" },
+          { label: "GA", value: "GA" }
+        ]}
+      />
+      <RadioButton
+        label="Gender"
+        name="userGender"
+        value={formRegister.userGender}
+        onChange={handleChange}
+        options={[
+          { label: "Male", value: "Male" },
+          { label: "Female", value: "Female" },
+          { label: "Other", value: "Other" }
+        ]}
+      />
+      <button type="submit">Submit Registration idk</button>
+      {/* triggers <form onSubmit={handleSubmit}/> */}
+    </form>
+    
+    </>
+  );
+}
+export default RegisterTeacher;

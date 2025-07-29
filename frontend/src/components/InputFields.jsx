@@ -6,6 +6,7 @@ function InputField ({ label, type="text", name, value, onChange, placeholder })
     <div>
       <label>{label}</label>
       <input className="input-field"
+        required
         type={type}
         name={name}
         value={value}

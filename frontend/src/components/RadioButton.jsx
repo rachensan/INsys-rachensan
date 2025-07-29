@@ -7,6 +7,7 @@ function RadioButton({ label, name, value, onChange, options }) {
       {options.map((option, index) => (
         <label key={index}>
           <input
+            required
             type="radio"
             name={name}
             value={option.value}

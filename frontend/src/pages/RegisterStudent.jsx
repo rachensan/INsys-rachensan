@@ -10,7 +10,7 @@ function RegisterStudent() {
     password: "",
     firstName: "",
     lastName: "",
-    userGender: "N/A",
+    userGender: "",
     college: ""
   });
 
@@ -71,6 +71,7 @@ function RegisterStudent() {
       placeholder="Enter student id" 
     />
     <button onClick={handleSendOtp}>Send OTP</button>
+
     <InputField 
       name="code" //otp
       value={code}
@@ -114,9 +115,9 @@ function RegisterStudent() {
         value={formRegister.userGender}
         onChange={handleChange}
         options={[
-          { label: "Male", value: "male" },
-          { label: "Female", value: "female" },
-          { label: "Other", value: "other" }
+          { label: "Male", value: "Male" },
+          { label: "Female", value: "Female" },
+          { label: "Other", value: "Other" }
         ]}
       />
       <button type="submit">Submit Registration idk</button>
