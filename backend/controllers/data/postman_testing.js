@@ -377,7 +377,7 @@ const postmanLinks = [ //NOT usable, just a note
   },
   {
     WHAT: "Log In: Check Credentials",
-    FUNC: authRoutes, //put in jwt or other
+    FUNC: authRoutes,
     CRUD: "POST",
     path: "api/login",
     link: "http://localhost:3000/api/login",

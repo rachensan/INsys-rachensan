@@ -10,6 +10,7 @@ import SelectedSection from './teacherS/handleExam/2-Section';
 import AllQuestions from './teacherS/handleExam/3-AllQuesType';
 import Identification from './teacherS/handleExam/3-Identification';
 import RegisterTeacher from './pages/RegisterTeacher.jsx';
+import Login from './pages/Login.jsx';
 
 function App() {
   return(
@@ -21,6 +22,7 @@ function App() {
         <Route path='/handle-exam/:id' element={<HandleExam />} />
         <Route path='/register/student' element={<RegisterStudent />} />
         <Route path='/register/teacher' element={<RegisterTeacher />} />
+        <Route path='/login' element={<Login />} />
       </Routes>
     </BrowserRouter>
   )

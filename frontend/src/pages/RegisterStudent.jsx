@@ -3,11 +3,13 @@ import { useEffect, useState } from "react";
 import InputField from "../components/InputFields.jsx"
 import RadioButton from "../components/RadioButton.jsx";
 import SelectField from "../components/SelectFields.jsx";
+import Button from '../components/Buttons.jsx';
 
 function RegisterStudent() {
   const [formRegister, setFormRegister] = useState({
     username: "",
     password: "",
+    retypePassword: "",
     firstName: "",
     lastName: "",
     userGender: "",
@@ -43,6 +45,8 @@ function RegisterStudent() {
     e.preventDefault();
     if (!isVerified) return alert("Verify your email first");
 
+    if (formRegister.password !== formRegister.retypePassword) return alert("Passwords do not match");
+
     axios.post("http://localhost:3000/api/student/register/user-info", formRegister)
       .then(res => {
         console.log(res.data.message);
@@ -63,25 +67,49 @@ function RegisterStudent() {
 
   return (
     <>
+    <div>
     <InputField 
       label="School Id"
       name="username"
       value={formRegister.username} 
       onChange={handleChange}
       placeholder="Enter student id" 
+      disabled={isVerified}
     />
-    <button onClick={handleSendOtp}>Send OTP</button>
+    <Button onClick={handleSendOtp} label='Send OTP' disabled={isVerified}/>
 
     <InputField 
       name="code" //otp
       value={code}
       onChange={(e) => setCode(e.target.value)}
       placeholder="Enter OTP"
+      disabled={isVerified}
     />
-    <button onClick={handleVerifyOtp}>Verify</button>
+    <Button onClick={handleVerifyOtp} label='Verify' disabled={isVerified}/>
 
     <form onSubmit={handleSubmit}>
       <h2> Registration Form </h2>
+      <InputField 
+        label="Email"
+        name="email"
+        value={`${formRegister.username}@pampangastateu.edu.ph`}
+        placeholder="Enter your first name"
+        disabled={true}
+      /> 
+      <InputField 
+        label="Password"
+        name="password"
+        value={formRegister.password}
+        onChange={handleChange}
+        placeholder="Enter your password"
+      /> 
+      <InputField 
+        label="Re-type Password"
+        name="retypePassword"
+        value={formRegister.retypePassword}
+        onChange={handleChange}
+        placeholder="Re-type your password"
+      /> 
       <InputField 
         label="First Name"
         name="firstName"
@@ -120,10 +148,10 @@ function RegisterStudent() {
           { label: "Other", value: "Other" }
         ]}
       />
-      <button type="submit">Submit Registration idk</button>
+      <Button type="submit" label='Submit Registration idk'/>
       {/* triggers <form onSubmit={handleSubmit}/> */}
     </form>
-    
+    </div>
     </>
   );
 }
