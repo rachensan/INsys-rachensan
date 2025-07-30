@@ -15,7 +15,7 @@ import Login from './pages/Login.jsx';
 function App() {
   return(
     <BrowserRouter>
-    <Link to='/'> Home </Link> <br/><br/><br/>
+    <Link to='/'> Back lang </Link> <br/><br/><br/>
       <Routes>
         <Route path='/home' element={<Home />} />
         <Route path='/create-exam' element={<HandleExam />} />

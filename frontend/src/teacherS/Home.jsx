@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import axios from 'axios';
+import axios from "../utils/axiosConfig.js";
+
 
 export const HomeCard = ({ title, subjCode, schedule, status, sections, onClickNav, onClickDel }) => {
 
@@ -10,8 +11,7 @@ export const HomeCard = ({ title, subjCode, schedule, status, sections, onClickN
       <button onClick={(e)=>{
         e.stopPropagation(); //stop triggering the onClickNav
         onClickDel();
-      }
-        }>Delete</button>
+      }}>Delete</button>
       <h2>{title}</h2>
       <p>{subjCode}</p>
       <p>{schedule}</p>
@@ -27,7 +27,17 @@ function Home() {
   const [exam, setExam] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/api/exams') //just calling
+  axios.get('/protected', { withCredentials: true })
+    .then(res => {
+      console.log(res.data); // will show { message: "JWT is valid", user: ... }
+    })
+    .catch(err => {
+      console.error("Not authenticated:", err.response?.status);
+    });
+}, []);
+
+  useEffect(() => {
+    axios.get('/exams', { withCredentials: true }) 
       .then(res=> {
         setExam(res.data);
       })

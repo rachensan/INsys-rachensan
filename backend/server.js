@@ -9,6 +9,7 @@ import teacherAuthRoutes from "./utils/teacherAuth.js";
 import studentAuthRoutes from "./utils/studentAuth.js";
 import authRoutes from "./utils/auth.js";
 import { verifyJWT } from "./utils/jwt.js";
+import { verifyRole } from "./utils/jwt.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -16,6 +17,14 @@ const port = process.env.PORT || 3000;
 // import passport from "passport";
 // app.use(passport.initialize());
 // app.use(passport.session());
+
+app.use(cookieParser());
+
+//prep frontend:
+app.use(cors({ //allow frontend to access backend
+  origin: `http://localhost:5173`, //React frontend
+  credentials: true
+}));
 
 //authentication
 app.use(
@@ -25,33 +34,25 @@ app.use(
     saveUninitialized: true,
   })
 );
+
+
+
+
 //just for testing if jwt working
-app.get('api/protected', verifyJWT, (req, res) => {
+app.get('/api/protected', verifyJWT, (req, res) => {
   res.json({ message: "JWT is valid", user: req.user });
 });
 
-app.use(cookieParser());
 
-//prep frontend:
-app.use(cors({ //allow frontend to access backend
-  origin: `http://localhost:5173`, //React frontend
-  credentials: true
-})); 
+
+
+
+const teacherOnly = [verifyJWT, verifyRole('teacher')];
+const studentOnly = [verifyJWT, verifyRole('student')];
+const adminOnly = [verifyJWT, verifyRole('admin')];
+
 app.use(express.json()); // parse JSON bodies
 app.use(express.urlencoded({ extended: true })); 
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //authRouting
 app.use('/api', authRoutes);
@@ -104,21 +105,21 @@ app.use('/api/teacher', teacherAuthRoutes);
 
 
 // ========== USER ROUTES ==========
-  app.get('/api/users/:id', getUserById);
+  app.get('/api/users/:id', teacherOnly, getUserById);
   app.post('/api/users', createUser);
 
 
 // ========== EXAM ROUTES ==========
-  app.get('/api/exams/search', getExamsByTitle); 
+  app.get('/api/exams/search', teacherOnly, getExamsByTitle); 
       //for searchbar title search
-  app.get('/api/exams/status', getExamsByStatus);
-  app.get('/api/exams/:examId', getExamById); 
+  app.get('/api/exams/status', teacherOnly, getExamsByStatus);
+  app.get('/api/exams/:examId', teacherOnly, getExamById); 
       //fetch a single exam's details 
       //teachers (to view or edit a specific exam) 
       //students (to display exam info before starting)
-  app.get('/api/exams', getAllExams);
-  app.get('/api/exams/:examId/essays/:studentSchoolId', getEssayPerStudent);
-  app.get('/api/exams/:examId/code', getExamCode);
+  app.get('/api/exams', teacherOnly, getAllExams);
+  app.get('/api/exams/:examId/essays/:studentSchoolId', teacherOnly, getEssayPerStudent);
+  app.get('/api/exams/:examId/code', teacherOnly, getExamCode);
       //or destructure the getExamById in frontend like:
       //const [exam, setExam] = useState(null);
       //useEffect(() => {
@@ -126,38 +127,38 @@ app.use('/api/teacher', teacherAuthRoutes);
       //    .then(res => setExam(res.data));
       //}, []);
       //<p>Exam Code: {exam?.exam_code}</p>
-  app.get('/api/exams/:examId/sections', getSectionTakersByExamId);
-  app.get('/api/exams/:examId/scores/:sectionTaker', getAllScoresByExam);
-  app.post('/api/exams', createExam);
+  app.get('/api/exams/:examId/sections', teacherOnly, getSectionTakersByExamId);
+  app.get('/api/exams/:examId/scores/:sectionTaker', teacherOnly, getAllScoresByExam);
+  app.post('/api/exams', teacherOnly, createExam);
 
-  app.put('/api/exams/:examId/sections', updateSectionTakers);
+  app.put('/api/exams/:examId/sections', teacherOnly, updateSectionTakers);
       //can be null at first, when published without sections, will show popup alert... imma fix it later, im sleepy
 
-  app.patch('/api/exams/:examId/status', updateExamStatus);
-  app.patch('/api/exams/:examId/timer', updateExamTimer);
-  app.patch('/api/exams/:examId/details', updateExamDetails);
-  app.patch('/api/exams/:examId/code', updateExamCode);
+  app.patch('/api/exams/:examId/status', teacherOnly, updateExamStatus);
+  app.patch('/api/exams/:examId/timer', teacherOnly, updateExamTimer);
+  app.patch('/api/exams/:examId/details', teacherOnly, updateExamDetails);
+  app.patch('/api/exams/:examId/code', teacherOnly, updateExamCode);
       //not really needed, cuz we create the exam code at exam creation
-  app.get('/api/exams/:examId/schedule', getExamSchedule);
-  app.put('/api/exams/:examId/schedule', finalizeExamSchedule);
+  app.get('/api/exams/:examId/schedule', teacherOnly, getExamSchedule);
+  app.put('/api/exams/:examId/schedule', teacherOnly, finalizeExamSchedule);
 
-  app.delete('/api/exams/:examId', deleteExam);
+  app.delete('/api/exams/:examId', teacherOnly, deleteExam);
     //singular... one exam deletion
 
 // ========== QUESTION ROUTES ==========
-  app.post('/api/questions', createQuestion);
-  app.get('/api/exams/:examId/questions', getQuestionsByExamId);
-  app.delete('/api/exams/:examId/questions/:questionId', deleteQuestionById);
+  app.post('/api/questions', teacherOnly, createQuestion);
+  app.get('/api/exams/:examId/questions', teacherOnly, getQuestionsByExamId);
+  app.delete('/api/exams/:examId/questions/:questionId', teacherOnly, deleteQuestionById);
 
 
 // ========== STUDENT ROUTES ==========
-  app.get('/api/student/:studentId/exams/:examId/info', getInfoPerExam);
-  app.get('/api/student/:studentId/exam-history', getStudentExamHistory);
-  app.get('/api/exams/:examId/section-schedule', getSectionSchedule);
+  app.get('/api/student/:studentId/exams/:examId/info', studentOnly, getInfoPerExam);
+  app.get('/api/student/:studentId/exam-history', studentOnly);
+  app.get('/api/exams/:examId/section-schedule', studentOnly, getSectionSchedule);
 
-  app.post('/api/student/:studentId/exams/:examId/auto-submit', autoSubmitAllAnswers);
-  app.post('/api/student/verify', verifyExamAccess);
-  app.post('/api/student-answers/submit', answerSubmission); 
+  app.post('/api/student/:studentId/exams/:examId/auto-submit', studentOnly, autoSubmitAllAnswers);
+  app.post('/api/student/verify', studentOnly, verifyExamAccess);
+  app.post('/api/student-answers/submit', studentOnly, answerSubmission); 
       //autoScoringLogic works here
   app.put('/api/student-scores/score', autoScoringTemplate); 
       //backup tool
@@ -167,7 +168,7 @@ app.use('/api/teacher', teacherAuthRoutes);
   
 
 // ========== TEACHER ROUTES ==========
-  app.patch('/api/student-score/essay/:examId/:questionId', manualEssayScoring);
+  app.patch('/api/student-score/essay/:examId/:questionId', teacherOnly, manualEssayScoring);
    
 app.listen(port, () => {
   console.log(`Backend running at http://localhost:${port}`);

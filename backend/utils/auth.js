@@ -12,7 +12,7 @@ const saltRounds = 5;
 import { verifyToken } from '../utils/jwt.js';
 
 authRoutes.get('/protected', (req, res) => {
-  const token = req.cookies.access_token;
+  const token = req.cookies.accessToken;
   if (!token) return res.sendStatus(401);
 
   try {
@@ -61,16 +61,16 @@ authRoutes.post('/login', async (req, res) => {
     const accessToken = generateAccessToken(userPayload);
     const refreshToken = generateRefreshToken(userPayload);
 
-    res.cookie("access_token", accessToken, {
+    res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: false, //temporary for development //true=only works over HTTPS
       sameSite: "Strict",
       maxAge: 15 * 60 * 1000 //15 minutes
     });
 
-    res.cookie("refresh_token", refreshToken, {
+    res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: true,
+      secure: false, //for local testing, devewlopment oki
       sameSite: "Strict",
       maxAge: 7 * 24 * 60 * 60 * 1000 //7 days
     });

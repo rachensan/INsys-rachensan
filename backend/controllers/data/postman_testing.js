@@ -53,6 +53,13 @@ const postmanLinks = [ //NOT usable, just a note
         <p>{user?.full_name}</p>
     */
   {
+    WHAT: "Get All Exam",
+    FUNC: getAllExams,
+    CRUD: "GET",
+    path: "/api/exams",
+    link: "http://localhost:3000/api/exams"
+  },
+  {
     WHAT: "Create Exam",
     FUNC: createExam,
     CRUD: "POST",
