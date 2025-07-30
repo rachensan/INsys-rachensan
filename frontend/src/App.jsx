@@ -17,7 +17,7 @@ function App() {
     <BrowserRouter>
     <Link to='/'> Home </Link> <br/><br/><br/>
       <Routes>
-        <Route path='/' element={<Home />} />
+        <Route path='/home' element={<Home />} />
         <Route path='/create-exam' element={<HandleExam />} />
         <Route path='/handle-exam/:id' element={<HandleExam />} />
         <Route path='/register/student' element={<RegisterStudent />} />

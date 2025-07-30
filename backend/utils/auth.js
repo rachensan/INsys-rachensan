@@ -4,9 +4,28 @@ import {db} from '../db.js';
 import { generateOTP, verifyOTP } from "./otp.js";
 import { sendUserEmail } from "./nodemailer.js";
 import redisClient from "./redisClient.js";
+import { generateAccessToken, generateRefreshToken } from "./jwt.js";
 
 const authRoutes = express.Router();
 const saltRounds = 5;
+
+import { verifyToken } from '../utils/jwt.js';
+
+authRoutes.get('/protected', (req, res) => {
+  const token = req.cookies.access_token;
+  if (!token) return res.sendStatus(401);
+
+  try {
+    const decoded = verifyToken(token, process.env.JWT_ACCESS_SECRET);
+    res.json({ message: 'Protected route OK', user: decoded });
+  } catch (err) {
+    res.sendStatus(403);
+  }
+});
+
+
+
+
 
 authRoutes.post('/login', async (req, res) => {
   const { email, password } = req.body
@@ -25,13 +44,40 @@ authRoutes.post('/login', async (req, res) => {
       return res.status(404).json({ error: 'This email is not associated with an account. Please register to continue.' });
     }
 
-    const user = result.rows[0];
+    const user = result.rows[0]; //mostly used, dont delete
     const passwordMatch = await bcrypt.compare(password, user.password ) //true or false
 
     if (!passwordMatch) { //if false (password did not match)
       return res.status(401).json({error: `Incorrect Password`})
     }
-    return res.status(200).json({ message: "Login successful", user });
+
+//=================== JWT start ===================//
+    const userPayload = {
+      user_id: user.user_id,
+      school_id: user.school_id,
+      role: user.role
+    };
+
+    const accessToken = generateAccessToken(userPayload);
+    const refreshToken = generateRefreshToken(userPayload);
+
+    res.cookie("access_token", accessToken, {
+      httpOnly: true,
+      secure: false, //temporary for development //true=only works over HTTPS
+      sameSite: "Strict",
+      maxAge: 15 * 60 * 1000 //15 minutes
+    });
+
+    res.cookie("refresh_token", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "Strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000 //7 days
+    });
+//=================== JWT end ===================//
+
+    // Send access token in response
+    res.status(200).json({ message: "Login successful", accessToken, user: userPayload });
   } catch (error) {
     console.error('Error Logging In', error);
     res.status(500).json({ error: 'Failed to Log in' });

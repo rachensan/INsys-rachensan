@@ -4,19 +4,18 @@ import dotenv from 'dotenv';
 dotenv.config({ path: '../.env', quiet: true });
 
 import session from "express-session";
-import passport from "passport";
-
+import cookieParser from 'cookie-parser';
 import teacherAuthRoutes from "./utils/teacherAuth.js";
 import studentAuthRoutes from "./utils/studentAuth.js";
 import authRoutes from "./utils/auth.js";
+import { verifyJWT } from "./utils/jwt.js";
 
 const app = express();
-const port = process.env.PORT || 3000; // we dint have env yet
+const port = process.env.PORT || 3000;
 
-//prep frontend:
-app.use(cors()); // allow frontend to access backend
-app.use(express.json()); // parse JSON bodies
-app.use(express.urlencoded({ extended: true })); 
+// import passport from "passport";
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 //authentication
 app.use(
@@ -26,11 +25,35 @@ app.use(
     saveUninitialized: true,
   })
 );
+//just for testing if jwt working
+app.get('api/protected', verifyJWT, (req, res) => {
+  res.json({ message: "JWT is valid", user: req.user });
+});
 
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(cookieParser());
 
-//authentication
+//prep frontend:
+app.use(cors({ //allow frontend to access backend
+  origin: `http://localhost:5173`, //React frontend
+  credentials: true
+})); 
+app.use(express.json()); // parse JSON bodies
+app.use(express.urlencoded({ extended: true })); 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//authRouting
 app.use('/api', authRoutes);
 app.use('/api/student', studentAuthRoutes);
 app.use('/api/teacher', teacherAuthRoutes);
@@ -70,6 +93,7 @@ app.use('/api/teacher', teacherAuthRoutes);
     import {  } from './controllers/questionControllers/UPDATE.js'
   //DELETE
     import { deleteQuestionById } from "./controllers/questionControllers/DELETE.js";
+
 
 
 

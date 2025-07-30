@@ -1,10 +1,9 @@
-import axios from 'axios';
+import axios from "../utils/axiosConfig.js";
 import { useEffect, useState } from "react";
 import InputField from "../components/InputFields.jsx"
 import Button from "../components/Buttons.jsx"
 
 import { useNavigate } from 'react-router-dom'; //temporary? idk
-
 
 function Login() {
   const navigate = useNavigate();
@@ -14,13 +13,20 @@ function Login() {
     password: ""
   });
 
+
+useEffect(() => {
+          axios.get('/protected', { withCredentials: true })
+            .then(res => console.log('✅ JWT works:', res.data))
+            .catch(err => console.log('❌ JWT failed:', err.response?.data || err.message));
+        }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    axios.post("http://localhost:3000/api/login", formLogin) //do JWT next time.
+    axios.post("/login", formLogin, { withCredentials: true })
       .then(res => {
         console.log(res.data.message);
-        alert(res.data.message);
+        alert(res.data.message); 
         navigate('/home');
       })
       .catch(err => {
