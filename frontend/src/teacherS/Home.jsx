@@ -27,24 +27,22 @@ function Home() {
   const [exam, setExam] = useState([]);
 
   useEffect(() => {
-  axios.get('/protected', { withCredentials: true })
-    .then(res => {
-      console.log(res.data); // will show { message: "JWT is valid", user: ... }
-    })
-    .catch(err => {
-      console.error("Not authenticated:", err.response?.status);
-    });
-}, []);
+    axios.post("/refresh", {withCredentials: true})
+      .then(res => { console.log("New Access Token:", res.data.accessToken) })
+      .catch(err => { console.error(err.response?.data || err.message) });
 
-  useEffect(() => {
+    axios.get('/protected', { withCredentials: true })
+      .then(res => { console.log(res.data); // will show { message: "JWT is valid", user: ... }
+      })
+      .catch(err => { console.error("Not authenticated:", err.response?.status) });
+
     axios.get('/exams', { withCredentials: true }) 
-      .then(res=> {
-        setExam(res.data);
-      })
-      .catch (err => {
-        console.error('Failed to fetch exam data: ', err);
-      })
-  }, []);
+      .then(res=> { setExam(res.data) })
+      .catch (err => { console.error('Failed to fetch exam data: ', err) })  
+  }, []);  
+
+
+
 
     const handleDelete = (id) => {
       axios.delete(`http://localhost:3000/api/exams/${id}`)

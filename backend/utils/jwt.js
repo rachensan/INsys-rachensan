@@ -34,6 +34,40 @@ export const verifyRole = (requiredRole) => {
   };
 };
 
+export const refreshAccessToken = (req, res) => {
+  const token = req.cookies.refreshToken;
+  if (!token) return res.status(401).json({ error: "Refresh token missing" });
+
+  const decoded = verifyToken(token, process.env.JWT_REFRESH_SECRET); // throws if invalid
+
+  const newAccessToken = generateAccessToken(decoded);
+
+  res.cookie("accessToken", newAccessToken, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "Lax",
+    maxAge: 15 * 60 * 1000, // 15 mins
+  });
+
+  res.status(200).json({ accessToken: newAccessToken });
+};
+
+export const clearToken =  (req, res) => { //for idk yet, i have this logout logic in auth.js
+    res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: false,
+    sameSite: "Lax"
+  });
+
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: false,
+    sameSite: "Lax"
+  });
+
+  res.status(200).json({ message: "Logged out" });
+};
+
 
 
 

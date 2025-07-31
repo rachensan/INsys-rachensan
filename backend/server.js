@@ -8,8 +8,7 @@ import cookieParser from 'cookie-parser';
 import teacherAuthRoutes from "./utils/teacherAuth.js";
 import studentAuthRoutes from "./utils/studentAuth.js";
 import authRoutes from "./utils/auth.js";
-import { verifyJWT } from "./utils/jwt.js";
-import { verifyRole } from "./utils/jwt.js";
+import { verifyJWT, verifyRole, refreshAccessToken, clearToken } from "./utils/jwt.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -42,6 +41,13 @@ app.use(
 app.get('/api/protected', verifyJWT, (req, res) => {
   res.json({ message: "JWT is valid", user: req.user });
 });
+
+app.post("/api/refresh", refreshAccessToken);
+
+  
+
+ 
+
 
 
 

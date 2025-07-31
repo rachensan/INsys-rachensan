@@ -394,6 +394,13 @@ const postmanLinks = [ //NOT usable, just a note
     }
   },
   {
+    WHAT: "Log Out: Clear Cookies",
+    FUNC: authRoutes,
+    CRUD: "POST",
+    path: "api/logout",
+    link: "http://localhost:3000/api/logout",
+  },
+  {
     WHAT: "AUTH: Forgot Password Request OTP", //inputting new password here
     FUNC: authRoutes,
     CRUD: "POST",

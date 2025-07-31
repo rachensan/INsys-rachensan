@@ -64,14 +64,14 @@ authRoutes.post('/login', async (req, res) => {
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: false, //temporary for development //true=only works over HTTPS
-      sameSite: "Strict",
+      sameSite: "Lax",
       maxAge: 15 * 60 * 1000 //15 minutes
     });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: false, //for local testing, devewlopment oki
-      sameSite: "Strict",
+      sameSite: "Lax",
       maxAge: 7 * 24 * 60 * 60 * 1000 //7 days
     });
 //=================== JWT end ===================//
@@ -84,6 +84,30 @@ authRoutes.post('/login', async (req, res) => {
   }
   
 });
+
+authRoutes.post('/logout', async (req, res) => {
+  res.clearCookie("accessToken", {
+      httpOnly: true,
+      secure: false,
+      sameSite: "Lax"
+    });
+
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: false,
+      sameSite: "Lax"
+    });
+
+    res.status(200).json({ message: "Logged out" });
+})
+
+  
+
+
+
+
+
+
 
 //request otp and input new password
 authRoutes.post('/forgot-password/request-otp/:userId/:schoolId', async (req, res) => {

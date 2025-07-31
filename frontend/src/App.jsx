@@ -11,11 +11,14 @@ import AllQuestions from './teacherS/handleExam/3-AllQuesType';
 import Identification from './teacherS/handleExam/3-Identification';
 import RegisterTeacher from './pages/RegisterTeacher.jsx';
 import Login from './pages/Login.jsx';
+import LogoutButton from './layout/logout.jsx';
 
 function App() {
   return(
+    <>
     <BrowserRouter>
-    <Link to='/'> Back lang </Link> <br/><br/><br/>
+    <Link to='/home'> Back lang (/home) </Link> <br/><br/><br/>
+    <LogoutButton /> <br/><br/><br/>
       <Routes>
         <Route path='/home' element={<Home />} />
         <Route path='/create-exam' element={<HandleExam />} />
@@ -25,6 +28,7 @@ function App() {
         <Route path='/login' element={<Login />} />
       </Routes>
     </BrowserRouter>
+    </>
   )
 }
 

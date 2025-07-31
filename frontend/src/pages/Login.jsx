@@ -13,12 +13,14 @@ function Login() {
     password: ""
   });
 
-
 useEffect(() => {
           axios.get('/protected', { withCredentials: true })
             .then(res => console.log('✅ JWT works:', res.data))
             .catch(err => console.log('❌ JWT failed:', err.response?.data || err.message));
         }, []);
+
+
+        
 
   const handleSubmit = (e) => {
     e.preventDefault();
