@@ -1,9 +1,9 @@
 import {db} from '../../db.js';
 
 export const getAllExams = async(req, res) =>{
-
+  const {userId} = req.params;
   try {
-    const result = await db.query("SELECT * FROM examinations")
+    const result = await db.query("SELECT * FROM examinations WHERE user_id = $1", [userId])
     res.status(200).json(result.rows)
   } catch (error) {
     console.error('Error cant GET exams', error)

@@ -4,12 +4,15 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState({
-    fullName: "Juan Dela Cruz",
-    role: "teacher", // change to "student" or "superadmin"
+    fullName: "",
+    user_id: "",
+    school_id: "",
+    role: "",
   });
+  const [accessToken, setAccessToken] = useState('');
 
   return (
-    <AuthContext.Provider value={{ user }}>
+    <AuthContext.Provider value={{ user, setUser, accessToken, setAccessToken }}>
       {children}
     </AuthContext.Provider>
   );

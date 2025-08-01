@@ -63,8 +63,8 @@ const postmanLinks = [ //NOT usable, just a note
     WHAT: "Create Exam",
     FUNC: createExam,
     CRUD: "POST",
-    path: "/api/exams",
-    link: "http://localhost:3000/api/exams",
+    path: "/api/exams/56",
+    link: "http://localhost:3000/api/exams/:userId",
     body: {
       "title": "Math Midterm",
       "schedule": "2025-08-01",

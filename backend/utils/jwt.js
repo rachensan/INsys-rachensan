@@ -1,7 +1,9 @@
 import jwt from "jsonwebtoken";
 
 export const generateAccessToken = (user) => {
-  return jwt.sign( { school_id: user.school_id, role: user.role }, process.env.JWT_ACCESS_SECRET,
+  return jwt.sign( 
+    { school_id: user.school_id, role: user.role }, 
+    process.env.JWT_ACCESS_SECRET,
     { expiresIn: process.env.JWT_ACCESS_EXPIRES_IN }
   );
 };
@@ -15,18 +17,27 @@ export const verifyToken = (token, secret) => {
 };
 
 export const verifyJWT = (req, res, next) => {
-  const token = req.cookies.accessToken;
-  if (!token) return res.status(401).json({ error: 'Access denied. No token.' });
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Missing or invalid Authorization header' });
+  }
 
-  jwt.verify(token, process.env.JWT_ACCESS_SECRET, (err, decoded) => {
-    if (err) return res.sendStatus(403);
+  const token = authHeader.split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
     req.user = decoded;
+          console.log("Incoming token:", token);
+          console.log("Decoded user:", decoded);
     next();
-  });
+  } catch (err) {
+    console.error('JWT verification failed:', err);
+    return res.status(403).json({ error: 'Invalid access token' });
+  }
 };
 
 export const verifyRole = (requiredRole) => {
   return (req, res, next) => {
+    console.log("Required:", requiredRole, "| Found:", req.user?.role); 
     if (req.user?.role !== requiredRole) {
       return res.status(403).json({ error: 'Forbidden: insufficient role' });
     }
@@ -39,26 +50,12 @@ export const refreshAccessToken = (req, res) => {
   if (!token) return res.status(401).json({ error: "Refresh token missing" });
 
   const decoded = verifyToken(token, process.env.JWT_REFRESH_SECRET); // throws if invalid
-
   const newAccessToken = generateAccessToken(decoded);
 
-  res.cookie("accessToken", newAccessToken, {
-    httpOnly: true,
-    secure: false,
-    sameSite: "Lax",
-    maxAge: 15 * 60 * 1000, // 15 mins
-  });
-
-  res.status(200).json({ accessToken: newAccessToken });
+  res.json({ accessToken: newAccessToken });
 };
 
 export const clearToken =  (req, res) => { //for idk yet, i have this logout logic in auth.js
-    res.clearCookie("accessToken", {
-    httpOnly: true,
-    secure: false,
-    sameSite: "Lax"
-  });
-
   res.clearCookie("refreshToken", {
     httpOnly: true,
     secure: false,

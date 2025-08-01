@@ -123,7 +123,7 @@ app.use('/api/teacher', teacherAuthRoutes);
       //fetch a single exam's details 
       //teachers (to view or edit a specific exam) 
       //students (to display exam info before starting)
-  app.get('/api/exams', teacherOnly, getAllExams);
+  app.get('/api/exams/:userId', teacherOnly, getAllExams);
   app.get('/api/exams/:examId/essays/:studentSchoolId', teacherOnly, getEssayPerStudent);
   app.get('/api/exams/:examId/code', teacherOnly, getExamCode);
       //or destructure the getExamById in frontend like:
@@ -135,7 +135,7 @@ app.use('/api/teacher', teacherAuthRoutes);
       //<p>Exam Code: {exam?.exam_code}</p>
   app.get('/api/exams/:examId/sections', teacherOnly, getSectionTakersByExamId);
   app.get('/api/exams/:examId/scores/:sectionTaker', teacherOnly, getAllScoresByExam);
-  app.post('/api/exams', teacherOnly, createExam);
+  app.post('/api/exams/:userId', teacherOnly, createExam);
 
   app.put('/api/exams/:examId/sections', teacherOnly, updateSectionTakers);
       //can be null at first, when published without sections, will show popup alert... imma fix it later, im sleepy

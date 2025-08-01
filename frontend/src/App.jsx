@@ -1,4 +1,7 @@
-import {BrowserRouter, Routes, Route, useNavigate, Link} from 'react-router-dom'
+import {Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom'
+import { useEffect } from 'react';
+import axios from './utils/axiosConfig.js';
+import { useAuth } from './context/AuthContext.jsx';
 
 import RegisterStudent from './pages/RegisterStudent.jsx'
 
@@ -14,9 +17,30 @@ import Login from './pages/Login.jsx';
 import LogoutButton from './layout/logout.jsx';
 
 function App() {
+  const navigate = useNavigate();
+  const { setAccessToken, setUser } = useAuth();
+  const location = useLocation();
+
+useEffect(() => {
+  const publicPaths = ["/login", "/register/student", "/register/teacher"];
+  if (publicPaths.includes(location.pathname)) return;
+
+  axios.post("/refresh", {}, { withCredentials: true })
+    .then(res => {
+      const newToken = res.data.accessToken;
+      axios.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
+      console.log("Access token set:", newToken);
+
+      setAccessToken(newToken);
+    })
+    .catch(() => {
+      setAccessToken('');
+      navigate("/login");
+    });
+}, [location.pathname]);
+
   return(
     <>
-    <BrowserRouter>
     <Link to='/home'> Back lang (/home) </Link> <br/><br/><br/>
     <LogoutButton /> <br/><br/><br/>
       <Routes>
@@ -27,7 +51,6 @@ function App() {
         <Route path='/register/teacher' element={<RegisterTeacher />} />
         <Route path='/login' element={<Login />} />
       </Routes>
-    </BrowserRouter>
     </>
   )
 }

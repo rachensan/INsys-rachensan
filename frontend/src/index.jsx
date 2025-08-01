@@ -8,10 +8,20 @@
 
 // // ReactDOM.render(<BrowserRouter><App /></BrowserRouter>, document.getElementById('root'))
 // //createRoot(document.getElementById('root')).render(<App />);
-
+import React from 'react';
 import App from './App.jsx'
 import { createRoot } from 'react-dom/client'
+import { AuthProvider } from './context/AuthContext.jsx';
+import { BrowserRouter } from 'react-router-dom';
 
 const container = document.getElementById('root');
 const root = createRoot(container);
-root.render(<App />);
+root.render(
+  <BrowserRouter >
+    <React.StrictMode>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </React.StrictMode>
+  </BrowserRouter>
+  );
