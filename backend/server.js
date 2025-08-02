@@ -135,6 +135,7 @@ app.use('/api/teacher', teacherAuthRoutes);
       //<p>Exam Code: {exam?.exam_code}</p>
   app.get('/api/exams/:examId/sections', teacherOnly, getSectionTakersByExamId);
   app.get('/api/exams/:examId/scores/:sectionTaker', teacherOnly, getAllScoresByExam);
+  
   app.post('/api/exams/:userId', teacherOnly, createExam);
 
   app.put('/api/exams/:examId/sections', teacherOnly, updateSectionTakers);
