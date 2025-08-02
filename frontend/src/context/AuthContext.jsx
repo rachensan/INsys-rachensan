@@ -3,10 +3,10 @@ import { createContext, useContext, useState } from "react";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState({
+  const [user, setUser] = useState({ //comes from userPayload,,, should be the same
     fullName: "",
-    user_id: "",
-    school_id: "",
+    userId: "",
+    schoolId: "",
     role: "",
   });
   const [accessToken, setAccessToken] = useState('');

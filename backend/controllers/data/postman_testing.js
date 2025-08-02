@@ -4,7 +4,7 @@ import { createUser, getUserById } from "../userControllers";
 
 const postmanLinks = [ //NOT usable, just a note
   { 
-    WHAT: "Create User",
+    WHAT: "Create User", //this is not used
     FUNC: createUser,
     CRUD: "POST",
     path: "/api/users",
@@ -56,8 +56,8 @@ const postmanLinks = [ //NOT usable, just a note
     WHAT: "Get All Exam",
     FUNC: getAllExams,
     CRUD: "GET",
-    path: "/api/exams",
-    link: "http://localhost:3000/api/exams"
+    path: "/api/exams/:userId",
+    link: "http://localhost:3000/api/exams/56"
   },
   {
     WHAT: "Create Exam",

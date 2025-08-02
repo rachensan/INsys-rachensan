@@ -1,15 +1,27 @@
 import jwt from "jsonwebtoken";
 
-export const generateAccessToken = (user) => {
+export const generateAccessToken = (userPayload) => {
   return jwt.sign( 
-    { school_id: user.school_id, role: user.role }, 
+    {
+      userId: userPayload.userId,
+      schoolId: userPayload.schoolId,
+      role: userPayload.role
+    }, 
     process.env.JWT_ACCESS_SECRET,
     { expiresIn: process.env.JWT_ACCESS_EXPIRES_IN }
   );
 };
 
-export const generateRefreshToken = (user) => {
-  return jwt.sign(user, process.env.JWT_REFRESH_SECRET, { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN });
+export const generateRefreshToken = (userPayload) => {
+  return jwt.sign(
+    {
+      userId: userPayload.userId,
+      schoolId: userPayload.schoolId,
+      role: userPayload.role,
+      fullName: userPayload.fullName
+    },
+    process.env.JWT_REFRESH_SECRET, 
+    { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN });
 }
 
 export const verifyToken = (token, secret) => {
@@ -17,6 +29,8 @@ export const verifyToken = (token, secret) => {
 };
 
 export const verifyJWT = (req, res, next) => {
+  console.log("verifyJWT middleware HIT");
+
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'Missing or invalid Authorization header' });
@@ -47,12 +61,20 @@ export const verifyRole = (requiredRole) => {
 
 export const refreshAccessToken = (req, res) => {
   const token = req.cookies.refreshToken;
-  if (!token) return res.status(401).json({ error: "Refresh token missing" });
+  if (!token) return res.status(401).json({ error: "Refresh token missing--cant get access token" });
 
-  const decoded = verifyToken(token, process.env.JWT_REFRESH_SECRET); // throws if invalid
-  const newAccessToken = generateAccessToken(decoded);
+  try {
+    const decoded = verifyToken(token, process.env.JWT_REFRESH_SECRET);
 
-  res.json({ accessToken: newAccessToken });
+    const newAccessToken = generateAccessToken(decoded);
+
+    res.json({
+      accessToken: newAccessToken,
+      user: decoded, //already contains userId, schoolId, fullName, role
+    });
+  } catch (err) {
+    return res.status(403).json({ error: "Invalid refresh token" });
+  }
 };
 
 export const clearToken =  (req, res) => { //for idk yet, i have this logout logic in auth.js

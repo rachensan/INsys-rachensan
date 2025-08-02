@@ -12,14 +12,16 @@ const saltRounds = 5;
 import { verifyToken } from '../utils/jwt.js';
 
 authRoutes.get('/protected', (req, res) => {
-  const token = req.cookies.accessToken;
-  if (!token) return res.sendStatus(401);
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.status(401).json({ error: 'No token provided' });
+
+  const token = authHeader.split(' ')[1]; // "Bearer <token>"
 
   try {
-    const decoded = verifyToken(token, process.env.JWT_ACCESS_SECRET);
+    const decoded = verifyToken(token, process.env.JWT_ACCESS_SECRET); 
     res.json({ message: 'Protected route OK', user: decoded });
   } catch (err) {
-    res.sendStatus(403);
+    return res.status(403).json({ error: 'Invalid token' });
   }
 });
 
@@ -52,9 +54,9 @@ authRoutes.post('/login', async (req, res) => {
     }
 
 //=================== JWT start ===================//
-    const userPayload = {
-      user_id: user.user_id,
-      school_id: user.school_id,
+    const userPayload = { //data will come from here --> handleSubmit (setUser from Login)
+      userId: user.user_id, //we turn them to camelCase coz we handle them in frontend
+      schoolId: user.school_id, //these came from database, hence snake_case
       role: user.role,
       fullName: `${user.first_name} ${user.last_name}`
     };
@@ -71,8 +73,12 @@ authRoutes.post('/login', async (req, res) => {
     });
 //=================== JWT end ===================//
 
-    // Send access token in response
-    res.status(200).json({ message: "Login successful", accessToken, user: userPayload });
+    // Send access token to frontend... this is where it starts
+    res.status(200).json({ 
+      message: "Login successful", 
+      accessToken, 
+      user: userPayload 
+    });
   } catch (error) {
     console.error('Error Logging In', error);
     res.status(500).json({ error: 'Failed to Log in' });

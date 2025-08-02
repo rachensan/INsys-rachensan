@@ -34,11 +34,13 @@ app.use(
   })
 );
 
-
+const teacherOnly = [verifyJWT, verifyRole('teacher')];
+const studentOnly = [verifyJWT, verifyRole('student')];
+const adminOnly = [verifyJWT, verifyRole('admin')];
 
 
 //just for testing if jwt working
-app.get('/api/protected', verifyJWT, (req, res) => {
+app.get('/api/protected', teacherOnly, (req, res) => {
   res.json({ message: "JWT is valid", user: req.user });
 });
 
@@ -53,9 +55,7 @@ app.post("/api/refresh", refreshAccessToken);
 
 
 
-const teacherOnly = [verifyJWT, verifyRole('teacher')];
-const studentOnly = [verifyJWT, verifyRole('student')];
-const adminOnly = [verifyJWT, verifyRole('admin')];
+
 
 app.use(express.json()); // parse JSON bodies
 app.use(express.urlencoded({ extended: true })); 

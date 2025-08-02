@@ -18,26 +18,33 @@ import LogoutButton from './layout/logout.jsx';
 
 function App() {
   const navigate = useNavigate();
-  const { setAccessToken, setUser } = useAuth();
-  const location = useLocation();
+  const { setAccessToken, setUser, user } = useAuth();
 
 useEffect(() => {
   const publicPaths = ["/login", "/register/student", "/register/teacher"];
-  if (publicPaths.includes(location.pathname)) return;
+  if (publicPaths.includes(window.location.pathname)) return;
 
   axios.post("/refresh", {}, { withCredentials: true })
     .then(res => {
       const newToken = res.data.accessToken;
+      const { userId, schoolId, fullName, role } = res.data.user || {};
+
+      setAccessToken(res.data.accessToken);
+      setUser({ userId, schoolId, fullName, role });
+                            console.log("User after refresh: (obj)", { userId, schoolId, fullName, role }); //obj. for debugging only
+
       axios.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
       console.log("Access token set:", newToken);
-
-      setAccessToken(newToken);
     })
     .catch(() => {
       setAccessToken('');
       navigate("/login");
     });
-}, [location.pathname]);
+}, []);
+
+                            useEffect(() => {
+                              console.log("User updated: (from global context)", user);
+                            }, [user]);
 
   return(
     <>

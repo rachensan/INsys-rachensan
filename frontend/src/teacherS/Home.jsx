@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext.jsx';
 import axios from "../utils/axiosConfig.js";
 
 
@@ -26,26 +27,34 @@ export const HomeCard = ({ title, subjCode, schedule, status, sections, onClickN
 function Home() {
   const navigate = useNavigate();
   const [exam, setExam] = useState([]);
+  const { user, accessToken } = useAuth();
 
   useEffect(() => {
-    axios
-      .get('/protected')
-      .then((res) => {
-        console.log("Generating token for:", res.data.user);
+    console.log("User:", user);
+    console.log("Access Token:", accessToken);
+    if (!user.userId || !accessToken) return;
+    
+      axios.get('/protected', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        },
+        withCredentials: true
       })
-      .catch((err) => {
-        console.error("Not authenticated:", err.response?.status);
-      });
-
-    axios
-      .get('/exams')
+      .then(() => {
+        return axios.get(`/exams/${user.userId}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          },
+          withCredentials: true
+        });
+      })
       .then((res) => {
         setExam(res.data);
       })
       .catch((err) => {
-        console.error('Failed to fetch exam data:', err);
+        console.error("Error fetching exams:", err.response?.status);
       });
-  }, []);
+    }, [accessToken, user.userId]);
 
   const handleDelete = (id) => {
     axios

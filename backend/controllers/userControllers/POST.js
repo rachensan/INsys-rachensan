@@ -1,6 +1,6 @@
 import {db} from '../../db.js'
 
-export const createUser = async(req, res) => {
+export const createUser = async(req, res) => { //this is not used, outdated.
   const { fullName, email, role, password, schoolId } = req.body; //from postman testing
 
   try{

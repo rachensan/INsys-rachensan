@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom'; //temporary? idk
 
 function Login() {
   const navigate = useNavigate();
-  const { setAccessToken, setUser, accessToken } = useAuth();
+  const { accessToken, setAccessToken, setUser } = useAuth();
 
   const [formLogin, setFormLogin] = useState({
     email: "",
@@ -16,7 +16,9 @@ function Login() {
   });
 
           useEffect(() => {
-            if (!accessToken) return;
+            console.log("Sending access token:", accessToken);
+
+            if (!accessToken) return console.log("no access token");
             axios.get('/protected',  {
               headers: {
                 Authorization: `Bearer ${accessToken}`
@@ -31,20 +33,14 @@ function Login() {
 
     axios.post("/login", formLogin, { withCredentials: true })
       .then(res => {
-        const token = res.data.accessToken; //get token from backend
+        const { accessToken, user, message} = res.data; //response from backend login (auth.js)
 
-        setAccessToken(token); //store token in global context
-        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        setAccessToken(accessToken); //store access token in global context (AuthContext.js)
+        axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
-      
-        setUser({ //store user info in context
-          fullName: res.data.user.fullName,
-          user_id: res.data.user.id,
-          school_id: res.data.user.school_id,
-          role: res.data.user.role
-        });     
+        setUser(user); //from backend login (auth.js).. but came from userPayload
 
-        alert(res.data.message); 
+        alert(message); 
         navigate('/home');
       })
       .catch(err => {
