@@ -119,10 +119,11 @@ app.use('/api/teacher', teacherAuthRoutes);
   app.get('/api/exams/search', teacherOnly, getExamsByTitle); 
       //for searchbar title search
   app.get('/api/exams/status', teacherOnly, getExamsByStatus);
-  app.get('/api/exams/:examId', teacherOnly, getExamById); 
+  app.get('/api/exams/exam/:examId', teacherOnly, getExamById); 
       //fetch a single exam's details 
       //teachers (to view or edit a specific exam) 
       //students (to display exam info before starting)
+      
   app.get('/api/exams/:userId', teacherOnly, getAllExams);
   app.get('/api/exams/:examId/essays/:studentSchoolId', teacherOnly, getEssayPerStudent);
   app.get('/api/exams/:examId/code', teacherOnly, getExamCode);
