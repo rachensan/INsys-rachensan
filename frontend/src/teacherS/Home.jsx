@@ -56,11 +56,11 @@ function Home() {
       });
     }, [accessToken, user.userId]);
 
-  const handleDelete = (id) => {
+  const handleDelete = (examId) => {
     axios
-      .delete(`/exams/${id}`)
+      .delete(`/exams/${examId}`)
       .then(() => {
-        setExam((prev) => prev.filter((e) => e.id !== id));
+        setExam((prev) => prev.filter((e) => e.exam_id !== examId));
       })
       .catch((err) => console.error(err));
   };
@@ -69,15 +69,15 @@ function Home() {
     <>
       <button onClick={() => navigate('/create-exam')}>Create Exam</button>
       {exam.map((e) => (
-        <HomeCard
-          key={e.id}
+        <HomeCard //these from the database so use snake_case
+          key={e.exam_id}
           title={e.title}
           subjCode={e.subj_code}
           schedule={e.schedule}
           status={e.status}
           sections={e.sections}
-          onClickDel={() => handleDelete(e.id)}
-          onClickNav={() => navigate(`/handle-exam/${e.id}`)}
+          onClickDel={() => handleDelete(e.exam_id)} //send to: const handleDelete = (examId)=>{}
+          onClickNav={() => navigate(`/handle-exam/${e.exam_id}`)}
         />
       ))}
     </>

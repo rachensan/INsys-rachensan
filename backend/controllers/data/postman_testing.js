@@ -2,7 +2,10 @@ import { createExam, deleteExam, getExamsByStatus, getExamsByTitle, updateExamDe
 import { createQuestion } from "../questionControllers";
 import { createUser, getUserById } from "../userControllers";
 
-const postmanLinks = [ //NOT usable, just a note
+//NOT usable, just a note
+//NOT ALL routes are here
+
+const postmanLinks = [ 
   { 
     WHAT: "Create User", //this is not used
     FUNC: createUser,
