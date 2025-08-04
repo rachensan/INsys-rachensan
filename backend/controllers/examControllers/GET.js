@@ -8,8 +8,27 @@ export const getAllExams = async(req, res) =>{
   } catch (error) {
     console.error('Error cant GET exams', error)
   }
-
 } 
+
+export const getAllQuestionsByExam = async (req, res) => {
+  const { examId } = req.params;
+
+  try {
+    const result = await db.query(
+      `SELECT question_id, question_text, question_type, option_a, option_b, option_c, option_d, correct_answer, points 
+      FROM questions 
+      WHERE exam_id = $1`, 
+      [examId]
+    );
+
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error('Error fetching questions by exam:', error);
+    res.status(500).json({ error: 'Failed to fetch questions' });
+  }
+};
+
+
 
 export const getExamsByTitle = async(req, res) => { //for searbar sorting
   const { title } = req.query;

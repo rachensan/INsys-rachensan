@@ -3,17 +3,14 @@ import { useEffect } from 'react';
 import axios from './utils/axiosConfig.js';
 import { useAuth } from './context/AuthContext.jsx';
 
-import RegisterStudent from './pages/RegisterStudent.jsx'
-
-
-import Home from './teacherS/Home';
-import HandleExam from './teacherS/HandleExam';
-import SelectedSection from './teacherS/handleExam/2-Section';
-
-import AllQuestions from './teacherS/handleExam/3-AllQuesType';
-import Identification from './teacherS/handleExam/3-Identification';
-import RegisterTeacher from './pages/RegisterTeacher.jsx';
+//Pages
 import Login from './pages/Login.jsx';
+import RegisterTeacher from './pages/RegisterTeacher.jsx';
+import RegisterStudent from './pages/RegisterStudent.jsx'
+import Home from './pages/Home.jsx';
+import UpdateExam from './pages/UpdateExam.jsx';
+
+//Layout
 import LogoutButton from './layout/logout.jsx';
 
 function App() {
@@ -52,8 +49,8 @@ useEffect(() => {
     <LogoutButton /> <br/><br/><br/>
       <Routes>
         <Route path='/home' element={<Home />} />
-        <Route path='/create-exam' element={<HandleExam />} />
-        <Route path='/handle-exam/:id' element={<HandleExam />} />
+        <Route path='/create-exam' element={<UpdateExam />} />
+        <Route path='/update-exam/:examId' element={<UpdateExam />} />
         <Route path='/register/student' element={<RegisterStudent />} />
         <Route path='/register/teacher' element={<RegisterTeacher />} />
         <Route path='/login' element={<Login />} />

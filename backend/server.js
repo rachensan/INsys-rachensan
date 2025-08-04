@@ -82,7 +82,7 @@ app.use('/api/teacher', teacherAuthRoutes);
 
 //examCONTROLLERS
   //GET
-    import { getAllExams, getExamById, getExamsByTitle, getExamsByStatus, getExamCode, getSectionTakersByExamId, getAllScoresByExam, getEssayPerStudent, getExamSchedule, getSectionSchedule } from './controllers/examControllers/GET.js'
+    import { getAllExams, getExamById, getExamsByTitle, getExamsByStatus, getExamCode, getSectionTakersByExamId, getAllScoresByExam, getEssayPerStudent, getExamSchedule, getSectionSchedule, getAllQuestionsByExam } from './controllers/examControllers/GET.js'
   //POST
     import { createExam } from './controllers/examControllers/POST.js'
   //UPDATE
@@ -97,7 +97,7 @@ app.use('/api/teacher', teacherAuthRoutes);
   //POST
     import { createQuestion } from './controllers/questionControllers/POST.js'
   //UPDATE
-    import {  } from './controllers/questionControllers/UPDATE.js'
+    import { updateQuestion } from './controllers/questionControllers/UPDATE.js'
   //DELETE
     import { deleteQuestionById } from "./controllers/questionControllers/DELETE.js";
 
@@ -120,8 +120,10 @@ app.use('/api/teacher', teacherAuthRoutes);
   app.get('/api/exams/search', teacherOnly, getExamsByTitle); 
       //for searchbar title search
   app.get('/api/exams/status', teacherOnly, getExamsByStatus);
-  app.get('/api/exams/:examId/exam', teacherOnly, getExamById); 
-      //fetch a single exam's details 
+  app.get('/api/exams/questions/:examId', teacherOnly, getAllQuestionsByExam);
+      //get all questions to a specific exam
+  app.get('/api/exams/exam/:examId', teacherOnly, getExamById); 
+      //fetch a single exam's details (not questions)
       //teachers (to view or edit a specific exam) 
       //students (to display exam info before starting)
       
@@ -151,12 +153,13 @@ app.use('/api/teacher', teacherAuthRoutes);
   app.put('/api/exams/:examId/schedule', teacherOnly, finalizeExamSchedule);
 
   app.delete('/api/exams/:examId', teacherOnly, deleteExam);
-    //singular... one exam deletion
+      //singular... one exam deletion
 
 // ========== QUESTION ROUTES ==========
-  app.post('/api/questions', teacherOnly, createQuestion);
+  app.post('/api/questions/:examId', teacherOnly, createQuestion);
   app.get('/api/exams/:examId/questions', teacherOnly, getQuestionsByExamId);
   app.delete('/api/exams/:examId/questions/:questionId', teacherOnly, deleteQuestionById);
+  app.patch('/api/questions/:questionId', teacherOnly, updateQuestion);
 
 
 // ========== STUDENT ROUTES ==========

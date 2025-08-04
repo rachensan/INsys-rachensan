@@ -2,13 +2,13 @@ import axios from 'axios';
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import Title from "./handleExam/1-Title";
-import SelectedSection from './handleExam/2-Section';
+import Title from "../teacherS/handleExam/1-Title";
+import SelectedSection from '../teacherS/handleExam/2-Section';
 
-import AllQuestions, { QuestionAdd } from './handleExam/3-AllQuesType';
-import Identification from './handleExam/3-Identification';
-import MultipleChoice from './handleExam/3-MultipleC';
-import TrueFalse from './handleExam/3-TrueFalse';
+import AllQuestions, { QuestionAdd } from '../teacherS/handleExam/3-AllQuesType';
+import Identification from '../teacherS/handleExam/3-Identification';
+import MultipleChoice from '../teacherS/handleExam/3-MultipleC';
+import TrueFalse from '../teacherS/handleExam/3-TrueFalse';
 
 function HandleExam() {
   const navigate = useNavigate();
@@ -34,22 +34,17 @@ function HandleExam() {
     questions: [],
   } //for resetting the form, etc.
 
-
-
-
-
-
   //useEffect will work IF there is an existing id
   useEffect(()=>{
-    if(id) {
-      axios.get(`http://localhost:3000/api/exams/${id}`)
+    if(examId) {
+      axios.get(`http://localhost:3000/api/exams/${examId}`)
         .then(res => {
           console.log(res.data);
           setExamData(res.data);
         })
         .catch(err=>{console.error(err)})
     }
-  }, [id])  
+  }, [examId])  
   //it will be skipped, if no id seen, it will create a new one
 
 

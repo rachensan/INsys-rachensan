@@ -75,6 +75,14 @@ const postmanLinks = [
     }
   },
   {
+    WHAT: "Get All Exam Questions",
+    FUNC: getAllQuestionsByExam,
+    CRUD: "GET",
+    path: "/api/exams/:examId/questions",
+    link: "http://localhost:3000/api/exams/7/questions"
+  },
+  
+  {
     WHAT: "Create Question",
     FUNC: createQuestion,
     CRUD: "POST",
@@ -87,6 +95,19 @@ const postmanLinks = [
       "question": "What is 2 + 2?",
       "correctAnswer": "4",
       "options": ["1", "2", "3", "4"]
+    }
+  },
+    {
+    WHAT: "Update a Question",
+    FUNC: updateQuestion,
+    CRUD: "PATCH",
+    path: "/api/questions/:questionId",
+    link: "http://localhost:3000/api/questions/2",
+    body: {
+      "questionType": "multiplechoice",
+      "question": "What is the capital of Germany?",
+      "correctAnswer": "Berlin",
+      "options": ["Paris", "London", "Berlin", "Rome"]
     }
   },
   {

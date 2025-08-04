@@ -30,29 +30,27 @@ function Home() {
   const { user, accessToken } = useAuth();
 
   useEffect(() => {
+    const headers = { Authorization: `Bearer ${accessToken}` }
+    const config = {
+      headers,
+      withCredentials: true
+    };
+
+
+
     console.log("User:", user);
     console.log("Access Token:", accessToken);
     if (!user.userId || !accessToken) return;
     
-      axios.get('/protected', {
-        headers: {
-          Authorization: `Bearer ${accessToken}`
-        },
-        withCredentials: true
-      })
-      .then(() => {
-        return axios.get(`/exams/${user.userId}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          },
-          withCredentials: true
-        });
-      })
-      .then((res) => {
-        setExam(res.data);
-      })
-      .catch((err) => {
-        console.error("Error fetching exams:", err.response?.status);
+      axios.get('/protected', config)
+        .then(() => {
+          return axios.get(`/exams/${user.userId}`, config);
+        })
+        .then((res) => {
+          setExam(res.data);
+        })
+        .catch((err) => {
+          console.error("Error fetching exams:", err.response?.status);
       });
     }, [accessToken, user.userId]);
 
@@ -77,7 +75,7 @@ function Home() {
           status={e.status}
           sections={e.sections}
           onClickDel={() => handleDelete(e.exam_id)} //send to: const handleDelete = (examId)=>{}
-          onClickNav={() => navigate(`/handle-exam/${e.exam_id}`)}
+          onClickNav={() => navigate(`/update-exam/${e.exam_id}`)}
         />
       ))}
     </>

@@ -6,8 +6,8 @@ export const createQuestion = async(req, res) => {
   //TRUE OR FALSE
   //MULTIPLE-CHOCIE
   //ESSAY
-  
-  const { questionType, question, correctAnswer, options, examId, userId } = req.body 
+  const { examId } = req.params;
+  const { questionType, question, correctAnswer, options, userId } = req.body 
   //examId and userId are TEMPORARY CUZ WE DONT HAVE REGISTER AND LOGIN YET
   //from front-end so keep it camelCase
   const [optionA, optionB, optionC, optionD] = options || [];
