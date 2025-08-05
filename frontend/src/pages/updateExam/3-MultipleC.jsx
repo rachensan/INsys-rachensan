@@ -1,84 +1,76 @@
 import React, {useState} from 'react'
-import axios from 'axios';
 
+import Button from '../../components/Buttons.jsx'
+import InputField from '../../components/InputFields.jsx'
 
-function MultipleChoice({ exam, id, question: initialQuestion, options: initialOptions, correctAnswer: initialCorrectAnswer, onSave, formId }) {
-  const [question, setQuestion] = useState(initialQuestion || '');
-  const [correctAnswer, setCorrectAnswer] = useState(initialCorrectAnswer || '');
-  const [choices, setChoices] = useState(initialOptions || ['', '', '']);
-
-  const [isSaving, setIsSaving] = useState(false);
+function MultipleChoice({ id, question, options, correctAnswer, points, onSave }) {
+  const [editQuestion, setEditQuestion] = useState(question);
+  const [choices, setChoices] = useState(options || ['', '', '', '']);
+  const [editAnswer, setEditAnswer] = useState(correctAnswer);
+  const [editPoints, setEditPoints] = useState(points);
   
+  const [isEditing, setIsEditing] = useState(false);
 
-  // Combine ALL wrong choices and correct answer in one array for shuffling later
-  const allChoices = [...choices, correctAnswer];
-
-  const handleSaveQuestion = () => {
-    if (!isSaving) {
-      const newQuestion = {
-          id: id,
-          type: "multiplechoice",
-          question,
-          options: choices,
-          correctAnswer,
-          
-      };
-      onSave(newQuestion); // pass the saved question to parent
-      console.log("Saved Question Object:", newQuestion);
-      //we wont shuffle here pala, we shuffle sa student side para di magulo logic sa teacher-side
-      console.log("All Options to shuffle latur:", allChoices); 
+  const handleClick = () => {
+    if (isEditing) {
+      onSave({
+        question_id: id,
+        question_text: editQuestion,
+        options: choices,
+        correct_answer: editAnswer,
+        points: editPoints,
+      });
     }
-    console.log("exam:", exam);
-    setIsSaving(!isSaving);
-  }
+    setIsEditing(!isEditing);
+  };
 
 
   return (
     <>
     <div className='multiplechoiceDiv'>
-      <button type="button" className='editTitleBTN' onClick={handleSaveQuestion}>
-        {isSaving ? 'Edit' : 'Save' }
-      </button>
+      <Button label={isEditing ? "Save" : "Edit"} onClick={handleClick} />
       <br/>
       <div>
-        <label>Question:</label>
-        <input
-          type="text"
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
+        <InputField className="question-text"
+          label="Question"
+          name="question"
+          value={editQuestion}
+          onChange={(e) => setEditQuestion(e.target.value)}
           placeholder="Type the question here"
-          disabled={isSaving}
-      />
+          disabled={!isEditing}
+        />
       </div>
+
 {/* INPUTING WRONG CHOICES/OPTIONS*/}
       <div>
-        <p> Choices: </p>
         {choices.map((choice, index) => (
-          <div key={index}>
-            <input
-              type="text"
-              value={choice}
-              onChange={(e) => {
-                const updated = [...choices];
-                updated[index] = e.target.value;
-                setChoices(updated);
-              }}
-              placeholder={`Option ${index + 1}`}
-              disabled={isSaving}
-            />
-          </div>
+          <InputField
+            key={index}
+            className="choices-text"
+            label={`${String.fromCharCode(65 + index)}:`}
+            name={`option${index}`}
+            value={choice}
+            onChange={(e) => {
+              const updated = [...choices];
+              updated[index] = e.target.value;
+              setChoices(updated);
+            }}
+            placeholder={`Option ${index + 1}`}
+            disabled={!isEditing}
+          />
         ))}
-    </div>
+      </div>
+      
 {/* INPUTING THE ACTUAL RIGHT ANSWER*/}
-    <div>
-      <p>Correct Answer:</p>
-      <input 
-        type="text" 
-        value={correctAnswer} 
-        onChange={(e) => setCorrectAnswer(e.target.value)} 
-        placeholder="Type the correct answer"
-        disabled={isSaving}
-      />
+      <div>
+        <InputField className="answer-text" 
+          label="Correct Answer"
+          name="correctAnswer"
+          value={editAnswer}
+          onChange={(e) => setEditAnswer(e.target.value)}
+          placeholder="Type the correct answer"
+          disabled={!isEditing}
+        />
       </div>
     </div>
       

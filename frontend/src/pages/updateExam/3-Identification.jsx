@@ -1,8 +1,4 @@
 import React, {useState} from "react";
-import axios from "../../utils/axiosConfig.js";
-import { useParams } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext.jsx";
-
 
 import Button from '../../components/Buttons.jsx'
 import InputField from '../../components/InputFields.jsx'

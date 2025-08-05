@@ -40,12 +40,15 @@ export const EditableQuestion = ({ data, onSave }) => { //editing existing quest
     question: formData.question_text,
     correctAnswer: formData.correct_answer,
     points: formData.points,
-    optionA: formData.option_a,
-    optionB: formData.option_b,
-    optionC: formData.option_c,
-    optionD: formData.option_d,
     onSave: onSave
   };
+
+  const optionsArray = [
+    formData.option_a,
+    formData.option_b,
+    formData.option_c,
+    formData.option_d,
+  ];
 
   return (
     <div className="editable-question">
@@ -58,7 +61,7 @@ export const EditableQuestion = ({ data, onSave }) => { //editing existing quest
       />
 
       {type === 'identification' && <Identification {...commonProps} />}
-      {type === 'multiplechoice' && <MultipleChoice {...commonProps} />}
+      {type === 'multiplechoice' && <MultipleChoice {...commonProps} options={optionsArray} />}
       {type === 'truefalse' && <TrueFalse {...commonProps} />}
     </div>
   );
