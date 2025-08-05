@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 import SelectField from '../components/SelectFields.jsx';
 
 //updateExam folder
-import AllQuestions, { QuestionAdd, EditableQuestion } from './updateExam/3-AllQuesType.jsx';
+import AddQuestionForm, { QuestionAdd, EditableQuestionForm } from './updateExam/3-AllQuesType.jsx';
 
 function UpdateExam() {
   const { accessToken } = useAuth();
@@ -45,7 +45,7 @@ function UpdateExam() {
   if (!examInfo) return <p>Loading exam... fetching exam info...</p>;
   if (!examQues) return <p>Loading exam... probably no questions yet...</p>;
 
-  const handleQuestionAdd = async() => { //adds blank form
+  const handleQuestionAdd = async() => { //adds blank form just for displaying empty form UI 
     const newForm = { id: Date.now() };
     setQuestionForms((prev) => [...prev, newForm]);
   }
@@ -86,7 +86,7 @@ function UpdateExam() {
     <QuestionAdd onClick={handleQuestionAdd} />
 
     {examQues.map((q) => (
-      <EditableQuestion
+      <EditableQuestionForm
         key={q.question_id}
         data={q}
         onSave={handleSaveQuestion}
@@ -97,12 +97,12 @@ function UpdateExam() {
   {/*   Adding of question FORM  */}
 
   {questionForms.map((form) => (
-    <AllQuestions
+    <AddQuestionForm
       key={form.id}
       formId={form.id}
       exam={examQues}
       setExam={setExamQues}
-      onSave={handleQuestionAdd}
+      onSave={handleSaveQuestion}
     />
   )
   )}

@@ -6,11 +6,11 @@ function InputField ({ label, type="text", name, value, onChange, placeholder, c
     <div>
       <label>{label}</label>
       <input 
-        required
+        required //works only in form submissions
         className={className}
         type={type}
         name={name}
-        value={value}
+        value={value || ''}
         onChange={onChange}
         placeholder={placeholder}
         disabled={disabled}

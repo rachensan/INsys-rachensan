@@ -3,15 +3,17 @@ import React, { useState, useEffect } from "react";
 import Identification from "./3-Identification";
 import MultipleChoice from "./3-MultipleC";
 import TrueFalse from "./3-TrueFalse";
+import Essay from "./3-Essay";
 import SelectField from "../../components/SelectFields";
 
 const questionTypes = [
   { label: "Identification", value: "identification" },
   { label: "Multiple Choice", value: "multiplechoice" },
   { label: "True or False", value: "truefalse" },
+  { label: "Essay", value: "essay" }
 ];
 
-export const EditableQuestion = ({ data, onSave }) => { //editing existing questions in the database
+export const EditableQuestionForm = ({ data, onSave }) => { //editing existing questions in the database
   const [type, setType] = useState(data.question_type);
   const [formData, setFormData] = useState(data);
 
@@ -63,9 +65,11 @@ export const EditableQuestion = ({ data, onSave }) => { //editing existing quest
       {type === 'identification' && <Identification {...commonProps} />}
       {type === 'multiplechoice' && <MultipleChoice {...commonProps} options={optionsArray} />}
       {type === 'truefalse' && <TrueFalse {...commonProps} />}
+      {type === 'essay' && <Essay {...commonProps} />}
     </div>
   );
 }
+
 
 
 
@@ -86,7 +90,9 @@ export const QuestionAdd = ({ onClick }) => {
   );
 }
 
-function AllQuestions({ exam, setExam, onSave, formId }) { //adding new questions 
+
+
+function AddQuestionForm({ exam, setExam, onSave, formId }) { //adding new questions 
   const [selectedType, setSelectedType] = useState("identification");
   const [prevType, setPrevType] = useState("identification");
   const [questionData, setQuestionData] = useState({});
@@ -99,7 +105,9 @@ function AllQuestions({ exam, setExam, onSave, formId }) { //adding new question
   const handleQuesTypeChange = (e) => {
     const newType = e.target.value;
 
-    if (newType !== selectedType) {
+    const hasInput = Object.keys(questionData).length > 0; //{"question_text", "options", "etc"} or {}
+
+    if (newType !== selectedType && hasInput) {
       const confirmed = window.confirm(
         "Changing question type will clear the current form. Continue?"
       );
@@ -111,6 +119,10 @@ function AllQuestions({ exam, setExam, onSave, formId }) { //adding new question
       } else {
         setSelectedType(prevType);
       }
+    } else {
+      setSelectedType(newType);
+      setPrevType(newType);
+      setQuestionData({});
     }
   };
 
@@ -119,7 +131,6 @@ function AllQuestions({ exam, setExam, onSave, formId }) { //adding new question
     id: formId, //exam id
     onSave: (data) => {
       setQuestionData(data);
-      onSave({ ...data, questionType: selectedType });
     },
     data: questionData,
   };
@@ -127,7 +138,6 @@ function AllQuestions({ exam, setExam, onSave, formId }) { //adding new question
 
   return (
     <div className="question1Div">
-      <h3>Add Question</h3>
       <SelectField
         label="Question Type"
         name="questionType"
@@ -137,16 +147,17 @@ function AllQuestions({ exam, setExam, onSave, formId }) { //adding new question
           { label: "Identification", value: "identification" },
           { label: "Multiple Choice", value: "multiplechoice" },
           { label: "True or False", value: "truefalse" },
-          { label: "Essay", value: "Essay" }
+          { label: "Essay", value: "essay" }
         ]}
       />
 
       {selectedType === "identification" && <Identification {...commonProps} />}
       {selectedType === "multiplechoice" && <MultipleChoice {...commonProps} />}
       {selectedType === "truefalse" && <TrueFalse {...commonProps} />}
+      {selectedType === "essay" && <Essay {...commonProps} />}
     </div>
   );
 }
 
-export default AllQuestions;
+export default AddQuestionForm;
 

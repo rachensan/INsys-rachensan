@@ -4,9 +4,8 @@ import Button from '../../components/Buttons.jsx'
 import InputField from '../../components/InputFields.jsx'
 
 
-function Identification({ id, question, correctAnswer, points, onSave }) {
+function Essay({ id, question, points, onSave }) {
   const [editQuestion, setEditQuestion] = useState(question || "");
-  const [editAnswer, setEditAnswer] = useState(correctAnswer || "");
   const [editPoints, setEditPoints] = useState(points || 1);
 
   const [isEditing, setIsEditing] = useState(false);
@@ -20,13 +19,10 @@ function Identification({ id, question, correctAnswer, points, onSave }) {
       onSave({
         question_id: id,
         question_text: editQuestion,
-        correct_answer: editAnswer,
         points: editPoints,
       });
-      setIsEditing(false);
-    } else {
-      setIsEditing(true);
     }
+    setIsEditing(!isEditing);
   };
 
   return (
@@ -49,18 +45,10 @@ function Identification({ id, question, correctAnswer, points, onSave }) {
       onChange={(e) => setEditQuestion(e.target.value)}
       disabled={!isEditing}
     />
-
-    <InputField className="answer-text" 
-      label="Correct Answer"
-      name="correctAnswer"
-      value={editAnswer}
-      onChange={(e) => setEditAnswer(e.target.value)}
-      disabled={!isEditing}
-    />
     </div>
     </>
     
     );
 }
 
-export default Identification;
+export default Essay;

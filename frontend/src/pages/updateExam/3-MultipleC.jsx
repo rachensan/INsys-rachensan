@@ -4,15 +4,19 @@ import Button from '../../components/Buttons.jsx'
 import InputField from '../../components/InputFields.jsx'
 
 function MultipleChoice({ id, question, options, correctAnswer, points, onSave }) {
-  const [editQuestion, setEditQuestion] = useState(question);
+  const [editQuestion, setEditQuestion] = useState(question || "");
   const [choices, setChoices] = useState(options || ['', '', '', '']);
-  const [editAnswer, setEditAnswer] = useState(correctAnswer);
-  const [editPoints, setEditPoints] = useState(points);
+  const [editAnswer, setEditAnswer] = useState(correctAnswer || "");
+  const [editPoints, setEditPoints] = useState(points || 1);
   
   const [isEditing, setIsEditing] = useState(false);
 
   const handleClick = () => {
     if (isEditing) {
+      if (!editQuestion.trim() || !editAnswer.trim()) {
+        alert("Please fill in all fields.");
+        return;
+      }
       onSave({
         question_id: id,
         question_text: editQuestion,
@@ -30,6 +34,16 @@ function MultipleChoice({ id, question, options, correctAnswer, points, onSave }
     <div className='multiplechoiceDiv'>
       <Button label={isEditing ? "Save" : "Edit"} onClick={handleClick} />
       <br/>
+      <InputField className="points" 
+        label="Points"
+        type="number"
+        name="points"
+        value={editPoints}
+        min={1}
+        onChange={(e) => setEditPoints(Math.max(1, parseInt(e.target.value) || 1))}
+        disabled={!isEditing}
+      />
+      
       <div>
         <InputField className="question-text"
           label="Question"
