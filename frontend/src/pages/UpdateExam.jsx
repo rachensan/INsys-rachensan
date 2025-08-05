@@ -6,9 +6,6 @@ import { useAuth } from '../context/AuthContext.jsx';
 import SelectField from '../components/SelectFields.jsx';
 
 //updateExam folder
-import Identification from './updateExam/3-Identification.jsx'
-import MultipleChoice from './updateExam/3-MultipleC.jsx'
-import TrueFalse from './updateExam/3-TrueFalse.jsx'
 import AllQuestions, { QuestionAdd, EditableQuestion } from './updateExam/3-AllQuesType.jsx';
 
 function UpdateExam() {

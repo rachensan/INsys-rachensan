@@ -84,6 +84,11 @@ input {
   background-color: rgb(157, 157, 219);
   padding: 20px;
 }
+.editable-question {
+  background-color: rgb(157, 157, 219);
+  padding: 20px;
+  margin-top: 5px;
+}
 
   .identificationDiv {
     background-color: rgb(127, 229, 255);
