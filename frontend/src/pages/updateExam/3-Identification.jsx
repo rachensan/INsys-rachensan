@@ -29,6 +29,9 @@ function Identification({ id, question, correctAnswer, points, onSave }) {
 
   return (
     <>
+    <div className="identificationDiv">
+      <Button label={isEditing ? "Save" : "Edit"} onClick={handleClick} />
+    
     <InputField className="question-text"
       label="Question"
       name="question"
@@ -53,9 +56,6 @@ function Identification({ id, question, correctAnswer, points, onSave }) {
       onChange={(e) => setEditPoints(e.target.value)}
       disabled={!isEditing}
     />
-    <div className="identificationDiv">
-
-      <Button label={isEditing ? "Save" : "Edit"} onClick={handleClick} />
     </div>
     </>
     

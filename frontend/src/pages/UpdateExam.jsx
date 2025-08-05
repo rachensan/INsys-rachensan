@@ -9,6 +9,7 @@ import SelectField from '../components/SelectFields.jsx';
 import Identification from './updateExam/3-Identification.jsx'
 import MultipleChoice from './updateExam/3-MultipleC.jsx'
 import TrueFalse from './updateExam/3-TrueFalse.jsx'
+import AllQuestions, { QuestionAdd, EditableQuestion } from './updateExam/3-AllQuesType.jsx';
 
 function UpdateExam() {
   const { accessToken } = useAuth();
@@ -17,8 +18,8 @@ function UpdateExam() {
   const [questionTypes, setQuestionTypes] = useState({});
   const [questionForms, setQuestionForms] = useState([]);
 
-  const [examInfo, setExamInfo] = useState(null);
-  const [examQues, setExamQues] = useState(null);
+  const [examInfo, setExamInfo] = useState(null); //title, code, stats, sched, sect
+  const [examQues, setExamQues] = useState(null); //questions
 
   useEffect(() => {
     if (!accessToken || !examId) return;
@@ -47,20 +48,31 @@ function UpdateExam() {
   if (!examInfo) return <p>Loading exam... fetching exam info...</p>;
   if (!examQues) return <p>Loading exam... probably no questions yet...</p>;
 
-  const handleSave = async (updatedData) => {
-    const headers = { Authorization: `Bearer ${accessToken}` }
-    const config = {
-      headers,
-      withCredentials: true
-    };
+  const handleQuestionAdd = async() => { //adds blank form
+    const newForm = { id: Date.now() };
+    setQuestionForms((prev) => [...prev, newForm]);
+  }
 
+  const handleSaveQuestion = async (data) => { //save via axios
     try {
-      const res = await axios.patch(`/api/questions/${updatedData.question_id}`, updatedData);
-      
-      console.log("Updated successfully:", res.data);
-      // Optionally update local state if needed
+      const headers = { Authorization: `Bearer ${accessToken}` }
+      const config = {
+        headers,
+        withCredentials: true
+      };
+    
+      const res = await axios.post(`/questions/${examId}`, {
+        ...data,
+        exam_id: examId
+      }, config);
+
+      console.log("✅ Created new question:", res.data);
+
+      // Optionally refetch all questions
+      const updatedQuestions = await axios.get(`/exams/questions/${examId}`, config);
+      setExamQues(updatedQuestions.data);
     } catch (err) {
-      console.error("Update failed:", err);
+      console.error("❌ Failed to create question:", err);
     }
   };
 
@@ -74,75 +86,29 @@ function UpdateExam() {
       <p>Sections: {examInfo.sections}</p>
     </div>
 
-    {examQues.map((q) => {
-  if (q.question_type === 'identification') {
-    return (
-      <div key={q.question_id}>
-        <Identification 
-          id={q.question_id}
-          question={q.question_text}
-          correctAnswer={q.correct_answer}
-          points={q.points}
-          onSave={handleSave}
-        />
-      </div>
-    );
-  }
+    <QuestionAdd onClick={handleQuestionAdd} />
 
-  if (q.question_type === 'multiplechoice') {
-    return (
-      <div key={q.question_id}>
-        <MultipleChoice 
-          id={q.question_id}
-          question={q.question_text}
-          optionA={q.option_a}
-          optionB={q.option_b}
-          optionC={q.option_c}
-          optionD={q.option_d}
-          correctAnswer={q.correct_answer}
-          points={q.points}
-          onSave={handleSave}
-        />
-      </div>
-    );
-  }
+    {examQues.map((q) => (
+      <EditableQuestion
+        key={q.question_id}
+        data={q}
+        onSave={handleSaveQuestion}
+      />
+    ))}
 
-  if (q.question_type === 'truefalse') {
-    return (
-      <div key={q.question_id}>
-        <TrueFalse 
-          id={q.question_id}
-          question={q.question_text}
-          optionA={q.option_a}
-          optionB={q.option_b}
-          correctAnswer={q.correct_answer}
-          points={q.points}
-          onSave={handleSave}
-        />
-      </div>
-    );
-  }
 
   {/*   Adding of question FORM  */}
-  {questionForms.map((e) => (
+
+  {questionForms.map((form) => (
     <AllQuestions
-      key={e.id}
-      formId={e.id}
-      exam={examData} // comes from backend or created via POST
-      setExam={setExamData} 
-      onSave={() => {
-        axios.get(`http://localhost:3000/api/exams/${examData.id}`)
-          .then(res => setExamData(res.data))
-          .catch(err => console.error(err));
-      }}
+      key={form.id}
+      formId={form.id}
+      exam={examQues}
+      setExam={setExamQues}
+      onSave={handleQuestionAdd}
     />
-  ))}
-
-
-
-
-  return null; // fallback
-})}
+  )
+  )}
     </>
   );
 }

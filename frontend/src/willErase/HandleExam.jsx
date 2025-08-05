@@ -166,4 +166,50 @@ function HandleExam() {
   )
 }
 
+/*  if (q.question_type === 'identification') {
+    return (
+        <Identification 
+          key={q.question_id}
+          id={q.question_id}
+          question={q.question_text}
+          correctAnswer={q.correct_answer}
+          points={q.points}
+          onSave={handleSaveQuestion}
+        />
+    );
+  }
+
+  if (q.question_type === 'multiplechoice') {
+    return (
+        <MultipleChoice 
+          key={q.question_id}
+          id={q.question_id}
+          question={q.question_text}
+          optionA={q.option_a}
+          optionB={q.option_b}
+          optionC={q.option_c}
+          optionD={q.option_d}
+          correctAnswer={q.correct_answer}
+          points={q.points}
+          onSave={handleSaveQuestion}
+        />
+    );
+  }
+
+  if (q.question_type === 'truefalse') {
+    return (
+        <TrueFalse 
+          key={q.question_id}
+          id={q.question_id}
+          question={q.question_text}
+          optionA={q.option_a}
+          optionB={q.option_b}
+          correctAnswer={q.correct_answer}
+          points={q.points}
+          onSave={handleSaveQuestion}
+        />
+    );
+  }
+*/
+
 export default HandleExam;
