@@ -64,7 +64,7 @@ function UpdateExam() {
       //remove the saved form from the list of unsaved forms
       setQuestionForms((prev) => prev.filter((f) => f.id !== data.questionId));
 
-      //refetch and update questions from DB
+      //refetch and update questions from DB.. best practice
       const updatedQuestions = await axios.get(`/exams/questions/${examId}`, config);
       setExamQues(updatedQuestions.data);
     } catch (err) {
@@ -74,37 +74,38 @@ function UpdateExam() {
 
   return (
     <> UpdateExam
-    <div>
-      <h2>Update Exam: {examInfo.title}</h2>
-      <p>Code: {examInfo.exam_code}</p>
-      <p>Schedule: {examInfo.schedule}</p>
-      <p>Status: {examInfo.status}</p>
-      <p>Sections: {examInfo.sections}</p>
-    </div>
+      <div>
+        <h2>Update Exam: {examInfo.title}</h2>
+        <p>Code: {examInfo.exam_code}</p>
+        <p>Schedule: {examInfo.schedule}</p>
+        <p>Status: {examInfo.status}</p>
+        <p>Sections: {examInfo.sections}</p>
+      </div>
+      
 
-    <QuestionAdd onClick={handleQuestionAdd} />
-
-    {examQues.map((q) => (
-      <EditableQuestionForm
-        key={q.question_id}
-        data={q}
-        onSave={handleSaveQuestion}
-      />
-    ))}
+      {examQues.map((q) => (
+        <EditableQuestionForm
+          key={q.question_id}
+          data={q}
+          onSave={handleSaveQuestion}
+        />
+      ))}
 
 
-  {/*   Adding of question FORM  */}
+    {/*   Adding of question FORM  */}
 
-  {questionForms.map((form) => (
-    <AddQuestionForm
-      key={form.id}
-      formId={form.id}
-      exam={examQues}
-      setExam={setExamQues}
-      onSave={handleSaveQuestion}
-    />
-  )
-  )}
+      {questionForms.map((form) => (
+        <AddQuestionForm
+          key={form.id}
+          formId={form.id}
+          exam={examQues}
+          setExam={setExamQues}
+          onSave={handleSaveQuestion}
+        />
+      )
+      )}
+      
+      <QuestionAdd onClick={handleQuestionAdd} />
     </>
   );
 }

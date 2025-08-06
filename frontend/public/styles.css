@@ -91,7 +91,7 @@ input {
 }
 
   .identificationDiv {
-    background-color: rgb(127, 229, 255);
+    background-color: rgb(198, 244, 255);
     padding: 20px;
   }
 
@@ -101,12 +101,17 @@ input {
     }
 
   .multiplechoiceDiv {
-    background-color: rgb(255, 192, 120);
+    background-color: rgb(255, 228, 196);
     padding: 20px;
   }
 
   .truefalseDiv {
-    background-color: rgb(170, 255, 177);
+    background-color: rgb(216, 255, 219);
+    padding: 20px;
+  }
+
+  .essayDiv {
+    background-color: rgb(255, 216, 242);
     padding: 20px;
   }
 

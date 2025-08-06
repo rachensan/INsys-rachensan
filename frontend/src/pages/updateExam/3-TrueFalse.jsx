@@ -5,7 +5,8 @@ import SelectField from '../../components/SelectFields';
 
 function TrueFalse({ id, question, options, correctAnswer, points, onSave }) {
   const [editQuestion, setEditQuestion] = useState(question || "");
-  const [editAnswer, setEditAnswer] = useState(correctAnswer);
+  const [choices, setChoices] = useState(options || ['True', 'False']);
+  const [editAnswer, setEditAnswer] = useState(correctAnswer || "True");
   const [editPoints, setEditPoints] = useState(points || 1);
   const questionType = 'truefalse';
 
@@ -21,6 +22,7 @@ function TrueFalse({ id, question, options, correctAnswer, points, onSave }) {
         questionId: id,
         questionText: editQuestion,
         questionType: questionType,
+        options: choices,
         correctAnswer: editAnswer,
         points: editPoints,
       });

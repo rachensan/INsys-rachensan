@@ -13,7 +13,7 @@ function Essay({ id, question, points, onSave }) {
 
   const handleClick = () => {
     if (isEditing) {
-      if (!editQuestion.trim() || !editAnswer.trim()) {
+      if (!editQuestion.trim()) {
         alert("Please fill in all fields.");
         return;
       }
@@ -23,13 +23,15 @@ function Essay({ id, question, points, onSave }) {
         questionType: questionType,
         points: editPoints,
       });
+      setIsEditing(false);
+    } else {
+      setIsEditing(true);
     }
-    setIsEditing(!isEditing);
   };
 
   return (
     <>
-    <div className="identificationDiv">
+    <div className="essayDiv">
       <Button label={isEditing ? "Save" : "Edit"} onClick={handleClick} />
     <InputField className="points" 
       label="Points"

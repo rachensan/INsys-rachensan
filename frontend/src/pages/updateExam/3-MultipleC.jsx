@@ -18,6 +18,12 @@ function MultipleChoice({ id, question, options, correctAnswer, points, onSave }
         alert("Please fill in all fields.");
         return;
       }
+      if (!choices.includes(editAnswer)) {
+        alert("Answer should be one of the choices");
+        return;
+      }
+
+
       onSave({
         questionId: id,
         questionText: editQuestion,
@@ -26,8 +32,10 @@ function MultipleChoice({ id, question, options, correctAnswer, points, onSave }
         correctAnswer: editAnswer,
         points: editPoints,
       });
+      setIsEditing(false);
+    } else {
+      setIsEditing(true);
     }
-    setIsEditing(!isEditing);
   };
 
 
