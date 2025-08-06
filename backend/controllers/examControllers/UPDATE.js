@@ -70,27 +70,28 @@ export const updateExamTimer = async(req, res) => {
 
 export const updateExamDetails = async(req, res) => {
   const { examId } = req.params;
+  const userId = req.user.userId;
   const { title, schedule, timer, status } = req.body;
 
   try {
     const fields = [];
     const values = [];
-    let count = 1;
+    let count = 1; //SQL placeholders start at $1 (not $0)
 
     if (title) { //if exists = edited/patch
-      fields.push(`title = $${count++}`); //count=1 will increment +1 === $2
+      fields.push(`title = $${count++}`); //count = 1, then → increment count = 2
       values.push(title);
     }
     if (schedule) {
-      fields.push(`schedule = $${count++}`); // $3
+      fields.push(`schedule = $${count++}`); //count = 2, then count = 3
       values.push(schedule);
     }
     if (status) {
-      fields.push(`status = $${count++}`); // $4
+      fields.push(`status = $${count++}`); //count = 3, then count = 4
       values.push(status);
     }
     if (timer) {
-      fields.push(`timer = $${count++}`); // $4
+      fields.push(`timer = $${count++}`); //count = 4, then count = 5
       values.push(timer);
     }
     
@@ -99,16 +100,26 @@ export const updateExamDetails = async(req, res) => {
       return res.status(400).json({ message: "No data to update" });
     }
 
+    const examIdCount = count++;
+    const userIdCount = count;
+
+    //WHERE clause values
     values.push(examId);
-      // we start at count = 1 because SQL placeholders start at $1 (not $0)
+    values.push(userId);
+      
       
       //fields = ["title = $1", "schedule = $2", "timer = $3"]
       
-    const query = `UPDATE examinations SET ${fields.join(", ")} WHERE exam_id = $${count} RETURNING *`;
+    const query = 
+    `UPDATE examinations 
+    SET ${fields.join(", ")} 
+    WHERE exam_id = $${examIdCount} 
+      AND user_id = $${userIdCount} RETURNING *`;
 
       //query = $1 $2 $3 $4 
             //fields have $1,$2,$3
             //exam_id have $4
+            //user_id have $5
       //values = [title, schedule, timer, examId]
 
     const result = await db.query(query, values);
