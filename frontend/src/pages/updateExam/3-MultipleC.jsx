@@ -8,6 +8,7 @@ function MultipleChoice({ id, question, options, correctAnswer, points, onSave }
   const [choices, setChoices] = useState(options || ['', '', '', '']);
   const [editAnswer, setEditAnswer] = useState(correctAnswer || "");
   const [editPoints, setEditPoints] = useState(points || 1);
+  const questionType = 'multiplechoice';
   
   const [isEditing, setIsEditing] = useState(false);
 
@@ -18,10 +19,11 @@ function MultipleChoice({ id, question, options, correctAnswer, points, onSave }
         return;
       }
       onSave({
-        question_id: id,
-        question_text: editQuestion,
+        questionId: id,
+        questionText: editQuestion,
+        questionType: questionType,
         options: choices,
-        correct_answer: editAnswer,
+        correctAnswer: editAnswer,
         points: editPoints,
       });
     }

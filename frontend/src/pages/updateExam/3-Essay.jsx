@@ -7,6 +7,7 @@ import InputField from '../../components/InputFields.jsx'
 function Essay({ id, question, points, onSave }) {
   const [editQuestion, setEditQuestion] = useState(question || "");
   const [editPoints, setEditPoints] = useState(points || 1);
+  const questionType = 'essay';
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -17,8 +18,9 @@ function Essay({ id, question, points, onSave }) {
         return;
       }
       onSave({
-        question_id: id,
-        question_text: editQuestion,
+        questionId: id,
+        questionText: editQuestion,
+        questionType: questionType,
         points: editPoints,
       });
     }

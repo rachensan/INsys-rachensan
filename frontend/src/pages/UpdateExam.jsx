@@ -51,21 +51,20 @@ function UpdateExam() {
   }
 
   const handleSaveQuestion = async (data) => { //save via axios
+    console.log("Posting question:", data);
+
     try {
-      const headers = { Authorization: `Bearer ${accessToken}` }
       const config = {
-        headers,
+        headers: { Authorization: `Bearer ${accessToken}` },
         withCredentials: true
       };
     
-      const res = await axios.post(`/questions/${examId}`, {
-        ...data,
-        exam_id: examId
-      }, config);
+      await axios.post(`/questions/${examId}`, { ...data, exam_id: examId }, config);
 
-      console.log("✅ Created new question:", res.data);
+      //remove the saved form from the list of unsaved forms
+      setQuestionForms((prev) => prev.filter((f) => f.id !== data.questionId));
 
-      // Optionally refetch all questions
+      //refetch and update questions from DB
       const updatedQuestions = await axios.get(`/exams/questions/${examId}`, config);
       setExamQues(updatedQuestions.data);
     } catch (err) {

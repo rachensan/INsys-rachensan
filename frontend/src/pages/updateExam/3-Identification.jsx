@@ -8,6 +8,7 @@ function Identification({ id, question, correctAnswer, points, onSave }) {
   const [editQuestion, setEditQuestion] = useState(question || "");
   const [editAnswer, setEditAnswer] = useState(correctAnswer || "");
   const [editPoints, setEditPoints] = useState(points || 1);
+  const questionType = 'identification';
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -17,10 +18,11 @@ function Identification({ id, question, correctAnswer, points, onSave }) {
         alert("Please fill in all fields.");
         return;
       }
-      onSave({
-        question_id: id,
-        question_text: editQuestion,
-        correct_answer: editAnswer,
+      onSave({ //camelCase, POST(req.body), we are not GETting
+        questionId: id,
+        questionText: editQuestion,
+        questionType: questionType,
+        correctAnswer: editAnswer,
         points: editPoints,
       });
       setIsEditing(false);

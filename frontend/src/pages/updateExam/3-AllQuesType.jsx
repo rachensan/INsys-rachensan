@@ -37,9 +37,10 @@ export const EditableQuestionForm = ({ data, onSave }) => { //editing existing q
     }
   };
 
-  const commonProps = {
+  const commonProps = { //from DB so snake_case
     id: formData.question_id,
     question: formData.question_text,
+    questionType: formData.question_type,
     correctAnswer: formData.correct_answer,
     points: formData.points,
     onSave: onSave
@@ -92,7 +93,7 @@ export const QuestionAdd = ({ onClick }) => {
 
 
 
-function AddQuestionForm({ exam, setExam, onSave, formId }) { //adding new questions 
+function AddQuestionForm({ exam, onSave, formId }) { //adding new questions 
   const [selectedType, setSelectedType] = useState("identification");
   const [prevType, setPrevType] = useState("identification");
   const [questionData, setQuestionData] = useState({});
@@ -130,7 +131,9 @@ function AddQuestionForm({ exam, setExam, onSave, formId }) { //adding new quest
     exam, //full exam info
     id: formId, //exam id
     onSave: (data) => {
-      setQuestionData(data);
+      const dataAndType = { ...data, questionType: selectedType };
+      setQuestionData(dataAndType);
+      onSave(dataAndType); //call parent AXIOS POST
     },
     data: questionData,
   };

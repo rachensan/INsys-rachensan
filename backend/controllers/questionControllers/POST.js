@@ -7,7 +7,8 @@ export const createQuestion = async(req, res) => {
   //MULTIPLE-CHOICE
   //ESSAY
   const { examId } = req.params;
-  const { questionType, question, correctAnswer, options, userId } = req.body 
+  const userId = req.user.userId;
+  const { questionType, questionText, correctAnswer, options, points } = req.body 
 
   //from front-end so keep it camelCase
   const [optionA, optionB, optionC, optionD] = options || [];
@@ -20,7 +21,7 @@ export const createQuestion = async(req, res) => {
   }
   
   try {
-    const result = await db.query('INSERT INTO questions(exam_id, user_id, question_type, question_text, option_a, option_b, option_c, option_d, correct_answer) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [examId, userId, questionType, question, optionA, optionB, optionC, optionD, correctAnswer]);
+    const result = await db.query('INSERT INTO questions(exam_id, user_id, question_type, question_text, option_a, option_b, option_c, option_d, correct_answer, points) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *', [examId, userId, questionType, questionText, optionA, optionB, optionC, optionD, correctAnswer, points]);
 
     res.status(201).json(result.rows[0])
     
