@@ -1,12 +1,14 @@
 import {db} from '../../db.js';
 
 export const updateQuestion = async (req, res) => {
-  const { questionId } = req.params;
+  const { questionId, examId } = req.params;
+  const userId = req.user.userId;
   const {
     questionType,
-    question,
+    questionText,
     correctAnswer,
-    options
+    options,
+    points
   } = req.body;
 
   const [optionA, optionB, optionC, optionD] = options || [];
@@ -27,18 +29,24 @@ export const updateQuestion = async (req, res) => {
         option_b = $4,
         option_c = $5,
         option_d = $6,
-        correct_answer = $7
-      WHERE question_id = $8
+        correct_answer = $7,
+        points = $8
+      WHERE question_id = $9
+        AND user_id = $10
+        AND exam_id = $11
       RETURNING *`,
       [
         questionType,
-        question,
+        questionText,
         optionA,
         optionB,
         optionC,
         optionD,
         correctAnswer,
-        questionId
+        points,
+        questionId,
+        userId,
+        examId
       ]
     );
 

@@ -159,7 +159,7 @@ app.use('/api/teacher', teacherAuthRoutes);
   app.post('/api/questions/:examId', teacherOnly, createQuestion);
   app.get('/api/exams/:examId/questions', teacherOnly, getQuestionsByExamId);
   app.delete('/api/exams/:examId/questions/:questionId', teacherOnly, deleteQuestionById);
-  app.patch('/api/questions/:questionId', teacherOnly, updateQuestion);
+  app.patch('/api/exams/:examId/questions/:questionId', teacherOnly, updateQuestion);
 
 
 // ========== STUDENT ROUTES ==========

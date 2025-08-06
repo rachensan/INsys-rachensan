@@ -12,7 +12,6 @@ function UpdateExam() {
   const { accessToken } = useAuth();
   const { examId } = useParams();
 
-  const [questionTypes, setQuestionTypes] = useState({});
   const [questionForms, setQuestionForms] = useState([]);
 
   const [examInfo, setExamInfo] = useState(null); //title, code, stats, sched, sect
@@ -50,25 +49,34 @@ function UpdateExam() {
     setQuestionForms((prev) => [...prev, newForm]);
   }
 
-  const handleSaveQuestion = async (data) => { //save via axios
+  const handleSaveQuestion = async (data) => { //save via axios //data is from allquestype
     console.log("Posting question:", data);
+    const config = {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      withCredentials: true
+    };
 
     try {
-      const config = {
-        headers: { Authorization: `Bearer ${accessToken}` },
-        withCredentials: true
-      };
-    
-      await axios.post(`/questions/${examId}`, { ...data, exam_id: examId }, config);
+      const updatedQuestions = await axios.get(`/exams/questions/${examId}`, config);
+      const questionId = data.question_id || data.questionId;
+
+      if (questionId) {//camelCase cuz it's from AllQuesType.jsx
+        //if EXISTING --- UPDATE existing question
+        await axios.patch(`/exams/${examId}/questions/${questionId}`, { ...data, exam_id: examId }, config);
+      } else {
+        //if NOT EXISTING --- POST create another question
+        await axios.post(`/questions/${examId}`, { ...data, exam_id: examId }, config);
+      }
 
       //remove the saved form from the list of unsaved forms
-      setQuestionForms((prev) => prev.filter((f) => f.id !== data.questionId));
-
+      if (!questionId) {
+        setQuestionForms((prev) => prev.filter((f) => f.id !== data.questionId));
+      }
+      
       //refetch and update questions from DB.. best practice
-      const updatedQuestions = await axios.get(`/exams/questions/${examId}`, config);
       setExamQues(updatedQuestions.data);
     } catch (err) {
-      console.error("❌ Failed to create question:", err);
+      console.error("Failed to create question:", err);
     }
   };
 
