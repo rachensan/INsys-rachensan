@@ -12,13 +12,15 @@ export const getAllExams = async(req, res) =>{
 
 export const getAllQuestionsByExam = async (req, res) => {
   const { examId } = req.params;
+  const userId = req.user.userId;
 
   try {
     const result = await db.query(
       `SELECT question_id, question_text, question_type, option_a, option_b, option_c, option_d, correct_answer, points 
       FROM questions 
-      WHERE exam_id = $1`, 
-      [examId]
+      WHERE exam_id = $1
+        AND user_id = $2`, 
+      [examId, userId]
     );
 
     res.status(200).json(result.rows);
