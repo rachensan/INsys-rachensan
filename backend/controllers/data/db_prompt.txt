@@ -92,3 +92,27 @@ CREATE TABLE questions (
         UNIQUE (exam_id, student_school_id) --  prevent duplicate scores per student per exam
       );
 
+-- 5. COURSES
+  -- 5.1 COURSES TABLE
+      CREATE TABLE courses (
+        course_id SERIAL PRIMARY KEY,
+        course_code VARCHAR(6) UNIQUE NOT NULL, -- e.g., BSIT, BSIS, BSCS
+        course_name TEXT NOT NULL
+      );
+
+  -- 5.2 YEAR_LEVELS TABLE 
+      CREATE TABLE year_levels (
+        year_level_id SERIAL PRIMARY KEY,
+        year_number INT CHECK (year_number BETWEEN 1 AND 4) UNIQUE NOT NULL
+      );
+
+
+  -- 5.3 SECTIONS TABLE
+      CREATE TABLE sections (
+        section_id SERIAL PRIMARY KEY,
+        course_id INT REFERENCES courses(course_id) ON DELETE CASCADE,
+        year_level_id INT REFERENCES year_levels(year_level_id) ON DELETE CASCADE,
+        section_name VARCHAR(10) NOT NULL,
+        UNIQUE (course_id, year_level_id, section_name)
+      );
+

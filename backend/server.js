@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from 'dotenv';
 dotenv.config({ path: '../.env', quiet: true });
 
+//AUTH 
 import session from "express-session";
 import cookieParser from 'cookie-parser';
 import teacherAuthRoutes from "./utils/teacherAuth.js";
@@ -101,6 +102,9 @@ app.use('/api/teacher', teacherAuthRoutes);
   //DELETE
     import { deleteQuestionById } from "./controllers/questionControllers/DELETE.js";
 
+//year and section
+  import { addSection, deleteSection, yearSection } from "./controllers/yearSection.js";
+
 
 
 
@@ -108,6 +112,12 @@ app.use('/api/teacher', teacherAuthRoutes);
 
 // ========== TEST IF BACKEND WORKING ==========
   app.get('/', (req, res) => res.send('Backend is running UwU!'));
+
+
+// ========== YEAR AND SECTION ROUTES ==========
+  app.get('/api/sections/year-section', teacherOnly, yearSection);
+  app.post('/api/sections', adminOnly, addSection);
+  app.delete('/api/sections/:sectionId', adminOnly, deleteSection);
 
 
 // ========== USER ROUTES ==========
@@ -147,6 +157,7 @@ app.use('/api/teacher', teacherAuthRoutes);
   app.patch('/api/exams/:examId/status', teacherOnly, updateExamStatus);
   app.patch('/api/exams/:examId/timer', teacherOnly, updateExamTimer);
   app.patch('/api/exams/:examId/details', teacherOnly, updateExamDetails);
+      //
   app.patch('/api/exams/:examId/code', teacherOnly, updateExamCode);
       //not really needed, cuz we create the exam code at exam creation
   app.get('/api/exams/:examId/schedule', teacherOnly, getExamSchedule);

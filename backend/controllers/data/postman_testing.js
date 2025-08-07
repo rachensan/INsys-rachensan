@@ -465,6 +465,32 @@ const postmanLinks = [
         "newPassword": "Yla123"
     }
   },
+  {
+    WHAT: "Get All Year/Section Info",
+    FUNC: yearSection,
+    CRUD: "GET",
+    path: "/api/sections/year-section",
+    link: "http://localhost:3000/api/sections/year-section",
+  },
+  {
+    WHAT: "Add Section",
+    FUNC: addSection,
+    CRUD: "POST",
+    path: "/api/sections",
+    link: "http://localhost:3000/api/sections",
+    body: {
+      "courseId": 1,
+      "yearLevelId": 2,
+      "sectionName": "A"
+    },
+  },
+  {
+    WHAT: "Delete Section",
+    FUNC: deleteSection,
+    CRUD: "DELETE",
+    path: "/api/sections/:sectionId",
+    link: "http://localhost:3000/api/sections/5",
+  }
 ];
 
 
