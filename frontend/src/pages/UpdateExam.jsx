@@ -7,7 +7,9 @@ import SelectField from '../components/SelectFields.jsx';
 import Button from '../components/Buttons.jsx';
 
 //updateExam folder
+import SelectedSection from './updateExam/2-Section.jsx';
 import AddQuestionForm, { QuestionAdd, EditableQuestionForm } from './updateExam/3-AllQuesType.jsx';
+
 
 function UpdateExam() {
   const { accessToken } = useAuth();
@@ -53,7 +55,7 @@ function UpdateExam() {
   const handleSaveExamInfo = async () => { //title, sections, wtvr
     const config = {
       headers: { Authorization: `Bearer ${accessToken}` },
-      withCredentials: true
+      withCredentials: trueim
     };
 
     try {
@@ -64,16 +66,17 @@ function UpdateExam() {
     }
   };
 
-  const handleSaveQuestion = async (data) => { //save via axios //data is from allquestype
+  const handleSaveQuestion = async(data) => { //save via axios //data is from allquestype
     console.log("Posting question:", data);
     const config = {
       headers: { Authorization: `Bearer ${accessToken}` },
       withCredentials: true
     };
 
+    const questionId = Number.isInteger(data.questionId) ? data.questionId : null;
+
     try {
-      const updatedQuestions = await axios.get(`/exams/questions/${examId}`, config);
-      const questionId = data.question_id || data.questionId;
+      console.log("print questionId:", data.questionId); 
 
       if (questionId) {//camelCase cuz it's from AllQuesType.jsx
         //if EXISTING --- UPDATE existing question
@@ -83,17 +86,31 @@ function UpdateExam() {
         await axios.post(`/questions/${examId}`, { ...data, exam_id: examId }, config);
       }
 
-      //remove the saved form from the list of unsaved forms
-      if (!questionId) {
-        setQuestionForms((prev) => prev.filter((f) => f.id !== data.questionId));
-      }
-      
+    //clear form
+      setQuestionForms([]); 
+
       //refetch and update questions from DB.. best practice
+      const updatedQuestions = await axios.get(`/exams/questions/${examId}`, config);
       setExamQues(updatedQuestions.data);
     } catch (err) {
       console.error("Failed to create question:", err);
     }
   };
+
+  const handleDeleteQuestion = async(questionId) => {
+    const { examId } = useParams();
+
+    try {
+      await axios.delete(`/exams/${examId}/questions/${questionId}`);
+      
+      const updatedQuestions = await axios.get(`/exams/questions/${examId}`, config);
+      //refetch and update questions from DB.. best practice
+      setExamQues(updatedQuestions.data);
+
+    } catch (error) {
+      console.error("Failed to delete question:", err);
+    }
+  }
 
   return (
     <>
@@ -115,7 +132,10 @@ function UpdateExam() {
         <p>Code: {examInfo.exam_code}</p>
         <p>Schedule: {examInfo.schedule}</p>
         <p>Status: {examInfo.status}</p>
-        <p>Sections: {examInfo.sections}</p>
+        <p>Sections: </p>
+        <div>
+          <SelectedSection />
+        </div>
       </div>
       
 
@@ -124,6 +144,7 @@ function UpdateExam() {
           key={q.question_id}
           data={q}
           onSave={handleSaveQuestion}
+          onDelete={handleDeleteQuestion}
         />
       ))}
 

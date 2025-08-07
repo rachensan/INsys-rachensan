@@ -2,13 +2,39 @@
 //in the future you add: DELETE course, ADD course
 //recheck the addSection ( const { courseId } = req.body; ). what if the id is deleted or no longer existing? do not depend solely on courseId
 
+import {db} from '../db.js';
+
+
+export const courseData = async(req, res) => {
+  try {
+    const result = await db.query(`SELECT * FROM courses`); //BSIT, BSCS, BSIS
+      
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error('Error getting course data', error);
+    res.status(500).json({ error: 'Failed to course data' });
+  }
+}
+
+export const yearLevelData = async(req, res) => {
+  try {
+    const result = await db.query(` SELECT * FROM year_levels `); //"1", "2", "3", "4"
+      
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error('Error getting year level data', error);
+    res.status(500).json({ error: 'Failed to year level data' });
+  }
+}
+
+
 export const yearSection = async(req, res) => {
   try {
     const result = await db.query(`
-      SELECT s.section_id, c.course_code, y.year_number, s.section_name
+      SELECT s.section_id, c.course_id, c.course_code, y.year_number, s.section_name
       FROM sections s
       JOIN courses c ON s.course_id = c.course_id
-      JOIN year_leves y ON s.year_level_id = y.year_level_id
+      JOIN year_levels y ON s.year_level_id = y.year_level_id
       ORDER BY c.course_code, y.year_number, s.section_name `); //BSCS, 3, A
       
     res.status(200).json(result.rows);

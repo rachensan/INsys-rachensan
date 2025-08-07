@@ -97,7 +97,7 @@ const postmanLinks = [
       "options": ["1", "2", "3", "4"]
     }
   },
-    {
+  {
     WHAT: "Update a Question",
     FUNC: updateQuestion,
     CRUD: "PATCH",
@@ -109,6 +109,13 @@ const postmanLinks = [
       "correctAnswer": "Berlin",
       "options": ["Paris", "London", "Berlin", "Rome"]
     }
+  },
+  {
+    WHAT: "Delete Question By ID",
+    FUNC: deleteQuestionById,
+    CRUD: "DELETE",
+    path: "/api/exams/:examId/questions/:questionId",
+    link: "http://localhost:3000/api/exams/7/questions/2",
   },
   {
     WHAT: "Search Exam Title",
@@ -471,6 +478,20 @@ const postmanLinks = [
     CRUD: "GET",
     path: "/api/sections/year-section",
     link: "http://localhost:3000/api/sections/year-section",
+  },
+  {
+    WHAT: "Get Courses Info", //this includes the course name
+    FUNC: courseData,
+    CRUD: "GET",
+    path: "/api/course/details",
+    link: "http://localhost:3000/api/course/details",
+  },
+  {
+    WHAT: "Get Year-Level Info",
+    FUNC: yearLevelData,
+    CRUD: "GET",
+    path: "/api/year-level/details",
+    link: "http://localhost:3000/api/year-level/details",
   },
   {
     WHAT: "Add Section",

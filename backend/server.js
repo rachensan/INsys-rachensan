@@ -103,7 +103,7 @@ app.use('/api/teacher', teacherAuthRoutes);
     import { deleteQuestionById } from "./controllers/questionControllers/DELETE.js";
 
 //year and section
-  import { addSection, deleteSection, yearSection } from "./controllers/yearSection.js";
+  import { addSection, courseData, yearLevelData, deleteSection, yearSection } from "./controllers/yearSection.js";
 
 
 
@@ -116,6 +116,10 @@ app.use('/api/teacher', teacherAuthRoutes);
 
 // ========== YEAR AND SECTION ROUTES ==========
   app.get('/api/sections/year-section', teacherOnly, yearSection);
+  app.get('/api/course/details', teacherOnly, courseData); 
+  app.get('/api/year-level/details', teacherOnly, yearLevelData); 
+
+
   app.post('/api/sections', adminOnly, addSection);
   app.delete('/api/sections/:sectionId', adminOnly, deleteSection);
 
@@ -157,7 +161,6 @@ app.use('/api/teacher', teacherAuthRoutes);
   app.patch('/api/exams/:examId/status', teacherOnly, updateExamStatus);
   app.patch('/api/exams/:examId/timer', teacherOnly, updateExamTimer);
   app.patch('/api/exams/:examId/details', teacherOnly, updateExamDetails);
-      //
   app.patch('/api/exams/:examId/code', teacherOnly, updateExamCode);
       //not really needed, cuz we create the exam code at exam creation
   app.get('/api/exams/:examId/schedule', teacherOnly, getExamSchedule);
@@ -168,10 +171,10 @@ app.use('/api/teacher', teacherAuthRoutes);
 
 // ========== QUESTION ROUTES ==========
   app.post('/api/questions/:examId', teacherOnly, createQuestion);
-  app.get('/api/exams/:examId/questions', teacherOnly, getQuestionsByExamId);
-  app.delete('/api/exams/:examId/questions/:questionId', teacherOnly, deleteQuestionById);
+  app.get('/api/exams/:examId/questions', teacherOnly, getQuestionsByExamId); //idk why i made this and what for, lol
   app.patch('/api/exams/:examId/questions/:questionId', teacherOnly, updateQuestion);
-
+  
+  app.delete('/api/exams/:examId/questions/:questionId', teacherOnly, deleteQuestionById);
 
 // ========== STUDENT ROUTES ==========
   app.get('/api/student/:studentId/exams/:examId/info', studentOnly, getInfoPerExam);

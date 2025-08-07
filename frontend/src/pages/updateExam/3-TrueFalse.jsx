@@ -3,14 +3,14 @@ import InputField from '../../components/InputFields';
 import Button from '../../components/Buttons';
 import SelectField from '../../components/SelectFields';
 
-function TrueFalse({ id, question, options, correctAnswer, points, onSave }) {
-  const [editQuestion, setEditQuestion] = useState(question || "");
+function TrueFalse({ id, questionText, options, correctAnswer, points, onSave, defaultEditing = true }) {
+  const [editQuestion, setEditQuestion] = useState(questionText || "");
   const [choices, setChoices] = useState(options || ['True', 'False']);
   const [editAnswer, setEditAnswer] = useState(correctAnswer || "True");
   const [editPoints, setEditPoints] = useState(points || 1);
   const questionType = 'truefalse';
 
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(defaultEditing);
 
     const handleClick = () => {
     if (isEditing) {
@@ -26,8 +26,10 @@ function TrueFalse({ id, question, options, correctAnswer, points, onSave }) {
         correctAnswer: editAnswer,
         points: editPoints,
       });
+      setIsEditing(false);
+    } else {
+      setIsEditing(true);
     }
-    setIsEditing(!isEditing);
   };
 
   return (
@@ -47,7 +49,7 @@ function TrueFalse({ id, question, options, correctAnswer, points, onSave }) {
       <div>
         <InputField className="question-text"
           label="Question:"
-          name="question"
+          name="questionText"
           value={editQuestion}
           onChange={(e) => setEditQuestion(e.target.value)}
           placeholder="Type the question here"

@@ -3,14 +3,14 @@ import React, {useState} from 'react'
 import Button from '../../components/Buttons.jsx'
 import InputField from '../../components/InputFields.jsx'
 
-function MultipleChoice({ id, question, options, correctAnswer, points, onSave }) {
-  const [editQuestion, setEditQuestion] = useState(question || "");
+function MultipleChoice({ id, questionText, options, correctAnswer, points, onSave, defaultEditing = true }) {
+  const [editQuestion, setEditQuestion] = useState(questionText || "");
   const [choices, setChoices] = useState(options || ['', '', '', '']);
   const [editAnswer, setEditAnswer] = useState(correctAnswer || "");
   const [editPoints, setEditPoints] = useState(points || 1);
   const questionType = 'multiplechoice';
   
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(defaultEditing);
 
   const handleClick = () => {
     if (isEditing) {
@@ -57,7 +57,7 @@ function MultipleChoice({ id, question, options, correctAnswer, points, onSave }
       <div>
         <InputField className="question-text"
           label="Question"
-          name="question"
+          name="questionText"
           value={editQuestion}
           onChange={(e) => setEditQuestion(e.target.value)}
           placeholder="Type the question here"

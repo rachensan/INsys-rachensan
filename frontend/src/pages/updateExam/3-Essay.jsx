@@ -4,12 +4,12 @@ import Button from '../../components/Buttons.jsx'
 import InputField from '../../components/InputFields.jsx'
 
 
-function Essay({ id, question, points, onSave }) {
-  const [editQuestion, setEditQuestion] = useState(question || "");
+function Essay({ id, questionText, points, onSave, defaultEditing = true }) {
+  const [editQuestion, setEditQuestion] = useState(questionText || "");
   const [editPoints, setEditPoints] = useState(points || 1);
   const questionType = 'essay';
 
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(defaultEditing);
 
   const handleClick = () => {
     if (isEditing) {

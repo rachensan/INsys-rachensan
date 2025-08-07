@@ -13,15 +13,18 @@ const questionTypes = [
   { label: "Essay", value: "essay" }
 ];
 
-export const EditableQuestionForm = ({ data, onSave }) => { //editing existing questions in the database
+export const EditableQuestionForm = ({ data, onSave, onDelete, defaultEditing = false }) => { //editing existing questions in the database
   const [type, setType] = useState(data.question_type);
   const [formData, setFormData] = useState(data);
+
+  const [isEditing, setIsEditing] = useState(defaultEditing);
 
   const handleTypeChange = (e) => {
     const newType = e.target.value;
     if (newType !== type) {
       if (confirm("⚠️ Changing question type will reset current fields. Proceed?")) {
         setType(newType);
+        setIsEditing(true);
         setFormData({
           question_id: data.question_id,
           question_type: newType,
@@ -38,12 +41,13 @@ export const EditableQuestionForm = ({ data, onSave }) => { //editing existing q
   };
 
   const commonProps = { //from DB so snake_case
-    id: formData.question_id,
-    question: formData.question_text,
+    questionId: formData.question_id,
+    questionText: formData.question_text,
     questionType: formData.question_type,
     correctAnswer: formData.correct_answer,
     points: formData.points,
-    onSave: onSave
+    onSave: onSave,
+    defaultEditing: isEditing,
   };
 
   const optionsArray = [
@@ -62,6 +66,8 @@ export const EditableQuestionForm = ({ data, onSave }) => { //editing existing q
         onChange={handleTypeChange}
         options={questionTypes}
       />
+      <button className="delete-ques-btn" onClick={() => onDelete(data.question_id)}>Delete</button>
+
 
       {type === 'identification' && <Identification {...commonProps} />}
       {type === 'multiplechoice' && <MultipleChoice {...commonProps} options={optionsArray} />}
@@ -93,10 +99,12 @@ export const QuestionAdd = ({ onClick }) => {
 
 
 
-function AddQuestionForm({ exam, onSave, formId }) { //adding new questions 
+function AddQuestionForm({ exam, onSave, formId, defaultEditing = false  }) { //adding new questions 
   const [selectedType, setSelectedType] = useState("identification");
   const [prevType, setPrevType] = useState("identification");
   const [questionData, setQuestionData] = useState({});
+
+  const [isEditing, setIsEditing] = useState(defaultEditing);
 
   //reset data when type changes
   useEffect(() => {
@@ -117,6 +125,7 @@ function AddQuestionForm({ exam, onSave, formId }) { //adding new questions
         setSelectedType(newType);
         setPrevType(newType);
         setQuestionData({});
+        setIsEditing(true);
       } else {
         setSelectedType(prevType);
       }

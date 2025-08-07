@@ -4,13 +4,13 @@ import Button from '../../components/Buttons.jsx'
 import InputField from '../../components/InputFields.jsx'
 
 
-function Identification({ id, question, correctAnswer, points, onSave }) {
-  const [editQuestion, setEditQuestion] = useState(question || "");
+function Identification({ questionId, questionText, correctAnswer, points, onSave, defaultEditing = true }) {
+  const [editQuestion, setEditQuestion] = useState(questionText || "");
   const [editAnswer, setEditAnswer] = useState(correctAnswer || "");
   const [editPoints, setEditPoints] = useState(points || 1);
   const questionType = 'identification';
 
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(defaultEditing);
 
   const handleClick = () => {
     if (isEditing) {
@@ -19,7 +19,7 @@ function Identification({ id, question, correctAnswer, points, onSave }) {
         return;
       }
       onSave({ //camelCase, POST(req.body), we are not GETting
-        questionId: id,
+        questionId: questionId,
         questionText: editQuestion,
         questionType: questionType,
         correctAnswer: editAnswer,
@@ -46,7 +46,7 @@ function Identification({ id, question, correctAnswer, points, onSave }) {
     />
     <InputField className="question-text"
       label="Question"
-      name="question"
+      name="questionText"
       value={editQuestion}
       onChange={(e) => setEditQuestion(e.target.value)}
       disabled={!isEditing}
