@@ -3,170 +3,117 @@ import axios from "../../utils/axiosConfig";
 import { useAuth } from "../../context/AuthContext";
 
 import SelectField from "../../components/SelectFields";
+import CheckboxDropdown from "../../components/Checkbox_Dropdown";
 
-export const SectionCard = () => {
-  const [courseData, setCourseData] = useState([]);
-  const [yearData, setYearData] = useState([]);
-  const [yearLevel, setYearLevel] = useState("");
+export const SectionCard = ({ sd, yearLevel, addedSelections, setAddedSelections }) => {
+  const [sections, setSections] = useState([]);
 
-  const [formRegister, setFormRegister] = useState({});
-
-  const { accessToken } = useAuth();
-
+  // Fetch all sections once
   useEffect(() => {
-    const headers = { Authorization: `Bearer ${accessToken}` }
-    const config = {
-      headers,
-      withCredentials: true
+    const fetchSections = async () => {
+      try {
+        const res = await axios.get("/api/sections/year-section");
+        setSections(res.data); // assumes [{section_id, section_name, course_id, year_number}, ...]
+      } catch (err) {
+        console.error("Error fetching sections:", err);
+      }
     };
-
-    //COURSE TABLE
-    axios.get('/course/details', config) 
-    // { course_id, course_code, course_name }
-      .then((res) => {
-        setCourseData(res.data)
-      })
-      .catch((err) => console.error("Failed to fetch sections:", err));
-
-    //YEAR_LEVELS TABLE
-    axios.get('/year-level/details', config) 
-    // { year_level_id, year_number }
-      .then((res) => {
-        setYearData(res.data)
-      })
-      .catch((err) => console.error("Failed to fetch sections:", err));
-
+    fetchSections();
   }, []);
 
-    const handleChange = (e) => {
-      const { name, value } = e.target;
-      setFormRegister((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    };
+  // Handler for checkbox toggle
+  const handleCheckbox = (sectionId) => {
+    setAddedSelections((prev) =>
+      prev.includes(sectionId)
+        ? prev.filter((id) => id !== sectionId) // remove
+        : [...prev, sectionId] // add
+    );
+  };
 
   return (
-    <>
-      <div className="section-card">
-        {courseData.map((sd) => (
-          <div key={sd.course_id}> 
-            <p>{sd.course_code}:</p>
-
-            <SelectField
-              name="yearLevel"
-              value={yearLevel}
-              onChange={(e) => setYearLevel(e.target.value)}
-              options={yearData.map((yr) => ({
-                label: `${yr.year_number} Year`,
-                value: String(yr.year_number)
-              }))}
+    <div className="section-card">
+      {sections
+        .filter(
+          (sec) =>
+            sec.course_id === sd.course_id &&
+            sec.year_number === Number(yearLevel)
+        )
+        .map((sec) => (
+          <label key={sec.section_id}>
+            <input
+              type="checkbox"
+              checked={addedSelections.includes(sec.section_id)}
+              onChange={() => handleCheckbox(sec.section_id)}
             />
-
-
-          </div>
+            {sec.section_name}
+          </label>
         ))}
-      </div>
-    </>
-  )
+    </div>
+  );
 }
 
 
-
 function SelectedSection() {
-  const [sectionData, setSectionData] = useState({});
-  const [year, setYear] = useState(""); //1, 2, 3, 4
-  const [sections, setSections] = useState([]); //ABCD++
-  const [addedSelections, setAddedSelections] = useState([]); 
-
+  const [sectionData, setSectionData] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState("");
+  const [selectedYear, setSelectedYear] = useState("");
+  const [selectedSections, setSelectedSections] = useState([]); // now an array
   const { accessToken } = useAuth();
 
+  useEffect(() => {
+    const headers = { Authorization: `Bearer ${accessToken}` };
+    axios
+      .get("/sections/year-section", { headers, withCredentials: true })
+      .then((res) => setSectionData(res.data))
+      .catch((err) => console.error("Failed to fetch:", err));
+  }, [accessToken]);
+
+  const courseOptions = [...new Set(sectionData.map(d => d.course_code))]
+    .map(c => ({ label: c, value: c }));
+
+  const yearOptions = [...new Set(sectionData
+    .filter(d => d.course_code === selectedCourse)
+    .map(d => d.year_number)
+  )].map(y => ({ label: `${y} Year`, value: y }));
+
+  const sectionOptions = sectionData
+    .filter(d => d.course_code === selectedCourse && d.year_number === selectedYear);
+
+  const handleCheckbox = (sectionId) => {
+    setSelectedSections(prev =>
+      prev.includes(sectionId)
+        ? prev.filter(id => id !== sectionId)
+        : [...prev, sectionId]
+    );
+  };
 
   return (
-    <SectionCard />
-
-
-    /* 
     <div>
+      <SelectField
+        name="course"
+        value={selectedCourse}
+        onChange={(e) => { setSelectedCourse(e.target.value); setSelectedYear(""); setSelectedSections([]); }}
+        options={courseOptions}
+      />
+      <SelectField
+        name="year"
+        value={selectedYear}
+        onChange={(e) => { setSelectedYear(Number(e.target.value)); setSelectedSections([]); }}
+        options={yearOptions}
+        disabled={!selectedCourse}
+      />
 
-      <div>
-        <label>Course:</label>
-        <select
-          value={course}
-          onChange={(e) => {
-            setCourse(e.target.value);
-            setYear("");
-            setSelectedSections([]);
-          }}
-        >
-          <option value="">Select Course</option>
-          {courses.map((c) => (
-            <option key={c} value={c}>{c}</option>
-          ))}
-        </select>
-      </div>
-
-      {course && (
-        <div>
-          <label>Year:</label>
-          <select
-            value={year}
-            onChange={(e) => {
-              setYear(e.target.value);
-              setSelectedSections([]);
-            }}
-          >
-            <option value="">Select Year</option>
-            {years.map((y) => (
-              <option key={y} value={y}>{y} Year</option>
-            ))}
-          </select>
-        </div>
-      )}
-
-      {course && year && (
-        <div>
-          <label>Sections:</label>
-          <div>
-            {sections.map((section) => (
-              <label key={section} style={{ marginRight: "1em" }}>
-                <input
-                  type="checkbox"
-                  value={section}
-                  checked={selectedSections.includes(section)}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setSelectedSections((prev) => [...prev, section]);
-                    } else {
-                      setSelectedSections((prev) =>
-                        prev.filter((s) => s !== section)
-                      );
-                    }
-                  }}
-                />
-                {section}
-              </label>
-            ))}
-          </div>
-          <button onClick={handleAdd}>Add Selection</button>
-        </div>
-      )}
-
-      {addedSelections.length > 0 && (
-        <div>
-          <h4>Selected:</h4>
-          <ul>
-            {addedSelections.map((item, idx) => (
-              <li key={idx}>
-                {item.course} {item.year} {item.section}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <CheckboxDropdown
+        options={sectionOptions.map((s) => ({
+          value: s.section_id,
+          label: s.section_name,
+        }))}
+        selected={selectedSections}
+        onChange={setSelectedSections}
+        placeholder="Select sections"
+        disabled={!selectedYear}
+      />
     </div>
-
-    */
   );
 }
 
