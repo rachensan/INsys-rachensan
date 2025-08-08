@@ -55,7 +55,7 @@ function UpdateExam() {
   const handleSaveExamInfo = async () => { //title, sections, wtvr
     const config = {
       headers: { Authorization: `Bearer ${accessToken}` },
-      withCredentials: trueim
+      withCredentials: true
     };
 
     try {
@@ -76,7 +76,7 @@ function UpdateExam() {
     const questionId = Number.isInteger(data.questionId) ? data.questionId : null;
 
     try {
-      console.log("print questionId:", data.questionId); 
+      console.log("print questionId:", data.questionId); //will only print if we edit the existing question. undefined if it's a new  question, because questionId is from frontend, and we dont axios GET the data when we create, backend will handle the id creation.
 
       if (questionId) {//camelCase cuz it's from AllQuesType.jsx
         //if EXISTING --- UPDATE existing question
@@ -86,7 +86,7 @@ function UpdateExam() {
         await axios.post(`/questions/${examId}`, { ...data, exam_id: examId }, config);
       }
 
-    //clear form
+      //clear form
       setQuestionForms([]); 
 
       //refetch and update questions from DB.. best practice
@@ -98,17 +98,20 @@ function UpdateExam() {
   };
 
   const handleDeleteQuestion = async(questionId) => {
-    const { examId } = useParams();
+    const config = {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      withCredentials: true
+    };
 
     try {
-      await axios.delete(`/exams/${examId}/questions/${questionId}`);
-      
+      await axios.delete(`/exams/${examId}/questions/${questionId}`, config);
+  
       const updatedQuestions = await axios.get(`/exams/questions/${examId}`, config);
       //refetch and update questions from DB.. best practice
       setExamQues(updatedQuestions.data);
-
+      console.log('question deleted');
     } catch (error) {
-      console.error("Failed to delete question:", err);
+      console.error("Failed to delete question:", error);
     }
   }
 
