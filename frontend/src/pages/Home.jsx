@@ -3,17 +3,30 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx';
 import axios from "../utils/axiosConfig.js";
 
+import Button from '../components/Buttons.jsx';
 
-export const HomeCard = ({ data, title, subjCode, schedule, status, sections, onClickNav, onClickDel }) => {
+
+export const HomeCard = ({ data, title, subjCode, schedule, status, sections, onClickNav, onClickDel, onClickDupe }) => {
 
   return (
     <div onClick={onClickNav} style={{ border: "1px solid black", margin: "10px", padding: "10px" }}>
-      <button className="delete-exam-btn" 
+      <Button 
+        label="Delete" 
+        type="button" 
         onClick={(e) => { 
           e.stopPropagation(); 
-          onClickDel(data.exam_id); }}>
-        Delete
-      </button>
+          onClickDel(data.exam_id); 
+        }} 
+      />
+      <Button 
+        label="Duplicate" 
+        type="button" 
+        onClick={(e) => { 
+          e.stopPropagation(); 
+          onClickDupe(data.exam_id); 
+        }} 
+      />
+
       <h2>{title}</h2>
       <p>{subjCode}</p>
       <p>{schedule}</p>
@@ -48,6 +61,26 @@ function Home() {
         .catch((err) => { console.error("Error fetching exams:", err.response?.status) });
   }, [accessToken, user.userId]);
 
+  const handleDuplicateExam = async (examId) => {
+    const config = {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      withCredentials: true
+    };
+
+    try {
+      await axios.post(`/exams/${examId}/duplicate`, {}, config);
+      console.log("Exam duplicated");
+
+      // Refetch updated list for this user
+      const updatedExams = await axios.get(`/exams/${user.userId}`, config);
+      setExam(updatedExams.data);
+    } catch (err) {
+      console.error("Failed to duplicate exam:", err);
+    }
+  };
+
+
+
   const handleDeleteExam = async(examId) => {
     const config = {
       headers: { Authorization: `Bearer ${accessToken}` },
@@ -79,6 +112,7 @@ function Home() {
           sections={e.sections}
           data={e}
           onClickDel={handleDeleteExam} //send to: const handleDeleteExam = (examId)=>{}
+          onClickDupe={handleDuplicateExam}
           onClickNav={() => navigate(`/update-exam/${e.exam_id}`)}
         />
       ))}
