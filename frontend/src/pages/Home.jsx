@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx';
 import axios from "../utils/axiosConfig.js";
 
 
-export const HomeCard = ({ title, subjCode, schedule, status, sections, onClickNav, onClickDel }) => {
+export const HomeCard = ({ data, title, subjCode, schedule, status, sections, onClickNav, onClickDel }) => {
+
   return (
     <div onClick={onClickNav} style={{ border: "1px solid black", margin: "10px", padding: "10px" }}>
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          onClickDel();
-        }}
-      >
+      <button className="delete-exam-btn" 
+        onClick={(e) => { 
+          e.stopPropagation(); 
+          onClickDel(data.exam_id); }}>
         Delete
       </button>
       <h2>{title}</h2>
@@ -28,6 +27,7 @@ function Home() {
   const navigate = useNavigate();
   const [exam, setExam] = useState([]);
   const { user, accessToken } = useAuth();
+  const examId = useParams();
 
   useEffect(() => {
     const headers = { Authorization: `Bearer ${accessToken}` }
@@ -43,25 +43,28 @@ function Home() {
     if (!user.userId || !accessToken) return;
     
       axios.get('/protected', config)
-        .then(() => {
-          return axios.get(`/exams/${user.userId}`, config);
-        })
-        .then((res) => {
-          setExam(res.data);
-        })
-        .catch((err) => {
-          console.error("Error fetching exams:", err.response?.status);
-      });
-    }, [accessToken, user.userId]);
+        .then(() => { return axios.get(`/exams/${user.userId}`, config) })
+        .then((res) => { setExam(res.data) })
+        .catch((err) => { console.error("Error fetching exams:", err.response?.status) });
+  }, [accessToken, user.userId]);
 
-  const handleDelete = (examId) => {
-    axios
-      .delete(`/exams/${examId}`)
-      .then(() => {
-        setExam((prev) => prev.filter((e) => e.exam_id !== examId));
-      })
-      .catch((err) => console.error(err));
-  };
+  const handleDeleteExam = async(examId) => {
+    const config = {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      withCredentials: true
+    };
+
+    try {
+      await axios.delete(`/exams/${examId}`, config);
+  
+      const updatedExams = await axios.get(`/exams/${user.userId}`, config);
+      //refetch and update exams from DB.. 
+      setExam(updatedExams.data);
+      console.log('exam deleted');
+    } catch (error) {
+      console.error("Failed to delete exam:", error);
+    }
+  }
 
   return (
     <>
@@ -74,7 +77,8 @@ function Home() {
           schedule={e.schedule}
           status={e.status}
           sections={e.sections}
-          onClickDel={() => handleDelete(e.exam_id)} //send to: const handleDelete = (examId)=>{}
+          data={e}
+          onClickDel={handleDeleteExam} //send to: const handleDeleteExam = (examId)=>{}
           onClickNav={() => navigate(`/update-exam/${e.exam_id}`)}
         />
       ))}
