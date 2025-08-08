@@ -154,8 +154,7 @@ app.use('/api/teacher', teacherAuthRoutes);
   app.get('/api/exams/:examId/scores/:sectionTaker', teacherOnly, getAllScoresByExam);
   
   app.post('/api/exams/:userId', teacherOnly, createExam); 
-
-  app.post('/api/exams/56/duplicate', teacherOnly, duplicateExam);
+  app.post('/api/exams/:examId/duplicate', teacherOnly, duplicateExam);
 
   app.put('/api/exams/:examId/sections', teacherOnly, updateSectionTakers);
       //can be null at first, when published without sections, will show popup alert... imma fix it later, im sleepy

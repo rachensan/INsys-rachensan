@@ -18,7 +18,7 @@ export const createExam = async(req, res) => {
 
 export const duplicateExam = async (req, res) => { //duplicate title and questions only
   const { examId } = req.params; //original exam_id
-  const { userId } = req.user.userId;
+  const userId = req.user.userId;
   const randomExamCode = Math.random().toString(36).substring(2, 8).toUpperCase();
 
   try {
@@ -36,8 +36,8 @@ export const duplicateExam = async (req, res) => { //duplicate title and questio
 
     //Create new exam
     const newExamResult = await db.query(
-      `INSERT INTO examinations (user_id, title, exam_code)
-       VALUES ($1, $2, $3)
+      `INSERT INTO examinations (user_id, title, status, exam_code)
+       VALUES ($1, $2, $3, $4)
        RETURNING exam_id`,
       [userId, examResult.rows[0].title, 'pending', randomExamCode]
     );
