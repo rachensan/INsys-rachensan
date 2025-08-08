@@ -85,7 +85,7 @@ app.use('/api/teacher', teacherAuthRoutes);
   //GET
     import { getAllExams, getExamById, getExamsByTitle, getExamsByStatus, getExamCode, getSectionTakersByExamId, getAllScoresByExam, getEssayPerStudent, getExamSchedule, getSectionSchedule, getAllQuestionsByExam } from './controllers/examControllers/GET.js'
   //POST
-    import { createExam } from './controllers/examControllers/POST.js'
+    import { createExam, duplicateExam } from './controllers/examControllers/POST.js'
   //UPDATE
     import { updateExamDetails, updateExamCode, updateExamStatus, updateExamTimer, updateSectionTakers, finalizeExamSchedule } from './controllers/examControllers/UPDATE.js'
   //DELETE
@@ -153,7 +153,9 @@ app.use('/api/teacher', teacherAuthRoutes);
   app.get('/api/exams/:examId/sections', teacherOnly, getSectionTakersByExamId);
   app.get('/api/exams/:examId/scores/:sectionTaker', teacherOnly, getAllScoresByExam);
   
-  app.post('/api/exams/:userId', teacherOnly, createExam);
+  app.post('/api/exams/:userId', teacherOnly, createExam); 
+
+  app.post('/api/exams/56/duplicate', teacherOnly, duplicateExam);
 
   app.put('/api/exams/:examId/sections', teacherOnly, updateSectionTakers);
       //can be null at first, when published without sections, will show popup alert... imma fix it later, im sleepy

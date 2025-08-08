@@ -75,6 +75,13 @@ const postmanLinks = [
     }
   },
   {
+    WHAT: "Duplicate Exam", //dupe title and questions only
+    FUNC: duplicateExam,
+    CRUD: "POST",
+    path: "/api/exams/56/duplicate",
+    link: "http://localhost:3000/api/exams/:userId/duplicate"
+  },
+  {
     WHAT: "Get All Exam Questions",
     FUNC: getAllQuestionsByExam,
     CRUD: "GET",
