@@ -106,9 +106,10 @@ export const getSectionTakersByExamId = async (req, res) => {
 
   try {
     const result = await db.query(
-      "SELECT * FROM section_takers WHERE exam_id = $1",
-      [examId]
+      `SELECT * FROM section_takers 
+      WHERE exam_id = $1`, [examId]
     );
+    
 
     if (result.rows.length === 0) {
       return res.status(404).json({ message: 'Section/s not assigned yet' })

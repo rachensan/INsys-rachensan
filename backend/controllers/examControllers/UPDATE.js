@@ -2,33 +2,40 @@ import {db} from '../../db.js';
 
 export const updateSectionTakers = async (req, res) => {
   const { examId } = req.params;
-  const { sections } = req.body;
+  const { sections } = req.body; // [{ id, name }, ...]
 
-  if (!Array.isArray(sections)) {
-    return res.status(400).json({ message: 'Invalid section data' });
+  if (!Array.isArray(sections) || sections.length === 0) {
+    return res.status(400).json({ error: "At least one section is required" });
   }
 
   try {
-    await db.query('BEGIN');
+    await db.query("BEGIN");
 
-    // 1. Delete existing sections
-    await db.query("DELETE FROM section_takers WHERE exam_id = $1", [examId]);
-
-    // 2. Insert new sections
-    const insertPromises = sections.map(section =>
-      db.query("INSERT INTO section_takers (exam_id, section_name) VALUES ($1, $2)", [examId, section])
+    // Remove old assignments
+    await db.query(
+      "DELETE FROM section_takers WHERE exam_id = $1",
+      [examId]
     );
 
-    await Promise.all(insertPromises);
-    await db.query('COMMIT');
+    // Insert new ones
+    const values = sections
+      .map((_, i) => `($1, $${i * 2 + 2}, $${i * 2 + 3})`)
+      .join(", ");
 
-    res.status(200).json({ message: 'Sections updated successfully' });
+    const flatParams = sections.flatMap(s => [s.id, s.name]);
+
+    await db.query(
+      `INSERT INTO section_takers (exam_id, section_id, section_name) VALUES ${values}`,
+      [examId, ...flatParams]
+    );
+
+    await db.query("COMMIT");
+
+    res.status(200).json({ message: "Section takers updated" });
   } catch (error) {
-    await db.query('ROLLBACK');
-    console.error('Error updating sections:', error);
-    res.status(500).json({ error: 'Failed to update sections' });
-  } finally {
-    client.release();
+    await db.query("ROLLBACK");
+    console.error("Error updating section takers", error);
+    res.status(500).json({ error: "Failed to update section takers" });
   }
 };
 

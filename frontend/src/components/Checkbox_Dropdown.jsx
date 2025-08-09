@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
 export default function CheckboxDropdown({
-  options = [],
-  selected = [],
+  options = [],           // [{ value: 1, label: "Section A" }]
+  selected = [],           // [{ id: 1, name: "Section A" }]
   onChange,
   placeholder = "Select options",
   disabled = false,
@@ -10,11 +10,12 @@ export default function CheckboxDropdown({
 }) {
   const [open, setOpen] = useState(false);
 
-  const toggleOption = (value) => {
-    if (selected.includes(value)) {
-      onChange(selected.filter((v) => v !== value));
+  const toggleOption = (option) => {
+    const exists = selected.some(s => s.id === option.value);
+    if (exists) {
+      onChange(selected.filter(s => s.id !== option.value));
     } else {
-      onChange([...selected, value]);
+      onChange([...selected, { id: option.value, name: option.label }]);
     }
   };
 
@@ -30,7 +31,7 @@ export default function CheckboxDropdown({
           borderRadius: "4px",
           userSelect: "none",
         }}
-        onClick={() => !disabled && setOpen((prev) => !prev)}
+        onClick={() => !disabled && setOpen(prev => !prev)}
       >
         {selected.length > 0
           ? `${selected.length} selected`
@@ -41,10 +42,6 @@ export default function CheckboxDropdown({
       {open && !disabled && (
         <div
           style={{
-            display: "flex",
-            alignItems: "center",
-            padding: "4px 8px",
-            cursor: "pointer",
             position: "absolute",
             top: "100%",
             left: 0,
@@ -57,9 +54,11 @@ export default function CheckboxDropdown({
             overflowY: "auto",
             borderRadius: "4px",
             marginTop: "2px",
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr", // two-column layout
           }}
         >
-          {options.map((opt) => (
+          {options.map(opt => (
             <label
               key={opt.value}
               style={{
@@ -71,12 +70,12 @@ export default function CheckboxDropdown({
             >
               <input
                 type="checkbox"
-                checked={selected.includes(opt.value)}
-                onChange={() => toggleOption(opt.value)}
+                checked={selected.some(s => s.id === opt.value)}
+                onChange={() => toggleOption(opt)}
                 style={{
                   width: "14px",
                   height: "14px",
-                  transform: "scale(0.9)", // fine-tune size
+                  transform: "scale(0.9)",
                 }}
               />
               <span style={{ marginLeft: "5px" }}>{opt.label}</span>

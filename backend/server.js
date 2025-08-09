@@ -119,7 +119,7 @@ app.use('/api/teacher', teacherAuthRoutes);
   app.get('/api/course/details', teacherOnly, courseData); 
   app.get('/api/year-level/details', teacherOnly, yearLevelData); 
 
-
+  //not for exams, but for the whole department
   app.post('/api/sections', adminOnly, addSection);
   app.delete('/api/sections/:sectionId', adminOnly, deleteSection);
 
@@ -157,7 +157,8 @@ app.use('/api/teacher', teacherAuthRoutes);
   app.post('/api/exams/:examId/duplicate', teacherOnly, duplicateExam);
 
   app.put('/api/exams/:examId/sections', teacherOnly, updateSectionTakers);
-      //can be null at first, when published without sections, will show popup alert... imma fix it later, im sleepy
+      //can be null at first, when published without sections, will show popup alert... imma fix it later
+      //im fixing it now, bruh galing sa chatgpt lang kase nagmamadali nako matulog
 
   app.patch('/api/exams/:examId/status', teacherOnly, updateExamStatus);
   app.patch('/api/exams/:examId/timer', teacherOnly, updateExamTimer);
