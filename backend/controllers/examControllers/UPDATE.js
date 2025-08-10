@@ -157,12 +157,12 @@ export const updateExamCode = async(req, res) => {
 
 export const finalizeExamSchedule = async(req, res) => {
   const {examId} = req.params;
-  const {scheduledDate, addTimerMinutes, sectionName} = req.body; 
+  const {scheduledDate, addTimerQuestion, sectionName} = req.body; 
         //scheduledDate here is a string... convert to date 
 
   const startExamDate = new Date(scheduledDate + "+08:00"); //start date
   const endExamDate = new Date(startExamDate); //cloning startDate and add the timer
-        endExamDate.setMinutes(endExamDate.getMinutes() + addTimerMinutes);
+        endExamDate.setMinutes(endExamDate.getMinutes() + addTimerQuestion);
 
   const dateNow = new Date();
   const shouldFinalize = dateNow >= endExamDate; //true or false
@@ -179,13 +179,13 @@ export const finalizeExamSchedule = async(req, res) => {
       UPDATE section_takers s
       SET 
         start_datetime = $1, 
-        timer_minutes = $2,
+        timer_question = $2,
         end_datetime = $3
       WHERE 
         exam_id = $4
         AND section_name = $5
         RETURNING s.*`, 
-      [startExamDate, addTimerMinutes, endExamDate, examId, sectionName]);
+      [startExamDate, addTimerQuestion, endExamDate, examId, sectionName]);
 
 
       if (result.rows.length === 0) {

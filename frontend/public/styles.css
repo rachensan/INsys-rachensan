@@ -136,3 +136,9 @@ input {
     padding: 8px; 
     background-color: #ddffd6; 
   } 
+
+.scheduled-takers-div {
+  border: 1px solid #ccc; 
+  padding: 8px; 
+  background-color: #efffa6; 
+}

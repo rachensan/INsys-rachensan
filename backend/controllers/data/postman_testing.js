@@ -294,7 +294,7 @@ const postmanLinks = [
     body: {
       "sectionName": "BSIT 1-D",
       "scheduledDate": "2025-07-18T01:52:00",
-      "addTimerMinutes": 5
+      "addTimerQuestion": 5
     }
   }, 
   {

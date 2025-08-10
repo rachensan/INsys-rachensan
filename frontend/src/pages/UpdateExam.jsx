@@ -9,6 +9,7 @@ import Button from '../components/Buttons.jsx';
 //updateExam folder
 import SelectedSection from './updateExam/2-Section.jsx';
 import AddQuestionForm, { QuestionAdd, EditableQuestionForm } from './updateExam/3-AllQuesType.jsx';
+import ScheduledTakers from './updateExam/2-Schedule.jsx';
 
 
 function UpdateExam() {
@@ -135,9 +136,14 @@ function UpdateExam() {
         <p>Code: {examInfo.exam_code}</p>
         <p>Schedule: {examInfo.schedule}</p>
         <p>Status: {examInfo.status}</p>
+
         <p>Sections: </p>
         <div>
           <SelectedSection />
+        </div>
+
+        <div>
+          <ScheduledTakers />
         </div>
       </div>
       

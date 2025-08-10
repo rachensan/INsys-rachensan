@@ -32,7 +32,7 @@ CREATE TABLE examinations (
         section_name TEXT NOT NULL,
         start_datetime TIMESTAMP,
         end_datetime TIMESTAMP,
-        timer_minutes INT,
+        timer_question INT,
         is_finalized BOOLEAN DEFAULT FALSE
       );
 
