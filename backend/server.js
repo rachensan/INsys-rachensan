@@ -106,6 +106,8 @@ app.use('/api/teacher', teacherAuthRoutes);
   import { addSection, courseData, yearLevelData, deleteSection, yearSection } from "./controllers/yearSection.js";
 
 
+  
+
 
 
 

@@ -96,11 +96,16 @@ function SelectedSection() {
       const config = { headers, withCredentials: true };
 
       const sectionTakers = sectionOptions
-        .filter(s => selectedSections.some(sel => sel.id === s.section_id))
-        .map(s => ({ id: s.section_id, name: s.section_name }));
-console.log("sectionOptions:", sectionOptions);
-console.log("selectedSections:", selectedSections);
-console.log("sectionTakers:", sectionTakers);
+        .filter((s) => selectedSections.some(sel => sel.id === s.section_id))
+        .map((s) => (
+          { 
+            id: s.section_id, 
+            name:`${s.course_code} ${s.year_number}-${s.section_name}` //saved as: BSIT 3-H
+          }
+        ));
+              console.log("sectionOptions:", sectionOptions);
+              console.log("selectedSections:", selectedSections);
+              console.log("sectionTakers:", sectionTakers);
 
       await axios.put(`/exams/${examId}/sections`, { sections: sectionTakers }, config);
       const updated = await axios.get(`/exams/${examId}/sections`, config);  
