@@ -5,7 +5,7 @@ export default function CheckboxDropdown({
   selected = [],           // [{ id: 1, name: "Section A" }]
   onChange,
   placeholder = "Select options",
-  disabled = false,
+  disabled,
   maxHeight = "150px",
 }) {
   const [open, setOpen] = useState(false);
@@ -31,6 +31,7 @@ export default function CheckboxDropdown({
           borderRadius: "4px",
           userSelect: "none",
         }}
+        disabled={disabled}
         onClick={() => !disabled && setOpen(prev => !prev)}
       >
         {selected.length > 0

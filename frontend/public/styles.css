@@ -119,3 +119,20 @@ input {
   background-color: rgb(0, 255, 140);
   padding: 10px;
 }
+.section-div {
+    border: 1px solid #ccc; /* makes it visible */
+    border-radius: 5px;
+    padding: 10px;           /* some spacing inside */
+    background-color: #ffcece; /* light background */
+}
+  .section-choosing-div {
+    border: 1px solid #ccc; 
+    padding: 8px; 
+    background-color: #b8e9ff; 
+  }
+  .selected-section-div {
+    min-height: 50px;  
+    border: 1px solid #ccc; 
+    padding: 8px; 
+    background-color: #ddffd6; 
+  } 

@@ -65,16 +65,50 @@ function SelectedSection() {
   const { accessToken } = useAuth();
   const { examId } = useParams();
 
+  const [isEditing, setIsEditing] = useState(false);
+
+// 1. Fetch options
   useEffect(() => {
     const headers = { Authorization: `Bearer ${accessToken}` };
-    axios
-      .get("/sections/year-section", { headers, withCredentials: true })
+    const config = { headers, withCredentials: true };
+
+    axios.get("/sections/year-section", config)
       .then((res) => setSectionData(res.data))
       .catch((err) => console.error("Failed to fetch:", err));
-  }, [accessToken]);
+
+    axios.get(`/exams/${examId}/sections`, config)
+      .then(res => setDbSections(res.data))
+      .catch(console.error);
+  }, [accessToken, examId]);
+  // Guard logs to prevent crash
+  
+
+
+  // 2. Once both are loaded, set selected values
+  useEffect(() => {
+    console.log("sectionData:", sectionData);
+    console.log("dbSections:", dbSections);
+
+    if (sectionData.length > 0 && dbSections.length > 0 && dbSections[0]?.course_code) {
+      setSelectedCourse(dbSections[0].course_code);
+      setSelectedYear(dbSections[0].year_number);
+      setSelectedSections(dbSections.map(s => ({ id: s.section_id })));
+    }
+  }, [sectionData, dbSections]);
+
+
+
+
+
+
+  
 
   const courseOptions = [...new Set(sectionData.map(d => d.course_code))]
     .map(c => ({ label: c, value: c }));
+
+                  console.log("From DB:", dbSections[0]?.course_code);
+                  console.log("Option values:", courseOptions.map(o => o.value));
+
 
   const yearOptions = [...new Set(sectionData
     .filter(d => d.course_code === selectedCourse)
@@ -86,81 +120,99 @@ function SelectedSection() {
 
   // Save/Add Section handler
   const handleSaveSections = async () => {
-    if (!selectedCourse || !selectedYear || selectedSections.length === 0) {
-      alert("Please select course, year, and at least one section.");
-      return;
-    }
+    if (isEditing) {    
+      if (!selectedCourse || !selectedYear || selectedSections.length === 0) {
+          alert("Please select course, year, and at least one section.");
+          return;
+        }
 
-    try {
-      const headers = { Authorization: `Bearer ${accessToken}` }
-      const config = { headers, withCredentials: true };
+      try {
+        const headers = { Authorization: `Bearer ${accessToken}` }
+        const config = { headers, withCredentials: true };
 
-      const sectionTakers = sectionOptions
-        .filter((s) => selectedSections.some(sel => sel.id === s.section_id))
-        .map((s) => (
-          { 
-            id: s.section_id, 
-            name:`${s.course_code} ${s.year_number}-${s.section_name}` //saved as: BSIT 3-H
-          }
-        ));
-              console.log("sectionOptions:", sectionOptions);
-              console.log("selectedSections:", selectedSections);
-              console.log("sectionTakers:", sectionTakers);
+        const sectionTakers = sectionOptions
+          .filter((s) => selectedSections.some(sel => sel.id === s.section_id))
+          .map((s) => (
+            { 
+              id: s.section_id, 
+              name:`${s.course_code} ${s.year_number}-${s.section_name}` //saved as: BSIT 3-H
+            }
+          ));
+                console.log("sectionOptions:", sectionOptions);
+                console.log("selectedSections:", selectedSections);
+                console.log("sectionTakers:", sectionTakers);
 
-      await axios.put(`/exams/${examId}/sections`, { sections: sectionTakers }, config);
-      const updated = await axios.get(`/exams/${examId}/sections`, config);  
-      setDbSections(updated.data); // Keep DB state separate
+        await axios.put(`/exams/${examId}/sections`, { sections: sectionTakers }, config);
+        const updated = await axios.get(`/exams/${examId}/sections`, config);  
+        setDbSections(updated.data); // Keep DB state separate
 
-      alert("Sections saved successfully!");
-    } catch (err) {
-      if (err.response?.status === 404) {
-        console.warn("No sections assigned yet");
-        setDbSections([]);
-      } else {
-        console.error("Error fetching sections:", err);
-      }
-    }
+        setIsEditing(false);
+      } catch (err) {
+        if (err.response?.status === 404) {
+          console.warn("No sections assigned yet");
+          setDbSections([]);
+        } else {
+          console.error("Error fetching sections:", err);
+        }
+        }
+    } else {
+      setIsEditing(true);
+    }    
   };
 
   return (
-    <div>
-      <SelectField
-        name="course"
-        value={selectedCourse}
-        onChange={(e) => {
-          setSelectedCourse(e.target.value);
-          setSelectedYear("");
-          setSelectedSections([]);
-        }}
-        options={courseOptions}
-      />
-      <SelectField
-        name="year"
-        value={selectedYear}
-        onChange={(e) => {
-          setSelectedYear(Number(e.target.value));
-          setSelectedSections([]);
-        }}
-        options={yearOptions}
-        disabled={!selectedCourse}
-      />
+    <div className="section-div">
+      <div className="section-choosing-div">
+        <Button
+          label={isEditing ? "Save" : "Edit"}
+          disabled={!selectedCourse || !selectedYear || selectedSections.length === 0}
+          onClick={handleSaveSections}
+        />        
+        <SelectField
+          name="course"
+          value={selectedCourse}
+          onChange={(e) => {
+            setSelectedCourse(e.target.value);
+            setSelectedYear("");
+            setSelectedSections([]);
+          }}
+          options={courseOptions}
+          disabled={!selectedCourse || !isEditing}
+        />
+        <SelectField
+          name="year"
+          value={selectedYear}
+          onChange={(e) => {
+            setSelectedYear(Number(e.target.value));
+            setSelectedSections([]);
+          }}
+          options={yearOptions}
+          disabled={!selectedCourse || !isEditing}
+        />
 
-      <CheckboxDropdown
-        options={sectionOptions.map((s) => ({
-          value: s.section_id,
-          label: s.section_name,
-        }))}
-        selected={selectedSections}
-        onChange={setSelectedSections}
-        placeholder="Select sections"
-        disabled={!selectedYear}
-      />
+        <CheckboxDropdown
+          options={sectionOptions.map((s) => ({
+            value: s.section_id,
+            label: s.section_name,
+          }))}
+          selected={selectedSections}
+          onChange={setSelectedSections}
+          placeholder="Select sections"
+          disabled={!selectedYear || !isEditing}
+        />
+      </div>
+      
+      <div className="selected-section-div">
+        {dbSections.map((s) => (
+          <p key={s.section_id}>
+            {`${s.course_code} ${s.year_number}-${s.section_name}`}
+          </p>
+        ))}
+      </div>
 
-      <Button
-        label="Save Sections"
-        disabled={!selectedCourse || !selectedYear || selectedSections.length === 0}
-        onClick={handleSaveSections}
-      />
+
+
+
     </div>
   );
 }

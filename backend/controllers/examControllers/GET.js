@@ -106,8 +106,14 @@ export const getSectionTakersByExamId = async (req, res) => {
 
   try {
     const result = await db.query(
-      `SELECT * FROM section_takers 
-      WHERE exam_id = $1`, [examId]
+      `SELECT st.section_id, s.section_name, c.course_code, y.year_number
+      FROM section_takers st
+      JOIN sections s ON st.section_id = s.section_id
+      JOIN courses c ON s.course_id = c.course_id
+      JOIN year_levels y ON s.year_level_id = y.year_level_id
+      WHERE st.exam_id = $1
+      ORDER BY c.course_code, y.year_number, s.section_name
+    `, [examId]
     );
     
 

@@ -1,4 +1,4 @@
-function SelectField({ label, name, value, onChange, options }) {
+function SelectField({ label, name, value, onChange, options, disabled }) {
   return (
     <div>
       <label htmlFor={name}>{label}</label>
@@ -6,6 +6,7 @@ function SelectField({ label, name, value, onChange, options }) {
         required
         name={name} 
         value={value} 
+        disabled={disabled}
         onChange={onChange}>
         <option value="" disabled hidden>-- Select --</option>
         {options.map((option, index) => (
