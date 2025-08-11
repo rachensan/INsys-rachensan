@@ -67,7 +67,7 @@ function SelectedSection() {
 
   const [isEditing, setIsEditing] = useState(false);
 
-// 1. Fetch options
+//Fetch options
   useEffect(() => {
     const headers = { Authorization: `Bearer ${accessToken}` };
     const config = { headers, withCredentials: true };
@@ -80,11 +80,8 @@ function SelectedSection() {
       .then(res => setDbSections(res.data))
       .catch(console.error);
   }, [accessToken, examId]);
-  // Guard logs to prevent crash
   
-
-
-  // 2. Once both are loaded, set selected values
+  //Once both GET are loaded, set selected values
   useEffect(() => {
     console.log("sectionData:", sectionData);
     console.log("dbSections:", dbSections);
@@ -95,13 +92,6 @@ function SelectedSection() {
       setSelectedSections(dbSections.map(s => ({ id: s.section_id })));
     }
   }, [sectionData, dbSections]);
-
-
-
-
-
-
-  
 
   const courseOptions = [...new Set(sectionData.map(d => d.course_code))]
     .map(c => ({ label: c, value: c }));
@@ -203,6 +193,7 @@ function SelectedSection() {
       </div>
       
       <div className="selected-section-div">
+        Selected:
         {dbSections.map((s) => (
           <p key={s.section_id}>
             {`${s.course_code} ${s.year_number}-${s.section_name}`}
