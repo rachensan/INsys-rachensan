@@ -22,7 +22,8 @@ const TimePickerComponent = ({ value, onChange }) => {
 };
 
 
-function ScheduledTakers() {
+function ScheduledTakers({ selectedSectionName }) {
+                console.log("selectedSectionName:", selectedSectionName);
   const [startDate, setStartDate] = useState("");
   const [startTime, setStartTime] = useState("09:00");
   const [durationHours, setDurationHours] = useState(1);
@@ -37,13 +38,20 @@ function ScheduledTakers() {
   const [startDateTimeISO, setStartDateTimeISO] = useState("");
   const [endDateTimeISO, setEndDateTimeISO] = useState("");
     //.toISOString() === 2025-08-12T01:15:00.000Z
+  const [timeDate, setTimeDate] = useState([]);
+
+  const { examId } = useParams();
+  const { accessToken } = useAuth();
+  const headers = { Authorization: `Bearer ${accessToken}` }
+  const config = { headers, withCredentials: true };
 
   //calculate end date/time whenever inputs change
   useEffect(() => {
     if (!startDate || !startTime) return;
+    if (!selectedSectionName) return;
 
     const [hours, minutes] = startTime.split(":").map(Number);
-    const start = new Date(startDate);
+    const start = new Date(startDate); //start.toISOString()
     start.setHours(hours, minutes, 0, 0);
 
     setStartDateTime(start.toLocaleString()); 
@@ -55,11 +63,46 @@ function ScheduledTakers() {
     
     setEndDateTime(end.toLocaleString());
     setEndDateTimeISO(end.toISOString());
-  }, [startDate, startTime, durationHours, durationMinutes]);
 
+    //for backend convertion hrs to mins 
+    const totalMinutes = Number(durationHours) * 60 + Number(durationMinutes);
+
+
+                    console.log({
+                      scheduledDate: start.toISOString(),
+                      addTimerQuestion: totalMinutes,
+                      sectionName: selectedSectionName,
+                    });
+
+  }, [startDate, startTime, durationHours, durationMinutes, selectedSectionName, accessToken]);
+  
+  const handleSave = async () => {
+    if (!startDate || !startTime || !selectedSectionName) {
+      console.error("Missing data to save schedule");
+      return;
+    }
+
+    const [hours, minutes] = startTime.split(":").map(Number);
+    const start = new Date(startDate);
+    start.setHours(hours, minutes, 0, 0);
+
+    const totalMinutes = Number(durationHours) * 60 + Number(durationMinutes);
+
+    try {
+      await axios.put(`/exams/${examId}/schedule`, {
+        scheduledDate: start.toISOString(),
+        addTimerQuestion: totalMinutes,
+        sectionName: selectedSectionName,
+      }, config);
+      console.log("Saved schedule!");
+    } catch (err) {
+      console.error("Error saving schedule:", err);
+    }
+  };
 
   return (
     <div style={{ fontFamily: "sans-serif" }}>
+      <button onClick={handleSave}>Save Schedule</button>
       <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
         <div>
           <label>Start Date:</label>

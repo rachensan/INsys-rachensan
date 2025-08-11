@@ -17,6 +17,7 @@ function UpdateExam() {
   const { examId } = useParams();
 
   const [questionForms, setQuestionForms] = useState([]);
+  const [selectedSectionName, setSelectedSectionName] = useState([]);
 
   const [examInfo, setExamInfo] = useState(null); //title, code, stats, sched, sect
   const [examQues, setExamQues] = useState(null); //questions
@@ -139,11 +140,11 @@ function UpdateExam() {
 
         <p>Sections: </p>
         <div>
-          <SelectedSection />
+          <SelectedSection setSelectedSectionName={setSelectedSectionName}/>
         </div>
 
         <div>
-          <ScheduledTakers />
+          <ScheduledTakers selectedSectionName={selectedSectionName}/>
         </div>
       </div>
       

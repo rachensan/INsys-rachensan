@@ -160,9 +160,17 @@ export const finalizeExamSchedule = async(req, res) => {
   const {scheduledDate, addTimerQuestion, sectionName} = req.body; 
         //scheduledDate here is a string... convert to date 
 
-  const startExamDate = new Date(scheduledDate + "+08:00"); //start date
-  const endExamDate = new Date(startExamDate); //cloning startDate and add the timer
-        endExamDate.setMinutes(endExamDate.getMinutes() + addTimerQuestion);
+  // Validate scheduledDate
+  if (!scheduledDate || isNaN(new Date(scheduledDate))) {
+    return res.status(400).json({ error: "Invalid or missing scheduledDate" });
+  }
+
+  //parse date
+  const startExamDate = new Date(scheduledDate); // No +08:00 hack
+  const durationMinutes = Number(addTimerQuestion) || 0;
+
+  //calculate end date
+  const endExamDate = new Date(startExamDate.getTime() + durationMinutes * 60000);
 
   const dateNow = new Date();
   const shouldFinalize = dateNow >= endExamDate; //true or false
@@ -183,9 +191,8 @@ export const finalizeExamSchedule = async(req, res) => {
         end_datetime = $3
       WHERE 
         exam_id = $4
-        AND section_name = $5
-        RETURNING s.*`, 
-      [startExamDate, addTimerQuestion, endExamDate, examId, sectionName]);
+      RETURNING s.*`, 
+      [startExamDate, addTimerQuestion, endExamDate, examId]);
 
 
       if (result.rows.length === 0) {

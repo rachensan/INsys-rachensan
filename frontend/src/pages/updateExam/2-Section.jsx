@@ -56,17 +56,27 @@ export const SectionCard = ({ sd, yearLevel, addedSelections, setAddedSelections
 }
 
 //=====================================================//
-function SelectedSection() {
+function SelectedSection({ setSelectedSectionName }) {
   const [sectionData, setSectionData] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
-  const [selectedSections, setSelectedSections] = useState([]); // IDs from form
-  const [dbSections, setDbSections] = useState([]); // Fetched from DB
+  const [selectedSections, setSelectedSections] = useState([]); //IDs from form
+  const [dbSections, setDbSections] = useState([]); //fetched from DB
+
   const { accessToken } = useAuth();
   const { examId } = useParams();
 
   const [isEditing, setIsEditing] = useState(false);
 
+    useEffect(() => {
+    if (dbSections.length > 0) {
+      setSelectedSectionName(
+        `${dbSections[0].course_code} ${dbSections[0].year_number}-${dbSections[0].section_name}`
+      );
+    }
+  }, [dbSections, setSelectedSectionName]);
+
+  
 //Fetch options
   useEffect(() => {
     const headers = { Authorization: `Bearer ${accessToken}` };
@@ -149,6 +159,7 @@ function SelectedSection() {
       setIsEditing(true);
     }    
   };
+  
 
   return (
     <div className="section-div">
@@ -195,7 +206,10 @@ function SelectedSection() {
       <div className="selected-section-div">
         Selected:
         {dbSections.map((s) => (
-          <p key={s.section_id}>
+          <p 
+            key={s.section_id}
+            onClick={() => setSelectedSectionName(s.section_name)} style={{ cursor: "pointer" }}
+          >
             {`${s.course_code} ${s.year_number}-${s.section_name}`}
           </p>
         ))}
