@@ -63,7 +63,7 @@ function ScheduledTakers() {
     setEndDateTimeISO(end.toISOString());
 
     //for backend convertion hrs to mins 
-    const totalMinutes = Number(durationHours) * 60 + Number(durationMinutes);
+    const totalMinutes = Number(durationHours) * 60 + Number(durationMinutes); //1hr = 60mins
 
 
                     console.log({

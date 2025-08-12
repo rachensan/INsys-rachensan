@@ -166,14 +166,15 @@ export const finalizeExamSchedule = async(req, res) => {
   }
 
   //parse date
-  const startExamDate = new Date(scheduledDate); // No +08:00 hack
+  const startExamDateUTC = new Date(scheduledDate).toISOString(); //always ISO UTC string
   const durationMinutes = Number(addTimerQuestion) || 0;
 
   //calculate end date
-  const endExamDate = new Date(startExamDate.getTime() + durationMinutes * 60000);
+  const endExamDateUTC = new Date(startExamDateUTC);
+  endExamDateUTC.setMinutes(endExamDateUTC.getMinutes() + durationMinutes);
 
   const dateNow = new Date();
-  const shouldFinalize = dateNow >= endExamDate; //true or false
+  const shouldFinalize = dateNow >= endExamDateUTC; //true or false
   //we compare numbers (date) Unix Epoch
       /*
       example: it's been 1758103200000 milliseconds since Jan 1, 1970 UTC
@@ -190,7 +191,7 @@ export const finalizeExamSchedule = async(req, res) => {
           end_datetime = $3
       WHERE exam_id = $4
       RETURNING *`, 
-      [startExamDate, addTimerQuestion, endExamDate, examId]);
+      [startExamDateUTC, addTimerQuestion, endExamDateUTC.toISOString(), examId]);
 
 
       if (result.rows.length === 0) {

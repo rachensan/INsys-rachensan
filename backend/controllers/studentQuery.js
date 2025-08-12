@@ -7,8 +7,8 @@ export const verifyExamAccess = async(req, res) => {
   try {
     const result = await db.query( //gives us the exam infoi dont understand what we area changing
       `SELECT *,
-              (start_datetime AT TIME ZONE 'UTC') AS start_utc,
-              (end_datetime   AT TIME ZONE 'UTC') AS end_utc
+          start_datetime AS start_utc,
+          end_datetime   AS end_utc
        FROM examinations 
        JOIN section_takers 
          ON examinations.exam_id = section_takers.exam_id 
