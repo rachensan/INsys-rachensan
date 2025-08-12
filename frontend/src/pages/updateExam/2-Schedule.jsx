@@ -22,8 +22,7 @@ const TimePickerComponent = ({ value, onChange }) => {
 };
 
 
-function ScheduledTakers({ selectedSectionName }) {
-                console.log("selectedSectionName:", selectedSectionName);
+function ScheduledTakers() {
   const [startDate, setStartDate] = useState("");
   const [startTime, setStartTime] = useState("09:00");
   const [durationHours, setDurationHours] = useState(1);
@@ -48,7 +47,6 @@ function ScheduledTakers({ selectedSectionName }) {
   //calculate end date/time whenever inputs change
   useEffect(() => {
     if (!startDate || !startTime) return;
-    if (!selectedSectionName) return;
 
     const [hours, minutes] = startTime.split(":").map(Number);
     const start = new Date(startDate); //start.toISOString()
@@ -71,13 +69,12 @@ function ScheduledTakers({ selectedSectionName }) {
                     console.log({
                       scheduledDate: start.toISOString(),
                       addTimerQuestion: totalMinutes,
-                      sectionName: selectedSectionName,
                     });
 
-  }, [startDate, startTime, durationHours, durationMinutes, selectedSectionName, accessToken]);
+  }, [startDate, startTime, durationHours, durationMinutes, accessToken]);
   
   const handleSave = async () => {
-    if (!startDate || !startTime || !selectedSectionName) {
+    if (!startDate || !startTime) {
       console.error("Missing data to save schedule");
       return;
     }
@@ -92,7 +89,6 @@ function ScheduledTakers({ selectedSectionName }) {
       await axios.put(`/exams/${examId}/schedule`, {
         scheduledDate: start.toISOString(),
         addTimerQuestion: totalMinutes,
-        sectionName: selectedSectionName,
       }, config);
       console.log("Saved schedule!");
     } catch (err) {

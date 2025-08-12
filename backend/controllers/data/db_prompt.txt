@@ -23,6 +23,9 @@ CREATE TABLE examinations (
   status TEXT DEFAULT 'pending',
   timer TEXT DEFAULT 'none',
   exam_code TEXT,
+  start_datetime TIMESTAMP,
+  end_datetime TIMESTAMP,
+  timer_question INT;
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
   -- 2.1 SECTION TAKER TABLE
@@ -30,9 +33,6 @@ CREATE TABLE examinations (
         section_id SERIAL PRIMARY KEY,
         exam_id INT REFERENCES examinations(exam_id) ON DELETE CASCADE,
         section_name TEXT NOT NULL,
-        start_datetime TIMESTAMP,
-        end_datetime TIMESTAMP,
-        timer_question INT,
         is_finalized BOOLEAN DEFAULT FALSE
       );
 

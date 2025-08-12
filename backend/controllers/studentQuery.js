@@ -5,9 +5,13 @@ export const verifyExamAccess = async(req, res) => {
   const { inputCode, inputSection, studentName, studentSchoolId } = req.body;
 
   try {
-    const result = await db.query( //gives us the exam info
-      `SELECT * FROM examinations 
-       JOIN section_takers ON examinations.exam_id = section_takers.exam_id 
+    const result = await db.query( //gives us the exam infoi dont understand what we area changing
+      `SELECT *,
+              (start_datetime AT TIME ZONE 'UTC') AS start_utc,
+              (end_datetime   AT TIME ZONE 'UTC') AS end_utc
+       FROM examinations 
+       JOIN section_takers 
+         ON examinations.exam_id = section_takers.exam_id 
        WHERE exam_code = $1 AND section_name = $2`,
       [inputCode, inputSection]
     );
@@ -16,32 +20,27 @@ export const verifyExamAccess = async(req, res) => {
       return res.status(404).json({ error: 'Invalid code or section' });
     }
 
+  //always work in UTC internally
+    const currentTimeUTC = new Date(new Date().toISOString()); // always UTC
+    const startTimeUTC = new Date(result.rows[0].start_utc);
+    const endTimeUTC = new Date(result.rows[0].end_utc);
+
   //time validation
-    const currentTime = new Date();
-    const startTime = new Date(result.rows[0].start_datetime + '+08:00');
-    const endTime = new Date(result.rows[0].end_datetime + '+08:00');
-/*
-    const timeVerification = currentTime > startTime && currentTime < endTime; //currently between start and end.. so we can enter if TRUE
-
-    if (!timeVerification) { //if it's false (not during the exam time)
-      return res.status(403).json({ error: 'Exam not available at this time' });
-    }
-*/
-
-    if (currentTime > endTime) {
+    if (currentTimeUTC > endTimeUTC) {
       return res.status(403).json({ error: 'Exam has ended' });
     }
-    if (currentTime < startTime) {
+    if (currentTimeUTC < startTimeUTC) {
       return res.status(403).json({ error: 'Exam has not started' });
     }
 
+  //check submissions
     const isSubmitted = await db.query(`
       SELECT * FROM student_scores
       WHERE student_school_id = $1
         AND section_name = $2
         AND exam_id = $3
-        AND is_submitted = $4
-      `, [studentSchoolId, inputSection, result.rows[0].exam_id, true]);
+        AND is_submitted = true
+      `, [studentSchoolId, inputSection, result.rows[0].exam_id]);
 
     if (isSubmitted.rows.length === 1) {
       return res.status(403).json({ error: 'You already submitted this exam' });
@@ -52,8 +51,8 @@ export const verifyExamAccess = async(req, res) => {
       WHERE student_school_id = $1
         AND section_name = $2
         AND exam_id = $3
-        AND is_submitted = $4
-      `, [studentSchoolId, inputSection, result.rows[0].exam_id, false]);
+        AND is_submitted = false
+      `, [studentSchoolId, inputSection, result.rows[0].exam_id]);
 
     if (isStarted.rows.length === 1) {
       return res.status(200).json({ message: 'Already Allowed. Proceed to exam', exam: result.rows[0] });

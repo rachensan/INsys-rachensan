@@ -184,14 +184,12 @@ export const finalizeExamSchedule = async(req, res) => {
 
   try {
     const result = await db.query(`
-      UPDATE section_takers s
-      SET 
-        start_datetime = $1, 
-        timer_question = $2,
-        end_datetime = $3
-      WHERE 
-        exam_id = $4
-      RETURNING s.*`, 
+      UPDATE examinations
+      SET start_datetime = $1,
+          timer_question = $2,
+          end_datetime = $3
+      WHERE exam_id = $4
+      RETURNING *`, 
       [startExamDate, addTimerQuestion, endExamDate, examId]);
 
 
