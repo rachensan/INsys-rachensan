@@ -78,6 +78,9 @@ function Login() {
         />
         <a href="/forgot-password">Forgot Password?</a>
         <Button label="Login" type="submit" />
+
+        <p>Don't have an accout yet? </p>
+        <a href="/welcome-register">Create account</a>
       </form>
     </div>
     </>

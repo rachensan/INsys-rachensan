@@ -12,13 +12,14 @@ import UpdateExam from './pages/UpdateExam.jsx';
 
 //Layout
 import LogoutButton from './layout/logout.jsx';
+import Welcome from './pages/Welcome.jsx';
 
 function App() {
   const navigate = useNavigate();
   const { setAccessToken, setUser, user } = useAuth();
 
 useEffect(() => {
-  const publicPaths = ["/login", "/register/student", "/register/teacher"];
+  const publicPaths = ["/login", "/register/student", "/register/teacher", "/welcome-register"];
   if (publicPaths.includes(window.location.pathname)) return;
 
   axios.post("/refresh", {}, { withCredentials: true })
@@ -54,6 +55,7 @@ useEffect(() => {
         <Route path='/register/student' element={<RegisterStudent />} />
         <Route path='/register/teacher' element={<RegisterTeacher />} />
         <Route path='/login' element={<Login />} />
+        <Route path='/welcome-register' element={<Welcome />} />
       </Routes>
     </>
   )
