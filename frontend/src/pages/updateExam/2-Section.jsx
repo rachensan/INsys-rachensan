@@ -93,7 +93,6 @@ function SelectedSection({ setSelectedSectionName }) {
   
   //Once both GET are loaded, set selected values
   useEffect(() => {
-    console.log("sectionData:", sectionData);
     console.log("dbSections:", dbSections);
 
     if (sectionData.length > 0 && dbSections.length > 0 && dbSections[0]?.course_code) {

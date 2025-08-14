@@ -4,7 +4,7 @@ import Button from '../../components/Buttons.jsx'
 import InputField from '../../components/InputFields.jsx'
 
 
-function Essay({ id, questionText, points, onSave, defaultEditing = true }) {
+function Essay({ questionId, questionText, points, onSave, defaultEditing = true }) {
   const [editQuestion, setEditQuestion] = useState(questionText || "");
   const [editPoints, setEditPoints] = useState(points || 1);
   const questionType = 'essay';
@@ -18,7 +18,7 @@ function Essay({ id, questionText, points, onSave, defaultEditing = true }) {
         return;
       }
       onSave({
-        questionId: id,
+        questionId: questionId,
         questionText: editQuestion,
         questionType: questionType,
         points: editPoints,

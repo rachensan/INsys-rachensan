@@ -115,10 +115,9 @@ export const getSectionTakersByExamId = async (req, res) => {
       ORDER BY c.course_code, y.year_number, s.section_name
     `, [examId]
     );
-    
 
     if (result.rows.length === 0) {
-      return res.status(404).json({ message: 'Section/s not assigned yet' })
+      return res.status(200).json(result.rows);
     }
 
     res.status(200).json(result.rows);

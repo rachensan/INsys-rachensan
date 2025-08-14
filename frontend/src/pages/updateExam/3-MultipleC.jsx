@@ -3,7 +3,7 @@ import React, {useState} from 'react'
 import Button from '../../components/Buttons.jsx'
 import InputField from '../../components/InputFields.jsx'
 
-function MultipleChoice({ id, questionText, options, correctAnswer, points, onSave, defaultEditing = true }) {
+function MultipleChoice({ questionId, questionText, options, correctAnswer, points, onSave, defaultEditing = true }) {
   const [editQuestion, setEditQuestion] = useState(questionText || "");
   const [choices, setChoices] = useState(options || ['', '', '', '']);
   const [editAnswer, setEditAnswer] = useState(correctAnswer || "");
@@ -25,7 +25,7 @@ function MultipleChoice({ id, questionText, options, correctAnswer, points, onSa
 
 
       onSave({
-        questionId: id,
+        questionId: questionId,
         questionText: editQuestion,
         questionType: questionType,
         options: choices,

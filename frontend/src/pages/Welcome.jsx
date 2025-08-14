@@ -20,7 +20,6 @@ function Welcome() {
       <Button label="Teacher" onClick={() =>{ navigate("/register/teacher") }}/>
       <Button label="Student" onClick={() =>{ navigate("/register/student") }}/>
     </div>
-    
     </>
   )
 }

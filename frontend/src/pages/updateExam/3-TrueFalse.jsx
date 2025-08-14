@@ -3,7 +3,7 @@ import InputField from '../../components/InputFields';
 import Button from '../../components/Buttons';
 import SelectField from '../../components/SelectFields';
 
-function TrueFalse({ id, questionText, options, correctAnswer, points, onSave, defaultEditing = true }) {
+function TrueFalse({ questionId, questionText, options, correctAnswer, points, onSave, defaultEditing = true }) {
   const [editQuestion, setEditQuestion] = useState(questionText || "");
   const [choices, setChoices] = useState(options || ['True', 'False']);
   const [editAnswer, setEditAnswer] = useState(correctAnswer || "True");
@@ -19,7 +19,7 @@ function TrueFalse({ id, questionText, options, correctAnswer, points, onSave, d
         return;
       }
       onSave({
-        questionId: id,
+        questionId: questionId,
         questionText: editQuestion,
         questionType: questionType,
         options: choices,
