@@ -171,56 +171,23 @@ export const getEssayPerStudent = async(req, res) => {
   }
 }
 
-export const getExamSchedule = async(req, res) => { //for teacher side, to see ALL(sections) schdule in an exam
+export const getExamSchedule = async(req, res) => { //for teacher side, to see ALL(sections) schedule in an exam
   const {examId} = req.params;
-/*     
-//format example: "July 16 2025 23:30"
-  const formatOptions = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
-  };
-  const examFinalized = scheduledDate.toLocaleString('en-US', formatOptions).replace(',', '');
-
-  const now = new Date();
-  const dateNow = now.toLocaleString('en-US', options).replace(',', '');
-*/ 
+  const { sectionName } = req.body;
 
   try {
-    const result = await db.query(`SELECT * FROM section_takers WHERE exam_id = $1`, [examId]);
+    const result = await db.query(`
+      SELECT * 
+      FROM examinations 
+      WHERE exam_id = $1
+        AND section_name = $2`
+      , [examId, sectionName]);
   
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: "No matching section or exam found" });
-    }
+    if (result.rows.length === 0) return res.status(404).json({ error: "No matching exam found" })
 
     res.status(200).json(result.rows);
   } catch (error) {
     console.error("Error getting finalized schedule", error);
     res.status(500).json({ error: "Failed to get exam schedule" });
-  }
-}
-
-export const getSectionSchedule = async(req, res) => { //one section schedule
-  const { examId } = req.params;
-  const { sectionName } = req.body;
-
-  try {
-    const result = await db.query(`
-      SELECT start_datetime, end_datetime
-      FROM section_takers 
-      WHERE exam_id = $1
-        AND section_name = $2`, [examId, sectionName]);
-  
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: "No matching section or exam found" });
-    }
-
-    res.status(200).json(result.rows);
-  } catch (error) {
-    console.error("Error getting finalized schedule", error);
-    res.status(500).json({ error: "Failed to get section exam schedule" });
   }
 }

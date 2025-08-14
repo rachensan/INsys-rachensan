@@ -37,14 +37,30 @@ function ScheduledTakers() {
   const [startDateTimeISO, setStartDateTimeISO] = useState("");
   const [endDateTimeISO, setEndDateTimeISO] = useState("");
     //.toISOString() === 2025-08-12T01:15:00.000Z
-  const [timeDate, setTimeDate] = useState([]);
+
+  //fetch saved data from DB
+  const [savedDate, setSavedDate] = useState("");
 
   const { examId } = useParams();
   const { accessToken } = useAuth();
   const headers = { Authorization: `Bearer ${accessToken}` }
   const config = { headers, withCredentials: true };
 
-  //calculate end date/time whenever inputs change
+/* =========== FETCH AND RENDER THE DATE ========== */
+  useEffect(() => {
+    const fetchDate = async () => {
+      try {
+        const res = await axios.get(`/exams/${examId}/schedule`); 
+        setSavedDate(res.data.scheduledDate); 
+        setStartDateTime(res.data)
+      } catch (err) {
+        console.error("Error fetching saved date", err);
+      }
+    };
+    if (examId) fetchDate();
+  }, [accessToken, examId])
+
+/* ====== CALCULATE END DATE/TIME (INPUT CHANGE) ====== */
   useEffect(() => {
     if (!startDate || !startTime) return;
 
@@ -68,11 +84,12 @@ function ScheduledTakers() {
 
                     console.log({
                       scheduledDate: start.toISOString(),
-                      addTimerQuestion: totalMinutes,
+                      addExamDuration: totalMinutes,
                     });
 
   }, [startDate, startTime, durationHours, durationMinutes, accessToken]);
-  
+
+/* =========== SAVE DATE ========== */
   const handleSave = async () => {
     if (!startDate || !startTime) {
       console.error("Missing data to save schedule");
@@ -88,7 +105,7 @@ function ScheduledTakers() {
     try {
       await axios.put(`/exams/${examId}/schedule`, {
         scheduledDate: start.toISOString(),
-        addTimerQuestion: totalMinutes,
+        addExamDuration: totalMinutes,
       }, config);
       console.log("Saved schedule!");
     } catch (err) {
@@ -99,6 +116,7 @@ function ScheduledTakers() {
   return (
     <div style={{ fontFamily: "sans-serif" }}>
       <button onClick={handleSave}>Save Schedule</button>
+{/* ========================= TIME PICKER COMPONENT ========================= */}
       <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
         <div>
           <label>Start Date:</label>
@@ -118,7 +136,7 @@ function ScheduledTakers() {
           />
         </div>
       </div>
-
+{/* ========================= DURATION ========================= */}
       <div style={{ marginBottom: "10px" }}>
         <label>Duration:</label>
         <div style={{ display: "inline-flex", alignItems: "center", gap: "5px" }}>
@@ -141,11 +159,7 @@ function ScheduledTakers() {
           <span>m</span>
         </div>
       </div>
-
-
-
-
-
+{/* ========================= START AND END TIME DISPLAY ========================= */}
       <div className="scheduled-takers-div">
         <div>
           Start Date/Time: {startDateTime || "—"}

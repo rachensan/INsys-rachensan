@@ -83,7 +83,7 @@ app.use('/api/teacher', teacherAuthRoutes);
 
 //examCONTROLLERS
   //GET
-    import { getAllExams, getExamById, getExamsByTitle, getExamsByStatus, getExamCode, getSectionTakersByExamId, getAllScoresByExam, getEssayPerStudent, getExamSchedule, getSectionSchedule, getAllQuestionsByExam } from './controllers/examControllers/GET.js'
+    import { getAllExams, getExamById, getExamsByTitle, getExamsByStatus, getExamCode, getSectionTakersByExamId, getAllScoresByExam, getEssayPerStudent, getExamSchedule, getAllQuestionsByExam } from './controllers/examControllers/GET.js'
   //POST
     import { createExam, duplicateExam } from './controllers/examControllers/POST.js'
   //UPDATE
@@ -166,8 +166,9 @@ app.use('/api/teacher', teacherAuthRoutes);
   app.patch('/api/exams/:examId/timer', teacherOnly, updateExamTimer);
   app.patch('/api/exams/:examId/details', teacherOnly, updateExamDetails);
   app.patch('/api/exams/:examId/code', teacherOnly, updateExamCode);
-      //not really needed, cuz we create the exam code at exam creation
-  app.get('/api/exams/:examId/schedule', teacherOnly, getExamSchedule);
+      //not really needed, cuz we create the exam code at exam creation\
+
+  app.get('/api/exams/:examId/schedule', teacherOnly, getExamSchedule); 
   app.put('/api/exams/:examId/schedule', teacherOnly, finalizeExamSchedule);
 
   app.delete('/api/exams/:examId', teacherOnly, deleteExam);
@@ -183,7 +184,7 @@ app.use('/api/teacher', teacherAuthRoutes);
 // ========== STUDENT ROUTES ==========
   app.get('/api/student/:studentId/exams/:examId/info', studentOnly, getInfoPerExam);
   app.get('/api/student/:studentId/exam-history', studentOnly);
-  app.get('/api/exams/:examId/section-schedule', studentOnly, getSectionSchedule);
+  
 
   app.post('/api/student/:studentId/exams/:examId/auto-submit', studentOnly, autoSubmitAllAnswers);
   app.post('/api/student/verify', studentOnly, verifyExamAccess);

@@ -59,10 +59,10 @@ export const updateExamStatus = async(req, res) => {
 
 export const updateExamTimer = async(req, res) => {
   const { examId } = req.params;
-  const { timer } = req.body;
+  const { exam_duration } = req.body;
 
   try {
-    const result = await db.query ("UPDATE examinations SET timer = $1 WHERE exam_id = $2 RETURNING *", [timer, examId]);
+    const result = await db.query ("UPDATE examinations SET exam_duration = $1 WHERE exam_id = $2 RETURNING *", [exam_duration, examId]);
 
     if(result.rows.length === 0) {
       return res.status(404).json({ message: 'Exam not found' })
@@ -70,7 +70,7 @@ export const updateExamTimer = async(req, res) => {
 
     res.status(200).json(result.rows[0]);
   } catch (error) {
-    console.error('Error updating exam timer', error);
+    console.error('Error updating exam duration timer', error);
     res.status(500).json({ error: 'Failed to update exam timer' });
   }
 }
@@ -78,7 +78,7 @@ export const updateExamTimer = async(req, res) => {
 export const updateExamDetails = async(req, res) => {
   const { examId } = req.params;
   const userId = req.user.userId;
-  const { title, schedule, timer, status } = req.body;
+  const { title, schedule, exam_duration, status } = req.body;
 
   try {
     const fields = [];
@@ -97,9 +97,9 @@ export const updateExamDetails = async(req, res) => {
       fields.push(`status = $${count++}`); //count = 3, then count = 4
       values.push(status);
     }
-    if (timer) {
-      fields.push(`timer = $${count++}`); //count = 4, then count = 5
-      values.push(timer);
+    if (exam_duration) {
+      fields.push(`exam_duration = $${count++}`); //count = 4, then count = 5
+      values.push(exam_duration);
     }
     
 
@@ -115,7 +115,7 @@ export const updateExamDetails = async(req, res) => {
     values.push(userId);
       
       
-      //fields = ["title = $1", "schedule = $2", "timer = $3"]
+      //fields = ["title = $1", "schedule = $2", "exam_duration = $3"]
       
     const query = 
     `UPDATE examinations 
@@ -127,7 +127,7 @@ export const updateExamDetails = async(req, res) => {
             //fields have $1,$2,$3
             //exam_id have $4
             //user_id have $5
-      //values = [title, schedule, timer, examId]
+      //values = [title, schedule, exam_duration, examId]
 
     const result = await db.query(query, values);
     res.status(200).json(result.rows[0]);
@@ -157,7 +157,7 @@ export const updateExamCode = async(req, res) => {
 
 export const finalizeExamSchedule = async(req, res) => {
   const {examId} = req.params;
-  const {scheduledDate, addTimerQuestion, sectionName} = req.body; 
+  const {scheduledDate, addExamDuration, sectionName} = req.body; 
         //scheduledDate here is a string... convert to date 
 
   // Validate scheduledDate
@@ -167,7 +167,7 @@ export const finalizeExamSchedule = async(req, res) => {
 
   //parse date
   const startExamDateUTC = new Date(scheduledDate).toISOString(); //always ISO UTC string
-  const durationMinutes = Number(addTimerQuestion) || 0;
+  const durationMinutes = Number(addExamDuration) || 0;
 
   //calculate end date
   const endExamDateUTC = new Date(startExamDateUTC);
@@ -187,11 +187,11 @@ export const finalizeExamSchedule = async(req, res) => {
     const result = await db.query(`
       UPDATE examinations
       SET start_datetime = $1,
-          timer_question = $2,
+          exam_duration = $2,
           end_datetime = $3
       WHERE exam_id = $4
       RETURNING *`, 
-      [startExamDateUTC, addTimerQuestion, endExamDateUTC.toISOString(), examId]);
+      [startExamDateUTC, addExamDuration, endExamDateUTC.toISOString(), examId]);
 
 
       if (result.rows.length === 0) {
@@ -207,6 +207,6 @@ export const finalizeExamSchedule = async(req, res) => {
       res.status(200).json(result.rows[0]);
   } catch (error) {
     console.error("Error updating finalized schedule", error);
-    res.status(500).json({ error: "Failed to update finalized timer schedule???" });
+    res.status(500).json({ error: "Failed to update finalized timer schedule" });
   }
 }

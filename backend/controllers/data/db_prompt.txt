@@ -21,11 +21,11 @@ CREATE TABLE examinations (
   title TEXT NOT NULL,
   schedule DATE,
   status TEXT DEFAULT 'pending',
-  timer TEXT DEFAULT 'none',
   exam_code TEXT,
   start_datetime TIMESTAMPTZ, -- stores in UTC
   end_datetime TIMESTAMPTZ,   -- stores in UTC
-  timer_question INT;
+  timer_question INT,
+  exam_duration INT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
   -- 2.1 SECTION TAKER TABLE
