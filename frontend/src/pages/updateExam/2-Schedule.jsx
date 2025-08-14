@@ -24,7 +24,7 @@ const TimePickerComponent = ({ value, onChange }) => {
 
 function ScheduledTakers() {
   const [startDate, setStartDate] = useState("");
-  const [startTime, setStartTime] = useState("09:00");
+  const [startTime, setStartTime] = useState("06:45");
   const [durationHours, setDurationHours] = useState(1);
   const [durationMinutes, setDurationMinutes] = useState(0);
 
@@ -38,9 +38,6 @@ function ScheduledTakers() {
   const [endDateTimeISO, setEndDateTimeISO] = useState("");
     //.toISOString() === 2025-08-12T01:15:00.000Z
 
-  //fetch saved data from DB
-  const [savedDate, setSavedDate] = useState("");
-
   const { examId } = useParams();
   const { accessToken } = useAuth();
   const headers = { Authorization: `Bearer ${accessToken}` }
@@ -48,16 +45,26 @@ function ScheduledTakers() {
 
 /* =========== FETCH AND RENDER THE DATE ========== */
   useEffect(() => {
-    const fetchDate = async () => {
+    const fetchSchedule = async () => {
       try {
-        const res = await axios.get(`/exams/${examId}/schedule`); 
-        setSavedDate(res.data.scheduledDate); 
-        setStartDateTime(res.data)
+        const res = await axios.get(`/exams/${examId}/schedule`, config); 
+
+        //convert UTC to local time
+        const utcDate = new Date(res.data.start_datetime);
+        const localDate = new Date(utcDate.getTime() - utcDate.getTimezoneOffset() * 60000);
+        setStartDate(localDate.toISOString().split("T")[0]);
+        setStartTime(localDate.toISOString().split("T")[1].slice(0, 5));
+
+        if (res.data.exam_duration !== undefined) {
+          const totalMinutes = Number(res.data.exam_duration);
+          setDurationHours(Math.floor(totalMinutes / 60));
+          setDurationMinutes(totalMinutes % 60);
+        }
       } catch (err) {
         console.error("Error fetching saved date", err);
       }
     };
-    if (examId) fetchDate();
+    if (examId) fetchSchedule();
   }, [accessToken, examId])
 
 /* ====== CALCULATE END DATE/TIME (INPUT CHANGE) ====== */
@@ -116,7 +123,7 @@ function ScheduledTakers() {
   return (
     <div style={{ fontFamily: "sans-serif" }}>
       <button onClick={handleSave}>Save Schedule</button>
-{/* ========================= TIME PICKER COMPONENT ========================= */}
+{/* ========================= DATE ========================= */}  
       <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
         <div>
           <label>Start Date:</label>
@@ -127,6 +134,7 @@ function ScheduledTakers() {
             style={{ width: "140px" }}
           />
         </div>
+{/* ========================= TIME-PICKER COMPONENT ========================= */}        
         <div>
           <label>Start Time:</label>
           <TimePickerComponent
