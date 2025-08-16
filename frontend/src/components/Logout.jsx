@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import Button from "../components/Buttons";
+import Button from "./Buttons.jsx";
 import axios from "../utils/axiosConfig.js";
 import { useAuth } from '../context/AuthContext.jsx';
 

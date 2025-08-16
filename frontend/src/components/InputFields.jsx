@@ -21,3 +21,14 @@ function InputField ({ label, type="text", name, value, onChange, placeholder, c
 }
 
 export default InputField;
+
+/*
+  <InputField 
+    label="OTP"
+    name="code"
+    value={code} <-- must be string or number
+    onChange={(e) => setCode(e.target.value)}
+    placeholder="Enter student id"
+    disabled={isVerified}
+  />
+*/

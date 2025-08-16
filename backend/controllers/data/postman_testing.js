@@ -445,7 +445,8 @@ const postmanLinks = [
     path: "/api/forgot-password/request-otp/:userId/:schoolId",
     link: "http://localhost:3000/api/forgot-password/request-otp/38/2021307605",
     body: {
-        "newPassword": "Yla123"
+        "newPassword": "Yla123",
+        "schoolId": "2021307605"
     }
   },
   {

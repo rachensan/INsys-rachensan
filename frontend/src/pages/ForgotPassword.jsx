@@ -1,0 +1,112 @@
+import axios from "../utils/axiosConfig.js";
+import { useState } from 'react';
+
+//components
+import Button from "../components/Buttons.jsx";
+import InputField from "../components/InputFields.jsx";
+
+function ForgotPassword() {
+
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+    retypePassword: "",
+  });
+
+  const [isVerified, setIsVerified] = useState(false);
+  const [code, setCode] = useState(""); //otp
+
+  const handleSendOtp = async () => {
+    try {
+      const res = await axios.post('/forgot-password/request-otp', { email: form.email });
+      alert(res.data.message);
+    } catch (err) {
+        console.error(err.message);
+        alert("Network or server error")
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    try {
+      const res = await axios.post('/forgot-password/verify-otp', { email: form.email, code });
+      alert(res.data.message);
+      setIsVerified(true);
+    } catch (err) {
+      console.log(err.response?.data);
+      alert("Invalid OTP");
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!isVerified) return alert("Verify your email first");
+
+    if (form.password !== form.retypePassword) return alert("Passwords do not match");
+
+    axios.post('/forgot-password/reset', { 
+      email: form.email, 
+      newPassword: form.password })
+      .then(res => {
+        console.log(res.data.message);
+        alert(res.data.message);
+      })
+      .catch(err => {
+        console.log(err.response?.data);
+      });
+  }
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  return (
+    <>
+      {/*{!isVerified ? ( */}
+        <>
+        <p> Forgot Password </p>
+        <InputField 
+          label="Email"
+          name="email"
+          value={form.email} 
+          onChange={handleChange}
+          placeholder="Enter student id"
+        />
+        <Button label="Send OTP" onClick={handleSendOtp} />
+        <InputField 
+          label="OTP"
+          name="code"
+          value={code} 
+          onChange={(e) => setCode(e.target.value)}
+          placeholder="Enter student id"
+        />
+        <Button label="Verify" onClick={handleVerifyOtp} />
+        </>
+      {/* ) : ( */}
+        <>
+        <InputField 
+          label="password"
+          name="password"
+          value={form.password} 
+          onChange={(e) => setForm({ ...form, password: e.target.value })}
+          placeholder="Password"
+        />
+        <InputField 
+          label="re-type password"
+          name="retypePassword"
+          value={form.retypePassword} 
+          onChange={(e) => setForm({ ...form, retypePassword: e.target.value })}
+          placeholder="Confirm Password"
+        />
+        <Button label="Reset Password" onClick={handleSubmit} />
+        </>
+      {/* )} */}
+      
+    </>
+  )
+}
+
+export default ForgotPassword;

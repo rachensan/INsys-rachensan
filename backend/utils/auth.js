@@ -105,27 +105,63 @@ authRoutes.post('/logout', async (req, res) => {
 
 
 
-//request otp and input new password
-authRoutes.post('/forgot-password/request-otp/:userId/:schoolId', async (req, res) => {
-  const { userId, schoolId } = req.params;
-  const { newPassword } = req.body; //inputted new password
-  const email = `${schoolId}@pampangastateu.edu.ph`;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//FOR FORGOT PASSWORD WHEN LOGGED OUT
+//send request otp only
+authRoutes.post('/forgot-password/request-otp', async (req, res) => {
+  const { email } = req.body; //inputted new password
 
   try {
     const result = await db.query(`
-      SELECT user_id, school_id FROM users WHERE user_id = $1 AND school_id = $2`, [userId, schoolId]);
-
+      SELECT user_id, school_id 
+      FROM users 
+      WHERE email = $1`, [email]);
+    
     if (result.rows.length === 0) return res.status(404).json({ message: "User not found." });
 
-    //password hashing uwu
-    const hash = await bcrypt.hash(newPassword, saltRounds) ;
+    const user = result.rows[0];
 
     //generate OTP and send email
     const otp = await generateOTP(email, "forgot"); //wait for redis to store this
     await sendUserEmail({ email, token: otp, context: "forgot" }); //nodemailer
 
-    //temporarily store user info in Redis (optional,, to auto-insert after verify)
-    await redisClient.setEx(`pendingUser:${email}`, 300, JSON.stringify({ hash }));
+    //temporarily store user info in Redis (to auto-insert after verify)
+    await redisClient.setEx(`pendingUser:${email}`, 
+      300, 
+      JSON.stringify({ user_id: user.user_id, school_id: user.school_id }));
 
     return res.status(200).json({ message: 'OTP sent. Verify to reset password.' });
   } catch (error) {
@@ -135,6 +171,108 @@ authRoutes.post('/forgot-password/request-otp/:userId/:schoolId', async (req, re
 
 })
 
+
+//verify otp 
+authRoutes.post('/forgot-password/verify-otp', async (req, res) => {
+  const { code, email } = req.body; //inputted new password
+
+  try {
+    //========== verify otp ==========//
+    const isValid = await verifyOTP(email, code); //send to generateOTP.js
+            console.log(`isValid: ${isValid}`)
+    if (!isValid) return res.status(400).json({ message: 'Invalid or expired code' })
+
+    await redisClient.setEx(`verifiedEmail:${email}`, 300, "true");
+
+    return res.status(201).json({ message: 'Email verified' });
+  } catch (err) {
+    console.error('OTP Verification Error:', err);
+    return res.status(500).json({ message: 'Server error during verification' });
+  }
+})
+
+
+//check if verified and then we input new password
+authRoutes.post('/forgot-password/reset', async (req, res) => {
+  const { email, newPassword } = req.body; //inputted new password
+
+  try {
+    //check if verified flag exists in Redis
+    const verified = await redisClient.get(`verifiedEmail:${email}`);
+
+    if (!verified) {
+      return res.status(400).json({ message: "Email not verified" });
+    }
+
+    //password hashing
+    const hash = await bcrypt.hash(newPassword, saltRounds);
+
+    //updating password to database
+    await db.query(`
+      UPDATE users 
+      SET password = $1
+      WHERE email = $2
+      RETURNING *`, 
+      [hash, email]); //changed password to hash (hashed password)
+      
+    await redisClient.del(`verifiedEmail:${email}`);
+
+    return res.status(201).json({ message: "Passowrd reset successfully" });
+  } catch (err) {
+    console.error('OTP Verification Error:', err);
+    return res.status(500).json({ message: 'Server error during verification' });
+  }
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//FOR FORGOT PASSWORD WHEN LOGGED IN
 //verify and confirm reset password
 authRoutes.post('/forgot-password/reset-password/:userId/:schoolId', async(req, res) => {
   const { userId, schoolId } = req.params;
@@ -176,6 +314,7 @@ authRoutes.post('/forgot-password/reset-password/:userId/:schoolId', async(req, 
     return res.status(500).json({ message: 'Server error during verification' });
   }
 });
+
 
 //verify passwordMatch - only used in frontend
 authRoutes.post('/verify-password/:userId', async (req, res) => {

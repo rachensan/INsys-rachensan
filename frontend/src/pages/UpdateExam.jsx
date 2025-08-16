@@ -135,7 +135,6 @@ function UpdateExam() {
         </div>
 
         <p>Code: {examInfo.exam_code}</p>
-        <p>Schedule: {examInfo.schedule}</p>
         <p>Status: {examInfo.status}</p>
 
         <p>Sections: </p>
