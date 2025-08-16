@@ -1,11 +1,14 @@
 import axios from 'axios';
 import { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom'
+
 import InputField from "../components/InputFields.jsx"
 import RadioButton from "../components/RadioButton.jsx";
 import SelectField from "../components/SelectFields.jsx";
 import Button from '../components/Buttons.jsx';
 
 function RegisterTeacher() {
+  const navigate = useNavigate();
   const [formRegister, setFormRegister] = useState({
     username: "",
     schoolId: "",
@@ -52,6 +55,7 @@ function RegisterTeacher() {
       .then(res => {
         console.log(res.data.message);
         alert(res.data.message);
+        navigate("/login");
       })
       .catch(err => {
         console.log(err.response?.data);

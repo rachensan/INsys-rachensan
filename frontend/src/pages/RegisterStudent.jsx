@@ -1,11 +1,13 @@
 import axios from 'axios';
 import { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom'
 import InputField from "../components/InputFields.jsx"
 import RadioButton from "../components/RadioButton.jsx";
 import SelectField from "../components/SelectFields.jsx";
 import Button from '../components/Buttons.jsx';
 
 function RegisterStudent() {
+  const navigate = useNavigate();
   const [formRegister, setFormRegister] = useState({
     username: "",
     password: "",
@@ -21,7 +23,7 @@ function RegisterStudent() {
   const username = formRegister.username;
 
   const handleSendOtp = async () => {
-    try {
+    try { // did not use axiosConfig here so it's the full url
       const res = await axios.post("http://localhost:3000/api/student/register/email-otp", { username: username });
       alert(res.data.message);
     } catch (err) {
@@ -51,6 +53,7 @@ function RegisterStudent() {
       .then(res => {
         console.log(res.data.message);
         alert(res.data.message);
+        navigate("/login");
       })
       .catch(err => {
         console.log(err.response?.data);
@@ -90,8 +93,6 @@ function RegisterStudent() {
         
       ) : (
         <>
-          
-
           <form onSubmit={handleSubmit}>
             <h2> Registration Form </h2>
             <InputField 
