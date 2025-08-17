@@ -107,9 +107,10 @@ export const getExamCode = async(req, res) => {
 
 export const getSectionTakersByExamId = async (req, res) => {
   const { examId } = req.params;
+  const { courseCode } = req.query;
 
   try {
-    const result = await db.query(
+    let result = await db.query(
       `SELECT st.section_id, s.section_name, c.course_code, y.year_number
       FROM section_takers st
       JOIN sections s ON st.section_id = s.section_id
@@ -120,8 +121,24 @@ export const getSectionTakersByExamId = async (req, res) => {
     `, [examId]
     );
 
-    if (result.rows.length === 0) {
-      return res.status(200).json(result.rows);
+    //fallback for new exam: no sections linked yet
+    if (result.rows.length === 0 && courseCode) {
+      const fallbackResult = await db.query(
+        `SELECT 
+           s.section_id,
+           s.section_name,
+           c.course_code,
+           y.year_number
+         FROM sections s
+         JOIN courses c ON s.course_id = c.course_id
+         JOIN year_levels y ON s.year_level_id = y.year_level_id
+         WHERE c.course_code = $1
+          AND y.year_number = 1
+         ORDER BY y.year_number, s.section_name
+         LIMIT 1`, //only shows the first section by default
+        [courseCode]
+      );
+      result = fallbackResult; // now safe
     }
 
     res.status(200).json(result.rows);

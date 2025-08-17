@@ -58,9 +58,9 @@ export const SectionCard = ({ sd, yearLevel, addedSelections, setAddedSelections
 //=====================================================//
 function SelectedSection({ setSelectedSectionName }) {
   const [sectionData, setSectionData] = useState([]);
-  const [selectedCourse, setSelectedCourse] = useState("");
-  const [selectedYear, setSelectedYear] = useState("");
-  const [selectedSections, setSelectedSections] = useState([]); //IDs from form
+  const [selectedCourse, setSelectedCourse] = useState("BSIT");
+  const [selectedYear, setSelectedYear] = useState("1");
+  const [selectedSections, setSelectedSections] = useState([{id: 1}]); //IDs from form
   const [dbSections, setDbSections] = useState([]); //fetched from DB
 
   const { accessToken } = useAuth();
@@ -86,27 +86,40 @@ function SelectedSection({ setSelectedSectionName }) {
       .then((res) => setSectionData(res.data))
       .catch((err) => console.error("Failed to fetch:", err));
 
-    axios.get(`/exams/${examId}/sections`, config)
+    axios.get(`/exams/${examId}/sections`, {
+      ...config,
+      params: { courseCode: selectedCourse }
+    })
       .then(res => setDbSections(res.data))
       .catch(console.error);
-  }, [accessToken, examId]);
+  }, [accessToken, examId, selectedCourse]);
   
   //Once both GET are loaded, set selected values
   useEffect(() => {
     console.log("dbSections:", dbSections);
 
-    if (sectionData.length > 0 && dbSections.length > 0 && dbSections[0]?.course_code) {
-      setSelectedCourse(dbSections[0].course_code);
-      setSelectedYear(dbSections[0].year_number);
+    if (dbSections.length > 0) {
       setSelectedSections(dbSections.map(s => ({ id: s.section_id })));
     }
+
+    if (sectionData.length > 0 && dbSections[0]?.course_code) {
+      setSelectedCourse(dbSections[0].course_code);
+      setSelectedYear(dbSections[0].year_number);
+    }
+
   }, [sectionData, dbSections]);
 
   const courseOptions = [...new Set(sectionData.map(d => d.course_code))]
     .map(c => ({ label: c, value: c }));
 
-                  console.log("From DB:", dbSections[0]?.course_code);
                   console.log("Option values:", courseOptions.map(o => o.value));
+
+                  console.log("From DB:", dbSections[0]?.course_code);
+                  console.log("selectedSections:", selectedSections);
+                  
+
+                  console.log("Selected course:", selectedCourse);
+                  console.log("Raw DB sections:", dbSections);
 
 
   const yearOptions = [...new Set(sectionData
