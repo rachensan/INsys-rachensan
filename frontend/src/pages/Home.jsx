@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
+import axios from '../utils/axiosConfig.js';
 
 //hooks
 import { useExams } from '../hooks/useExams.js';
@@ -11,10 +12,30 @@ import CompletedExams from '../components/home/CompletedExams.jsx';
 
 function Home() {
   const navigate = useNavigate();
+
+  //========= home filter status =========//
   const { exams, deleteExam, duplicateExam, fetchAllExams } = useExams();
 
   const [status, setStatus] = useState('draft');
   const [allExams, setAllExams] = useState([]);
+
+  //========= create exam modal =========//
+  const [showModal, setShowModal] = useState(false);
+  const [title, setTitle] = useState("");
+
+  const handleCreate = async () => {
+    try {
+      const res = await axios.post('/exams/create-exam', {
+        title,
+        schedule: null,
+        status: "draft"
+      });
+      navigate(`/update-exam/${res.data.exam_id}`)
+    } catch (err) {
+      console.error("Error creating exam", err);
+    }
+  };
+  
 
   useEffect(() => {
     const load = async () => {
@@ -24,11 +45,24 @@ function Home() {
     load();
   }, []);
 
-  const filteredExams = allExams.filter(exam => exam.status === status);
-
   return (
     <>
-      <button onClick={() => navigate('/create-exam')}>Create Exam</button>
+      <button onClick={() => setShowModal(true)}>Create Exam</button>
+        {showModal && (
+          <div className="modal">
+            <input
+              type="text"
+              placeholder="Enter exam title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+            <button onClick={handleCreate}>Confirm</button>
+            <button onClick={() => setShowModal(false)}>Cancel</button>
+          </div>
+        )}
+      
+
+
       <Button label="Drafts" onClick={() => setStatus("draft")} />
       <Button label="Ongoing" onClick={() => setStatus('ongoing')} />
       <Button label="Completed" onClick={() => setStatus('completed')} />

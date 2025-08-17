@@ -155,7 +155,7 @@ app.use('/api/teacher', teacherAuthRoutes);
   app.get('/api/exams/:examId/sections', teacherOnly, getSectionTakersByExamId);
   app.get('/api/exams/:examId/scores/:sectionTaker', teacherOnly, getAllScoresByExam);
   
-  app.post('/api/exams/:userId', teacherOnly, createExam); 
+  app.post('/api/exams/create-exam', teacherOnly, createExam); 
   app.post('/api/exams/:examId/duplicate', teacherOnly, duplicateExam);
 
   app.put('/api/exams/:examId/sections', teacherOnly, updateSectionTakers);

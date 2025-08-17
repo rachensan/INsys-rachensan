@@ -14,6 +14,7 @@ import ForgotPassword from './pages/ForgotPassword.jsx';
 
 //Layout
 import LogoutButton from './components/Logout.jsx';
+import CreateExam from './pages/CreateExam.jsx';
 
 
 function App() {
@@ -52,7 +53,7 @@ useEffect(() => {
     <LogoutButton /> <br/><br/><br/>
       <Routes>
         <Route path='/home' element={<Home />} />
-        <Route path='/create-exam' element={<UpdateExam />} />
+        <Route path='/create-exam' element={<CreateExam />} />
         <Route path='/update-exam/:examId' element={<UpdateExam />} />
         <Route path='/register/student' element={<RegisterStudent />} />
         <Route path='/register/teacher' element={<RegisterTeacher />} />
