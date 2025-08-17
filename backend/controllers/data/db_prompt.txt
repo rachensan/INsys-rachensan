@@ -20,7 +20,7 @@ CREATE TABLE examinations (
   user_id INT REFERENCES users(user_id),
   title TEXT NOT NULL,
   schedule DATE,
-  status TEXT DEFAULT 'pending',
+  status TEXT DEFAULT 'draft',
   exam_code TEXT,
   start_datetime TIMESTAMPTZ, -- stores in UTC
   end_datetime TIMESTAMPTZ,   -- stores in UTC

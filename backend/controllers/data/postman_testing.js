@@ -71,7 +71,7 @@ const postmanLinks = [
     body: {
       "title": "Math Midterm",
       "schedule": "2025-08-01",
-      "status": "pending"
+      "status": "draft"
     }
   },
   {

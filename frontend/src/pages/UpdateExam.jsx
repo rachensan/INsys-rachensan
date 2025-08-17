@@ -7,9 +7,9 @@ import SelectField from '../components/SelectFields.jsx';
 import Button from '../components/Buttons.jsx';
 
 //updateExam folder
-import SelectedSection from './updateExam/2-Section.jsx';
-import AddQuestionForm, { QuestionAdd, EditableQuestionForm } from './updateExam/3-AllQuesType.jsx';
-import ScheduledTakers from './updateExam/2-Schedule.jsx';
+import SelectedSection from '../components/updateExam/2-Section.jsx';
+import AddQuestionForm, { QuestionAdd, EditableQuestionForm } from '../components/updateExam/3-AllQuesType.jsx';
+import ScheduledTakers from '../components/updateExam/2-Schedule.jsx';
 
 
 function UpdateExam() {

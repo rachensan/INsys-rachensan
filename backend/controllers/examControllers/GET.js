@@ -1,7 +1,7 @@
 import {db} from '../../db.js';
 
 export const getAllExams = async(req, res) =>{
-  const {userId} = req.params;
+  const userId = req.user.userId;
   try {
     const result = await db.query("SELECT * FROM examinations WHERE user_id = $1", [userId])
     res.status(200).json(result.rows)
@@ -68,9 +68,13 @@ export const getExamById = async(req, res) => {
 }
 
 export const getExamsByStatus = async(req, res) => {
+  const userId = req.user.userId;
   const { filter } = req.query;
   try {
-    const result = await db.query("SELECT * FROM examinations WHERE status ILIKE $1", [filter]
+    const result = await db.query(`
+      SELECT * FROM examinations 
+      WHERE user_id = $1
+        AND status ILIKE $2`, [userId, filter]
     );
 
     if (result.rows.length === 0) {

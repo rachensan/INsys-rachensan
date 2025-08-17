@@ -39,7 +39,7 @@ export const duplicateExam = async (req, res) => { //duplicate title and questio
       `INSERT INTO examinations (user_id, title, status, exam_code)
        VALUES ($1, $2, $3, $4)
        RETURNING exam_id`,
-      [userId, examResult.rows[0].title, 'pending', randomExamCode]
+      [userId, examResult.rows[0].title, 'draft', randomExamCode]
     );
 
     const newExamId = newExamResult.rows[0].exam_id;

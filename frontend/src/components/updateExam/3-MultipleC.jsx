@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 
-import Button from '../../components/Buttons.jsx'
-import InputField from '../../components/InputFields.jsx'
+import Button from '../Buttons.jsx'
+import InputField from '../InputFields.jsx'
 
 function MultipleChoice({ questionId, questionText, options, correctAnswer, points, onSave, defaultEditing = true }) {
   const [editQuestion, setEditQuestion] = useState(questionText || "");
