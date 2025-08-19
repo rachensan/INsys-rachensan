@@ -6,11 +6,11 @@ import axios from '../utils/axiosConfig.js';
 import { useExams } from '../hooks/useExams.js';
 //components
 import Button from '../components/Buttons.jsx';
-import DraftExams from '../components/home/DraftExams.jsx';
-import OngoingExams from '../components/home/OngoingExams.jsx';
-import CompletedExams from '../components/home/CompletedExams.jsx';
+import DraftExams from '../components/home-teacher/DraftExams.jsx';
+import OngoingExams from '../components/home-teacher/OngoingExams.jsx';
+import CompletedExams from '../components/home-teacher/CompletedExams.jsx';
 
-function Home() {
+function HomeTeacher() {
   const navigate = useNavigate();
 
   //========= home filter status =========//
@@ -39,7 +39,7 @@ function Home() {
 
   useEffect(() => {
     const load = async () => {
-      const data = await fetchAllExams();
+      const data = await fetchAllExams;
       setAllExams(data);
     };
     load();
@@ -88,4 +88,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default HomeTeacher;

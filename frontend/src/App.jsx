@@ -7,13 +7,15 @@ import { useAuth } from './context/AuthContext.jsx';
 import Login from './pages/Login.jsx';
 import RegisterTeacher from './pages/RegisterTeacher.jsx';
 import RegisterStudent from './pages/RegisterStudent.jsx'
-import Home from './pages/Home.jsx';
+import HomeTeacher from './pages/HomeTeacher.jsx';
+import HomeStudent from './pages/HomeStudent.jsx';
 import UpdateExam from './pages/UpdateExam.jsx';
 import Welcome from './pages/Welcome.jsx';
 import ForgotPassword from './pages/ForgotPassword.jsx';
 
 //Layout
 import LogoutButton from './components/Logout.jsx';
+
 
 function App() {
   const navigate = useNavigate();
@@ -41,21 +43,35 @@ useEffect(() => {
     });
 }, []);
 
-                            useEffect(() => {
-                              console.log("User updated: (from global context)", user);
-                            }, [user]);
+useEffect(() => {
+  console.log("User updated: (from global context)", user);  
+
+  if (!user) return;
+
+  if (user.role === "teacher") {
+    navigate("/teacher-dashboard");
+    
+  } else if (user.role === "student") {
+    navigate("/student-entry");
+
+  } else if (user.role === "superadmin") {
+    navigate("/admin");
+  }
+}, [user, navigate]);
 
   return(
     <>
-    <Link to='/home'> Back lang (/home) </Link> <br/><br/><br/>
+    <Link to='/teacher-dashboard'> Back lang (/teacher-dashboard) </Link> <br/><br/><br/>
     <LogoutButton /> <br/><br/><br/>
       <Routes>
-        <Route path='/home' element={<Home />} />
+        <Route path='/teacher-dashboard' element={<HomeTeacher />} />
         <Route path='/update-exam/:examId' element={<UpdateExam />} />
+
+        <Route path='/student-entry' element={<HomeStudent />} />
+
         <Route path='/register/student' element={<RegisterStudent />} />
         <Route path='/register/teacher' element={<RegisterTeacher />} />
         <Route path='/login' element={<Login />} />
-
         <Route path='/forgot-password' element={<ForgotPassword />} />
         <Route path='/welcome-register' element={<Welcome />} />
       </Routes>

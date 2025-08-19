@@ -41,7 +41,6 @@ function Login() {
         setUser(user); //from backend login (auth.js).. but came from userPayload
 
         alert(message); 
-        navigate('/home');
       })
       .catch(err => {
         console.log(err.response?.data);
