@@ -41,11 +41,22 @@ function Login() {
         setUser(user); //from backend login (auth.js).. but came from userPayload
 
         alert(message); 
+
+        if (user.role === "teacher") {
+          navigate("/teacher-dashboard");
+        } else if (user.role === "student") {
+          navigate("/student-entry");
+        } else if (user.role === "admin") {
+          navigate("/admin");
+        }
       })
       .catch(err => {
         console.log(err.response?.data);
         alert("tingin ka sa console, andun error")
-      });
+      })
+
+      // 🚀 redirect after login
+    
   }
 
 

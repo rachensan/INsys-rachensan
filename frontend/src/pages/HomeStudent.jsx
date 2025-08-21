@@ -14,7 +14,7 @@ function HomeStudent() {
 
   return (
     <>
-      hello student
+      sup student, wala pa ako malagay
     </>
   );
 }

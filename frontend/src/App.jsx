@@ -1,5 +1,5 @@
-import {Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom'
-import { useEffect } from 'react';
+import {Routes, Route, Link, useNavigate, Navigate, Outlet } from 'react-router-dom'
+import { useEffect, useState } from 'react';
 import axios from './utils/axiosConfig.js';
 import { useAuth } from './context/AuthContext.jsx';
 
@@ -15,6 +15,51 @@ import ForgotPassword from './pages/ForgotPassword.jsx';
 
 //Layout
 import LogoutButton from './components/Logout.jsx';
+
+
+
+function ProtectedRoute({ allowedRoles }) {
+  const { user } = useAuth();
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (!allowedRoles.includes(user.role)) {
+    return <Navigate to="/unauthorized" replace />;
+  }
+
+  return <Outlet />;
+}
+
+function AuthLoader({ children }) {
+  const { setUser, setAccessToken } = useAuth();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    axios.post("/refresh", {}, { withCredentials: true })
+      .then(res => {
+        setUser(res.data.user);
+        setAccessToken(res.data.accessToken);
+        axios.defaults.headers.common["Authorization"] = `Bearer ${res.data.accessToken}`;
+      })
+      .catch(() => {
+        setUser(null);
+        setAccessToken(null);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [setUser, setAccessToken]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  return children;
+}
+
+
 
 
 function App() {
@@ -45,36 +90,32 @@ useEffect(() => {
 
 useEffect(() => {
   console.log("User updated: (from global context)", user);  
-
-  if (!user) return;
-
-  if (user.role === "teacher") {
-    navigate("/teacher-dashboard");
-    
-  } else if (user.role === "student") {
-    navigate("/student-entry");
-
-  } else if (user.role === "superadmin") {
-    navigate("/admin");
-  }
 }, [user, navigate]);
 
   return(
     <>
-    <Link to='/teacher-dashboard'> Back lang (/teacher-dashboard) </Link> <br/><br/><br/>
-    <LogoutButton /> <br/><br/><br/>
+    <AuthLoader>
+      <Link to='/teacher-dashboard'> Back lang (/teacher-dashboard) </Link> <br/><br/><br/>
+      <LogoutButton /> <br/><br/><br/>
+
       <Routes>
-        <Route path='/teacher-dashboard' element={<HomeTeacher />} />
-        <Route path='/update-exam/:examId' element={<UpdateExam />} />
+        <Route element={<ProtectedRoute allowedRoles={["teacher"]} />}>
+          <Route path="/teacher-dashboard" element={<HomeTeacher />} />
+          <Route path="/update-exam/:examId" element={<UpdateExam />} />
+        </Route>
 
-        <Route path='/student-entry' element={<HomeStudent />} />
+        <Route element={<ProtectedRoute allowedRoles={["student"]} />}>
+          <Route path="/student-entry" element={<HomeStudent />} />
+        </Route>
 
+        <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/welcome-register" element={<Welcome />} /> 
         <Route path='/register/student' element={<RegisterStudent />} />
         <Route path='/register/teacher' element={<RegisterTeacher />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/forgot-password' element={<ForgotPassword />} />
-        <Route path='/welcome-register' element={<Welcome />} />
       </Routes>
+    </AuthLoader>
+    
     </>
   )
 }
