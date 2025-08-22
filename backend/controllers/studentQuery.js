@@ -12,7 +12,9 @@ export const verifyExamAccess = async(req, res) => {
        FROM examinations 
        JOIN section_takers 
          ON examinations.exam_id = section_takers.exam_id 
-       WHERE exam_code = $1 AND section_name = $2`,
+       WHERE exam_code = $1 
+        AND section_name = $2
+        AND status = published`,
       [inputCode, inputSection]
     );
 

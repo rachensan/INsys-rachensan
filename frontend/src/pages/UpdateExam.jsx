@@ -68,6 +68,26 @@ function UpdateExam() {
     }
   };
 
+  const handlePublish = async () => {
+    const config = {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      withCredentials: true
+    };
+
+    try { 
+      await axios.patch(`/exams/${examId}/status`, {status: 'published'}, config);
+      console.log("Exam published!");
+    } catch (err) {
+      console.error("Failed to publish exam:", err);
+    }
+  };
+
+
+
+
+
+
+
   const handleSaveQuestion = async(data) => { //save via axios //data is from allquestype
     console.log("Posting question:", data);
     const config = {
@@ -121,21 +141,24 @@ function UpdateExam() {
     <>
       <div>
         <div>
-          <label>Title: </label>
-          <input className="title-input"
-            type="text"
-            name="title"
-            value={examInfo.title}
-            onChange={(e) => {
-              setExamInfo({ ...examInfo, [e.target.name]: e.target.value });
-            }}
-            placeholder="...Exam Title"
-          />
-          <Button label="Save" onClick={handleSaveExamInfo} />
-        </div>
+          <div>
+            <label>Title: </label>
+            <input className="title-input"
+              type="text"
+              name="title"
+              value={examInfo.title}
+              onChange={(e) => {
+                setExamInfo({ ...examInfo, [e.target.name]: e.target.value });
+              }}
+              placeholder="...Exam Title"
+            />
+            <Button label="Save" onClick={handleSaveExamInfo} />
+          </div>
 
-        <p>Code: {examInfo.exam_code}</p>
-        <p>Status: {examInfo.status}</p>
+          <p>Code: {examInfo.exam_code}</p>
+          <p>Status: {examInfo.status}</p>
+          <Button label="Publish" onClick={handlePublish} />
+        </div>
 
         <p>Sections: </p>
         <div>
