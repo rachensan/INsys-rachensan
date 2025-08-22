@@ -82,20 +82,21 @@ function RegisterStudent() {
         />
         <Button onClick={handleSendOtp} label='Send OTP' disabled={isVerified}/>
         <InputField 
-            name="code" //otp
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            placeholder="Enter OTP"
-            disabled={isVerified}
-          />
-          <Button onClick={handleVerifyOtp} label='Verify' disabled={isVerified}/>
+          divClassName="form-group"
+          name="code" //otp
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+          placeholder="Enter OTP"
+          disabled={isVerified}
+        />
+        <Button onClick={handleVerifyOtp} label='Verify' disabled={isVerified}/>
         </>
-        
       ) : (
         <>
           <form onSubmit={handleSubmit}>
             <h2> Registration Form </h2>
             <InputField 
+              divClassName="form-group"
               label="Email"
               name="email"
               value={`${formRegister.username}@pampangastateu.edu.ph`}
@@ -103,6 +104,7 @@ function RegisterStudent() {
               disabled={true}
             /> 
             <InputField 
+              divClassName="form-group"
               label="Password"
               name="password"
               value={formRegister.password}
@@ -110,6 +112,7 @@ function RegisterStudent() {
               placeholder="Enter your password"
             /> 
             <InputField 
+              divClassName="form-group"
               label="Re-type Password"
               name="retypePassword"
               value={formRegister.retypePassword}
@@ -117,6 +120,7 @@ function RegisterStudent() {
               placeholder="Re-type your password"
             /> 
             <InputField 
+              divClassName="form-group"
               label="First Name"
               name="firstName"
               value={formRegister.firstName}
@@ -124,6 +128,7 @@ function RegisterStudent() {
               placeholder="Enter your first name"
             /> 
             <InputField 
+              divClassName="form-group"
               label="Last Name"
               name="lastName"
               value={formRegister.lastName}
@@ -143,7 +148,9 @@ function RegisterStudent() {
                 { label: "GA", value: "GA" }
               ]}
             />
+            <div className='form-group'>
             <RadioButton
+              divClassName='radio-group'
               label="Gender"
               name="userGender"
               value={formRegister.userGender}
@@ -154,6 +161,7 @@ function RegisterStudent() {
                 { label: "Other", value: "Other" }
               ]}
             />
+            </div>
             <Button type="submit" label='Submit Registration idk'/>
             {/* triggers <form onSubmit={handleSubmit}/> */}
           </form>

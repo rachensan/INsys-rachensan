@@ -2,9 +2,22 @@ import {db} from '../db.js';
 
 //VERIFY BEFORE ENTERING
 export const verifyExamAccess = async(req, res) => {
-  const { inputCode, inputSection, studentName, studentSchoolId } = req.body;
+  const { inputCode, inputSection } = req.body;
+  const userId = req.user.userId; 
 
-  try {
+  try {  
+    const resUserInfo = await db.query(`
+      SELECT school_id, first_name, last_name
+      FROM users
+      WHERE user_id = $1
+      `, [userId]);
+
+    if (resUserInfo.rows.length === 0) return res.status(404).json({ error: "User not found, can't access exam" }) //prbly expired token, cuz the userId is from jwt payload
+       
+    const resUser = resUserInfo.rows[0];
+    const studentName = `${resUser.last_name}, ${resUser.first_name}`;
+    const studentSchoolId = resUser.school_id;
+  
     const result = await db.query( //gives us the exam infoi dont understand what we area changing
       `SELECT *,
           start_datetime AS start_utc,
@@ -14,10 +27,11 @@ export const verifyExamAccess = async(req, res) => {
          ON examinations.exam_id = section_takers.exam_id 
        WHERE exam_code = $1 
         AND section_name = $2
-        AND status = published`,
+        AND status = 'published'`,
       [inputCode, inputSection]
     );
-
+                                      console.log("inputCode:", inputCode);
+                                      console.log("inputSection:", inputSection);
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Invalid code or section' });
     }
@@ -61,14 +75,21 @@ export const verifyExamAccess = async(req, res) => {
     } else {
       await db.query(
       `INSERT INTO student_scores (student_school_id, exam_id, section_name, student_name) 
-      VALUES ($1, $2, $3, $4)`,
+      VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING`, //conflict= If multiple requestslike 'enter', it might insert into the db again
       [studentSchoolId, result.rows[0].exam_id, inputSection, studentName]
     );
     }
 
     res.status(200).json({ message: 'Exam entry granted', exam: result.rows[0] });
   } catch (error) {
-    console.error('Error verifying exam entry:', error);
+    console.error('Error verifying exam entry:', {
+      error,
+      inputCode,
+      inputSection,
+      userId,
+      studentSchoolId,
+      studentName
+    });
     res.status(500).json({ error: error.details || 'Failed to enter exam' });
   }
 }

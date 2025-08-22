@@ -1,9 +1,10 @@
 import React from "react";
 
-function InputField ({ label, type="text", name, value, onChange, placeholder, className="input-field", disabled=false }) {
+function InputField ({ label, type="text", name, value, onChange, placeholder, className="input-field", divClassName = "input-wrapper", disabled=false }) {
   return (
     <>
-    <div>
+              
+    <div className={divClassName}>
       <label>{label}</label>
       <input 
         required //works only in form submissions

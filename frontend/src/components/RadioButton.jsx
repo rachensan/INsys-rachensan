@@ -1,8 +1,8 @@
 import React from "react";
 
-function RadioButton({ label, name, value, onChange, options }) {
+function RadioButton({ label, name, value, onChange, options, divClassName}) {
   return (
-    <div>
+    <div className={divClassName} > 
       <p>{label}</p>
       {options.map((option, index) => (
         <label key={index}>

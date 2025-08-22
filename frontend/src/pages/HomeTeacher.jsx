@@ -64,7 +64,7 @@ function HomeTeacher() {
 
 
       <Button label="Drafts" onClick={() => setStatus("draft")} />
-      <Button label="Ongoing" onClick={() => setStatus('ongoing')} />
+      <Button label="Ongoing" onClick={() => setStatus('published')} />
       <Button label="Completed" onClick={() => setStatus('completed')} />
       
       {status === 'draft' && 
@@ -73,9 +73,9 @@ function HomeTeacher() {
         onClickDel={deleteExam} 
         onClickDupe={duplicateExam}
       />}
-      {status === 'ongoing' && 
+      {status === 'published' && 
       <OngoingExams 
-        exams={exams.filter(e => e.status === 'ongoing')} 
+        exams={exams.filter(e => e.status === 'published')} 
         onClickDel={deleteExam} 
         onClickDupe={duplicateExam} />}
       {status === 'completed' && 
