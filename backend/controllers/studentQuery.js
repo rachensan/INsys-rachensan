@@ -2,6 +2,7 @@ import {db} from '../db.js';
 
 //VERIFY BEFORE ENTERING
 export const verifyExamAccess = async(req, res) => {
+  console.log("Raw body:", req.body);
   const { inputCode, inputSection } = req.body;
   const userId = req.user.userId; 
 

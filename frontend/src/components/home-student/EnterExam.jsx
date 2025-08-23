@@ -23,8 +23,11 @@ function EnterExam() {
     //optionally redirect to exam instructions
       navigate(`/exam/instructions`);
     } catch (error) {
-      console.error(error.message);
-      alert("Di ka pwede pomasok", error)
+      if (error.response) {
+        alert(error.response.data.error || "Something went wrong");
+      } else {
+        alert("Server not reachable");
+      }
     }
   }
   
