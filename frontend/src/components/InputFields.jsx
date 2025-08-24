@@ -1,6 +1,6 @@
 import React from "react";
 
-function InputField ({ label, type="text", name, value, onChange, placeholder, className="input-field", divClassName = "input-wrapper", disabled=false }) {
+function InputField ({ label, type="text", name, value, onChange, placeholder, id, className="input-field", divClassName="form-group", disabled=false }) {
   return (
     <>
               
@@ -8,6 +8,7 @@ function InputField ({ label, type="text", name, value, onChange, placeholder, c
       <label>{label}</label>
       <input 
         required //works only in form submissions
+        id={id || name}
         className={className}
         type={type}
         name={name}

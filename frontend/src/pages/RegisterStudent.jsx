@@ -70,74 +70,97 @@ function RegisterStudent() {
 
   return (
     <>
-      {!isVerified ? (
+      {!isVerified ? ( 
         <>
-        <InputField 
-          label="School Id"
-          name="username"
-          value={formRegister.username} 
-          onChange={handleChange}
-          placeholder="Enter student id" 
-          disabled={isVerified}
-        />
-        <Button onClick={handleSendOtp} label='Send OTP' disabled={isVerified}/>
-        <InputField 
-          divClassName="form-group"
-          name="code" //otp
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          placeholder="Enter OTP"
-          disabled={isVerified}
-        />
-        <Button onClick={handleVerifyOtp} label='Verify' disabled={isVerified}/>
+        <div className="container" id="otp-code-container">
+          <h1>OTP Verification</h1>
+
+          <div className="form-group">
+            <InputField 
+              label="School Id"
+              name="username"
+              id="school-id"
+              value={formRegister.username} 
+              onChange={handleChange}
+              placeholder="Enter student id" 
+              disabled={isVerified}
+            />
+          </div>
+          
+        <Button type="button" onClick={handleSendOtp} label='Send OTP' disabled={isVerified}/>
+        <p className="resend-link">
+          <a href="#" id="resend-otp">Didn't get a code? Resend</a>
+        </p>
+
+        <div className="form-group">
+          <InputField 
+            label="OTP Code"
+            name="code" //otp
+            id="otp-code"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            placeholder="Enter OTP"
+            disabled={isVerified}
+          />
+        </div>
+        
+        <Button type="button" onClick={handleVerifyOtp} label='Verify' disabled={isVerified}/>
+        </div>
         </>
       ) : (
         <>
-          <form onSubmit={handleSubmit}>
-            <h2> Registration Form </h2>
+        <div className="container" id="registration-container" >
+          <h1> Registration Form </h1>
+          <form id="registration-form" onSubmit={handleSubmit}>  
             <InputField 
-              divClassName="form-group"
               label="Email"
               name="email"
+              id="email"
               value={`${formRegister.username}@pampangastateu.edu.ph`}
               placeholder="Enter your first name"
               disabled={true}
             /> 
             <InputField 
-              divClassName="form-group"
               label="Password"
               name="password"
+              id="password" 
               value={formRegister.password}
               onChange={handleChange}
               placeholder="Enter your password"
             /> 
             <InputField 
-              divClassName="form-group"
               label="Re-type Password"
               name="retypePassword"
+              id="retype-password"
               value={formRegister.retypePassword}
               onChange={handleChange}
               placeholder="Re-type your password"
             /> 
-            <InputField 
-              divClassName="form-group"
-              label="First Name"
-              name="firstName"
-              value={formRegister.firstName}
-              onChange={handleChange}
-              placeholder="Enter your first name"
-            /> 
-            <InputField 
-              divClassName="form-group"
-              label="Last Name"
-              name="lastName"
-              value={formRegister.lastName}
-              onChange={handleChange}
-              placeholder="Enter your last name"
-            />
+
+            <div class="name-group">
+              <InputField 
+                label="First Name"
+                name="firstName"
+                id="first-name" 
+                value={formRegister.firstName}
+                onChange={handleChange}
+                placeholder="Enter your first name"
+              /> 
+              <InputField 
+                label="Last Name"
+                name="lastName"
+                id="last-name" 
+                value={formRegister.lastName}
+                onChange={handleChange}
+                placeholder="Enter your last name"
+              />
+            </div>
+
             <SelectField
+              divClassName="form-group"
               label="College Department"
               name="college"
+              id="options"  
               value={formRegister.college}
               onChange={handleChange}
               options={[
@@ -149,22 +172,24 @@ function RegisterStudent() {
               ]}
             />
             <div className='form-group'>
-            <RadioButton
-              divClassName='radio-group'
-              label="Gender"
-              name="userGender"
-              value={formRegister.userGender}
-              onChange={handleChange}
-              options={[
-                { label: "Male", value: "Male" },
-                { label: "Female", value: "Female" },
-                { label: "Other", value: "Other" }
-              ]}
-            />
+              <RadioButton
+                divClassName="form-group"
+                label="Gender"
+                name="userGender"
+                value={formRegister.userGender}
+                onChange={handleChange}
+                options={[
+                  { label: "Male", value: "Male" },
+                  { label: "Female", value: "Female" },
+                  { label: "Other", value: "Other" }
+                ]}
+              />
             </div>
             <Button type="submit" label='Submit Registration idk'/>
             {/* triggers <form onSubmit={handleSubmit}/> */}
           </form>
+        </div>
+          
         </>
       )}
     </>

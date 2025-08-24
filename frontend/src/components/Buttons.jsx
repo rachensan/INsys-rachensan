@@ -1,8 +1,8 @@
 import React from "react";
 
-function Button({ label = "Submit", type = "button", disabled = false, onClick }) {
+function Button({ label = "Submit", type = "button", disabled = false, onClick, className = "" }) {
   return (
-    <button type={type} disabled={disabled} onClick={onClick}>
+    <button type={type} disabled={disabled} onClick={onClick} className={className}>
       {label}
     </button>
   );

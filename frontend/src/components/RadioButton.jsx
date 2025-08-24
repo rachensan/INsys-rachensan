@@ -1,22 +1,29 @@
 import React from "react";
 
-function RadioButton({ label, name, value, onChange, options, divClassName}) {
+function RadioButton({ label, name, value, onChange, options, divClassName = "form-group"
+}) {
   return (
-    <div className={divClassName} > 
-      <p>{label}</p>
-      {options.map((option, index) => (
-        <label key={index}>
-          <input
-            required
-            type="radio"
-            name={name}
-            value={option.value}
-            checked={value === option.value}
-            onChange={onChange}
-          />
-          {option.label}
-        </label>
-      ))}
+    <div className={divClassName}>
+      {label && <label>{label}</label>}
+      <div className="radio-group">
+        {options.map((option, index) => {
+          const id = option.value.toLowerCase(); // e.g. "Male" → "male"
+          return (
+            <React.Fragment key={index}>
+              <input
+                type="radio"
+                id={id}
+                name={name}
+                value={option.value}
+                checked={value === option.value}
+                onChange={onChange}
+                required={index === 0} // only first one has required
+              />
+              <label htmlFor={id}>{option.label}</label>
+            </React.Fragment>
+          );
+        })}
+      </div>
     </div>
   );
 }
