@@ -83,7 +83,7 @@ app.use('/api/teacher', teacherAuthRoutes);
 
 //examCONTROLLERS
   //GET
-    import { getAllExams, getExamById, getExamsByTitle, getExamsByStatus, getExamCode, getSectionTakersByExamId, getAllScoresByExam, getEssayPerStudent, getExamSchedule, getAllQuestionsByExam } from './controllers/examControllers/GET.js'
+    import { getAllExams, getExamById, getExamsByTitle, getExamsByStatus, getExamCode, getSectionTakersByExamId, getAllScoresByExam, getEssayPerStudent, getExamSchedule } from './controllers/examControllers/GET.js'
   //POST
     import { createExam, duplicateExam } from './controllers/examControllers/POST.js'
   //UPDATE
@@ -94,7 +94,7 @@ app.use('/api/teacher', teacherAuthRoutes);
 
 //questionCONTROLLERS
   //GET
-    import { getQuestionsByExamId } from './controllers/questionControllers/GET.js'
+    import { getQuestionsByExamId } from "./controllers/examControllers/GET.js";
   //POST
     import { createQuestion } from './controllers/questionControllers/POST.js'
   //UPDATE
@@ -104,6 +104,7 @@ app.use('/api/teacher', teacherAuthRoutes);
 
 //year and section
   import { addSection, courseData, yearLevelData, deleteSection, yearSection } from "./controllers/yearSection.js";
+import { getQuestionsForStudent } from "./controllers/questionControllers/GET.js";
 
 
   
@@ -136,8 +137,6 @@ app.use('/api/teacher', teacherAuthRoutes);
   app.get('/api/exams/search', teacherOnly, getExamsByTitle); 
       //for searchbar title search
   app.get('/api/exams/status', teacherOnly, getExamsByStatus);
-  app.get('/api/exams/questions/:examId', teacherOnly, getAllQuestionsByExam);
-      //get all questions to a specific exam
   app.get('/api/exams/exam/:examId', teacherOnly, getExamById); 
       //fetch a single exam's details (not questions)
       //teachers (to view or edit a specific exam) 
@@ -176,7 +175,8 @@ app.use('/api/teacher', teacherAuthRoutes);
 
 // ========== QUESTION ROUTES ==========
   app.post('/api/questions/:examId', teacherOnly, createQuestion);
-  app.get('/api/exams/:examId/questions', teacherOnly, getQuestionsByExamId); //idk why i made this and what for, lol
+  app.get('/api/exams/:examId/questions', teacherOnly, getQuestionsByExamId); 
+      //questions by exam.. for teachers.
   app.patch('/api/exams/:examId/questions/:questionId', teacherOnly, updateQuestion);
   
   app.delete('/api/exams/:examId/questions/:questionId', teacherOnly, deleteQuestionById);
@@ -184,6 +184,8 @@ app.use('/api/teacher', teacherAuthRoutes);
 // ========== STUDENT ROUTES ==========
   app.get('/api/student/:studentId/exams/:examId/info', studentOnly, getInfoPerExam);
   app.get('/api/student/:studentId/exam-history', studentOnly);
+  app.get('/api/exams/questions/:examId', studentOnly, getQuestionsForStudent) 
+      //questions by exam.. limited selection in db, for student only.
   
 
   app.post('/api/student/:studentId/exams/:examId/auto-submit', studentOnly, autoSubmitAllAnswers);

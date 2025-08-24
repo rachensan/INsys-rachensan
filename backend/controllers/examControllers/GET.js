@@ -10,7 +10,7 @@ export const getAllExams = async(req, res) =>{
   }
 } 
 
-export const getAllQuestionsByExam = async (req, res) => {
+export const getQuestionsByExamId = async (req, res) => {
   const { examId } = req.params;
   const userId = req.user.userId;
 

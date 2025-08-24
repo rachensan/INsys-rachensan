@@ -82,13 +82,19 @@ const postmanLinks = [
     link: "http://localhost:3000/api/exams/:userId/duplicate"
   },
   {
-    WHAT: "Get All Exam Questions",
-    FUNC: getAllQuestionsByExam,
+    WHAT: "Get Questions By Exam", //for teacher SELECT *
+    FUNC: getQuestionsByExamId,
     CRUD: "GET",
     path: "/api/exams/:examId/questions",
     link: "http://localhost:3000/api/exams/7/questions"
   },
-  
+  {
+    WHAT: "Get Questions By Exam", //for student SELECT limited info
+    FUNC: getQuestionsForStudent,
+    CRUD: "GET",
+    path: "/api/exams/questions/:examId",
+    link: "http://localhost:3000/api/exams/questions/7"
+  },
   {
     WHAT: "Create Question",
     FUNC: createQuestion,

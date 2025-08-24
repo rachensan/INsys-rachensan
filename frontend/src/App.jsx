@@ -12,9 +12,10 @@ import HomeStudent from './pages/HomeStudent.jsx';
 import UpdateExam from './pages/UpdateExam.jsx';
 import Welcome from './pages/Welcome.jsx';
 import ForgotPassword from './pages/ForgotPassword.jsx';
-
 //Layout
 import LogoutButton from './components/Logout.jsx';
+import ExamQuestions from './components/home-student/ExamQuestions.jsx';
+
 
 
 
@@ -100,17 +101,18 @@ useEffect(() => {
 
       <Routes>
         <Route element={<ProtectedRoute allowedRoles={["teacher"]} />}>
-          <Route path="/teacher-dashboard" element={<HomeTeacher />} />
-          <Route path="/update-exam/:examId" element={<UpdateExam />} />
+          <Route path='/teacher-dashboard' element={<HomeTeacher />} />
+          <Route path='/update-exam/:examId' element={<UpdateExam />} />
         </Route>
 
         <Route element={<ProtectedRoute allowedRoles={["student"]} />}>
-          <Route path="/student-entry" element={<HomeStudent />} />
+          <Route path='/student-entry' element={<HomeStudent />} />
+          <Route path='/exam/start' element={<ExamQuestions />}   />
         </Route>
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/welcome-register" element={<Welcome />} /> 
+        <Route path='/login' element={<Login />} />
+        <Route path='/forgot-password' element={<ForgotPassword />} />
+        <Route path='/welcome-register' element={<Welcome />} /> 
         <Route path='/register/student' element={<RegisterStudent />} />
         <Route path='/register/teacher' element={<RegisterTeacher />} />
       </Routes>

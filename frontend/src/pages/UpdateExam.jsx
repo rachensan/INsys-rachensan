@@ -34,7 +34,7 @@ function UpdateExam() {
         };
 
         const examInfo = await axios.get(`/exams/exam/${examId}`, config);
-        const examQuestions = await axios.get(`/exams/questions/${examId}`, config);
+        const examQuestions = await axios.get(`/exams/${examId}/questions`, config);
 
         setExamInfo(examInfo.data);
         setExamQues(examQuestions.data);
@@ -112,7 +112,7 @@ function UpdateExam() {
       setQuestionForms([]); 
 
       //refetch and update questions from DB.. best practice
-      const updatedQuestions = await axios.get(`/exams/questions/${examId}`, config);
+      const updatedQuestions = await axios.get(`/exams/${examId}/questions`, config);
       setExamQues(updatedQuestions.data);
     } catch (err) {
       console.error("Failed to create question:", err);
@@ -128,7 +128,7 @@ function UpdateExam() {
     try {
       await axios.delete(`/exams/${examId}/questions/${questionId}`, config);
   
-      const updatedQuestions = await axios.get(`/exams/questions/${examId}`, config);
+      const updatedQuestions = await axios.get(`/exams/${examId}/questions`, config);
       //refetch and update questions from DB.. best practice
       setExamQues(updatedQuestions.data);
       console.log('question deleted');

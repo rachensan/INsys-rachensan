@@ -6,12 +6,17 @@ import { useAuth } from '../../context/AuthContext.jsx';
 
 import InputField from '../InputFields.jsx';
 
+
+
+
+
 function EnterExam() {
   const { accessToken } = useAuth();
   const navigate = useNavigate();
 
   const [inputExamCode, setInputExamCode] = useState('');
   const [inputExamSection, setInputExamSection] = useState('');
+  const [isVerified, setIsVerified] = useState(false);
 
   const handleEnterCode = async () =>  {
     const config = {
@@ -20,19 +25,17 @@ function EnterExam() {
     };
     try {
       await axios.post(`/student/verify`, {inputCode: inputExamCode, inputSection: inputExamSection}, config)
-    //optionally redirect to exam instructions
-      navigate(`/exam/instructions`);
+
+      setIsVerified(true);
     } catch (error) {
-      if (error.response) {
-        alert(error.response.data.error || "Something went wrong");
-      } else {
-        alert("Server not reachable");
-      }
+      alert(error.response?.data?.error || "Something went wrong");
     }
   }
   
   return (
     <>
+    {!isVerified ? (
+      <>
       <InputField 
         label="Code: "
         name="code"
@@ -48,6 +51,16 @@ function EnterExam() {
         placeholder="Enter your section"
       />
       <Button label="Enter" onClick={handleEnterCode} />
+      </>
+    ) : (
+      <>
+      <div>
+        <h2>Exam Instructions</h2>
+        <p>Please read the following carefully before starting your exam:</p>
+        <Button label="START" onClick={() => navigate(`/exam/start`)} />
+      </div>
+      </>
+    )}
     </>
   )
 }

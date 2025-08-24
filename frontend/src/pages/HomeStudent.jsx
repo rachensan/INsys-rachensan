@@ -12,7 +12,6 @@ function HomeStudent() {
 
   return (
     <>
-      sup student, wala pa ako malagay
       <EnterExam />
     </>
   );
