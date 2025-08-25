@@ -17,6 +17,7 @@ function EnterExam() {
   const [inputExamCode, setInputExamCode] = useState('');
   const [inputExamSection, setInputExamSection] = useState('');
   const [isVerified, setIsVerified] = useState(false);
+  const [examId, setExamId] = useState(null);
 
   const handleEnterCode = async () =>  {
     const config = {
@@ -24,9 +25,13 @@ function EnterExam() {
       withCredentials: true
     };
     try {
-      await axios.post(`/student/verify`, {inputCode: inputExamCode, inputSection: inputExamSection}, config)
+      const res = await axios.post(`/student/verify`, {inputCode: inputExamCode, inputSection: inputExamSection}, config) //this post request still returns value, so we can use the data
 
       setIsVerified(true);
+      
+      //if verified, it wil proceed to this
+      setExamId(res.data.exam.exam_id);
+      console.log("Try lang,,, Exam ID:", examId);
     } catch (error) {
       alert(error.response?.data?.error || "Something went wrong");
     }
@@ -57,7 +62,7 @@ function EnterExam() {
       <div>
         <h2>Exam Instructions</h2>
         <p>Please read the following carefully before starting your exam:</p>
-        <Button label="START" onClick={() => navigate(`/exam/start`)} />
+        <Button label="START" onClick={() => navigate(`/exam/start/${examId}`)} />
       </div>
       </>
     )}

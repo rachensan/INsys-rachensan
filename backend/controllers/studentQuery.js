@@ -6,6 +6,9 @@ export const verifyExamAccess = async(req, res) => {
   const { inputCode, inputSection } = req.body;
   const userId = req.user.userId; 
 
+  let studentSchoolId = null;
+  let studentName = null;
+
   try {  
     const resUserInfo = await db.query(`
       SELECT school_id, first_name, last_name
@@ -19,16 +22,17 @@ export const verifyExamAccess = async(req, res) => {
     const studentName = `${resUser.last_name}, ${resUser.first_name}`;
     const studentSchoolId = resUser.school_id;
   
-    const result = await db.query( //gives us the exam infoi dont understand what we area changing
+    const result = await db.query( //gives us the exam info
       `SELECT *,
-          start_datetime AS start_utc,
-          end_datetime   AS end_utc
-       FROM examinations 
-       JOIN section_takers 
-         ON examinations.exam_id = section_takers.exam_id 
-       WHERE exam_code = $1 
-        AND section_name = $2
-        AND status = 'published'`,
+        e.start_datetime AS start_utc,
+        e.end_datetime   AS end_utc,
+        e.exam_id 
+      FROM examinations e
+      JOIN section_takers s
+        ON e.exam_id = s.exam_id 
+      WHERE e.exam_code = $1 
+        AND s.section_name = $2
+        AND e.status = 'published'`,
       [inputCode, inputSection]
     );
                                       console.log("inputCode:", inputCode);

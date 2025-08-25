@@ -96,7 +96,6 @@ useEffect(() => {
   return(
     <>
     <AuthLoader>
-      <Link to='/teacher-dashboard'> Back lang (/teacher-dashboard) </Link> <br/><br/><br/>
       <LogoutButton /> <br/><br/><br/>
 
       <Routes>
@@ -107,7 +106,7 @@ useEffect(() => {
 
         <Route element={<ProtectedRoute allowedRoles={["student"]} />}>
           <Route path='/student-entry' element={<HomeStudent />} />
-          <Route path='/exam/start' element={<ExamQuestions />}   />
+          <Route path='/exam/start/:examId' element={<ExamQuestions />} />
         </Route>
 
         <Route path='/login' element={<Login />} />

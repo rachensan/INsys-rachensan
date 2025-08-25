@@ -9,7 +9,7 @@ function ExamQuestions() {
   const { accessToken } = useAuth();
   const navigate = useNavigate();
 
-  const { examId } = useParams();
+  const { examId } = useParams(); //not params.,, dapat galing sa code
   const [ examQuestions, setExamQuestions ] = useState([]);
   const [current, setCurrent] = useState(0);
 
