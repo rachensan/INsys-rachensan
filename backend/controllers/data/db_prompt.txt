@@ -12,9 +12,18 @@ CREATE TABLE users (
   role TEXT CHECK (role IN ('student', 'teacher', 'admin')) NOT NULL DEFAULT 'student',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+  -- 1.1. EXAM_SESSIONS TABLE
+      CREATE TABLE exam_sessions (
+        session_id SERIAL PRIMARY KEY,
+        exam_id INT REFERENCES examinations(exam_id) ON DELETE CASCADE,
+        student_school_id BIGINT REFERENCES users(school_id) ON DELETE CASCADE,
+        status TEXT CHECK (status IN ('in-progress', 'submitted')) DEFAULT 'in-progress',
+        started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        finished_at TIMESTAMP
+      );
 
 
--- 2. examinations TABLE
+-- 2. EXAMINATIONS TABLE
 CREATE TABLE examinations (
   exam_id SERIAL PRIMARY KEY,
   user_id INT REFERENCES users(user_id),
@@ -60,27 +69,34 @@ CREATE TABLE questions (
   -- 4.1 STUDENT_ANSWERS TABLE
       CREATE TABLE student_answers (
         answer_id SERIAL PRIMARY KEY,
+        session_id INT REFERENCES exam_sessions(session_id) ON DELETE CASCADE,
         exam_id INT REFERENCES examinations(exam_id) ON DELETE CASCADE,
         question_id INT REFERENCES questions(question_id) ON DELETE CASCADE,
         student_school_id BIGINT REFERENCES users(school_id) ON DELETE CASCADE,
         student_answer TEXT,
         is_correct BOOLEAN,
-        submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        CONSTRAINT student_answers_session_id_fkey
+        FOREIGN KEY (session_id) REFERENCES exam_sessions(session_id) ON DELETE CASCADE, CONSTRAINT student_answers_question_id_fkey
+        FOREIGN KEY (question_id) REFERENCES questions(question_id) ON DELETE CASCADE
       );
 
   -- 4.2 ESSAY_ANSWERS TABLE 
       CREATE TABLE essay_answers (
         answer_id SERIAL PRIMARY KEY,
+        session_id INT REFERENCES exam_sessions(session_id) ON DELETE CASCADE,
         question_id INT REFERENCES questions(question_id) ON DELETE CASCADE,
         student_school_id BIGINT REFERENCES users(school_id) ON DELETE CASCADE,
         student_answer TEXT,
-        essay_score INT,
-        submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        essay_score INT DEFAULT 0,
+        CONSTRAINT essay_answers_session_id_fkey
+        FOREIGN KEY (session_id) REFERENCES exam_sessions(session_id) ON DELETE CASCADE, CONSTRAINT essay_answers_question_id_fkey
+        FOREIGN KEY (question_id) REFERENCES questions(question_id) ON DELETE CASCADE
       );
 
   -- 4.3 STUDENT_SCORES TABLE
       CREATE TABLE student_scores (
         score_id SERIAL PRIMARY KEY,
+        session_id INT REFERENCES exam_sessions(session_id) ON DELETE CASCADE,
         exam_id INT REFERENCES examinations(exam_id) ON DELETE CASCADE,
         student_school_id BIGINT, CONSTRAINT student_scores_student_school_id_fkey FOREIGN KEY (student_school_id) REFERENCES users(school_id) ON DELETE CASCADE,
         student_name TEXT NOT NULL,
@@ -91,6 +107,23 @@ CREATE TABLE questions (
         submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         UNIQUE (exam_id, student_school_id) --  prevent duplicate scores per student per exam
       );
+  -- 4.4 EXAM_MONITORING_LOGS
+      CREATE TABLE exam_monitoring_logs (
+        log_id SERIAL PRIMARY KEY,
+        session_id INT REFERENCES exam_sessions(session_id) ON DELETE CASCADE,
+        question_id INT REFERENCES questions(question_id),
+        event_type VARCHAR(50) NOT NULL, -- e.g. 'tab_switch', 'tab_blur', 'resize'
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+  -- 4.5 STUDENT WARNING/OFFENSE TABLE
+      CREATE TABLE student_warnings (
+        warning_id SERIAL PRIMARY KEY,
+        session_id INT REFERENCES exam_sessions(session_id) ON DELETE CASCADE,
+        question_id INT REFERENCES questions(question_id),
+        warning_type VARCHAR(50) NOT NULL, -- e.g. 'tab_switch', 'blahblah'
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+
 
 -- 5. COURSES
   -- 5.1 COURSES TABLE
