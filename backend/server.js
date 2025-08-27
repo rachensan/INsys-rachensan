@@ -68,7 +68,7 @@ app.use('/api/teacher', teacherAuthRoutes);
 
 
 //verify student
-  import { verifyExamAccess, answerSubmission, autoScoringTemplate, manualEssayScoring, getInfoPerExam, getStudentExamHistory, autoSubmitAllAnswers } from "./controllers/studentQuery.js";
+  import { verifyExamAccess, answerSubmission, autoScoringTemplate, manualEssayScoring, getInfoPerExam, getStudentExamHistory, autoSubmitAllAnswers, startExam } from "./controllers/studentQuery.js";
 
 //userCONTROLLERS
   //GET
@@ -182,11 +182,12 @@ import { getQuestionsForStudent } from "./controllers/questionControllers/GET.js
   app.delete('/api/exams/:examId/questions/:questionId', teacherOnly, deleteQuestionById);
 
 // ========== STUDENT ROUTES ==========
+  app.get('/api/student/exams/:examId/start', studentOnly, startExam);
+
   app.get('/api/student/:studentId/exams/:examId/info', studentOnly, getInfoPerExam);
   app.get('/api/student/:studentId/exam-history', studentOnly);
   app.get('/api/exams/questions/:examId', studentOnly, getQuestionsForStudent) 
       //questions by exam.. limited selection in db, for student only.
-  
 
   app.post('/api/student/:studentId/exams/:examId/auto-submit', studentOnly, autoSubmitAllAnswers);
   app.post('/api/student/verify', studentOnly, verifyExamAccess);
