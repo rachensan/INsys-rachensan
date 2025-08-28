@@ -29,9 +29,22 @@ function EnterExam() {
 
       setIsVerified(true);
       
-      //if verified, it wil proceed to this
+      //if verified, it will proceed to this
       setExamId(res.data.exam.exam_id);
-      console.log("Try lang,,, Exam ID:", examId);
+      console.log("Try lang,,, Exam ID:", res.data.exam.exam_id);
+    } catch (error) {
+      alert(error.response?.data?.error || error.message || "Something went wrong");
+    }
+  }
+
+  const handleStartClick = async () => {
+    const config = {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      withCredentials: true
+    };
+    try {
+      const res = await axios.post(`/student/exams/${examId}/start`, {}, config); 
+      navigate(`/exam/start/${examId}`);
     } catch (error) {
       alert(error.response?.data?.error || "Something went wrong");
     }
@@ -62,7 +75,7 @@ function EnterExam() {
       <div>
         <h2>Exam Instructions</h2>
         <p>Please read the following carefully before starting your exam:</p>
-        <Button label="START" onClick={() => navigate(`/exam/start/${examId}`)} />
+        <Button label="START" onClick={handleStartClick} />
       </div>
       </>
     )}

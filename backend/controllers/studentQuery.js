@@ -10,6 +10,7 @@ export const verifyExamAccess = async(req, res) => {
   let studentName = null;
 
   try {  
+    //========= kuha lang tayo ng info sa user dito, not really that important sa logic =========//
     const resUserInfo = await db.query(`
       SELECT school_id, first_name, last_name
       FROM users
@@ -21,7 +22,8 @@ export const verifyExamAccess = async(req, res) => {
     const resUser = resUserInfo.rows[0];
     const studentName = `${resUser.last_name}, ${resUser.first_name}`;
     const studentSchoolId = resUser.school_id; //or just req.user.schoolId.. lol
-  
+    //========= ========= ========= ========= ========= ========= ========= ========= =========//
+    
     const result = await db.query( //gives us the exam info
       `SELECT *,
         e.start_datetime AS start_utc,
@@ -53,7 +55,7 @@ export const verifyExamAccess = async(req, res) => {
     if (currentTimeUTC < startTimeUTC) {
       return res.status(403).json({ error: 'Exam has not started' });
     }
-
+    
   //check submissions
     const isSubmitted = await db.query(`
       SELECT * FROM student_scores
@@ -67,8 +69,10 @@ export const verifyExamAccess = async(req, res) => {
       return res.status(403).json({ error: 'You already submitted this exam' });
     } 
 
+    //will check if you already answered some questions.. idk if i did the per question yet
     const isStarted = await db.query(`
-      SELECT * FROM student_scores
+      SELECT * 
+      FROM student_scores
       WHERE student_school_id = $1
         AND section_name = $2
         AND exam_id = $3
@@ -77,7 +81,7 @@ export const verifyExamAccess = async(req, res) => {
 
     if (isStarted.rows.length === 1) {
       return res.status(200).json({ message: 'Already Allowed. Proceed to exam', exam: result.rows[0] });
-    } else {
+    } else { //if starting for the first time, we insert user data
       await db.query(
       `INSERT INTO student_scores (student_school_id, exam_id, section_name, student_name) 
       VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING`, //conflict= If multiple requestslike 'enter', it might insert into the db again
@@ -88,16 +92,59 @@ export const verifyExamAccess = async(req, res) => {
     res.status(200).json({ message: 'Exam entry granted', exam: result.rows[0] });
   } catch (error) {
     console.error('Error verifying exam entry:', {
-      error,
+      message: error.message,
+      stack: error.stack,
       inputCode,
       inputSection,
       userId,
       studentSchoolId,
       studentName
     });
-    res.status(500).json({ error: error.details || 'Failed to enter exam' });
+    res.status(500).json({ error: error.message  || 'Failed to enter exam' });
   }
 }
+
+export const startExam = async(req, res) => {
+  const { examId } = req.params; 
+  const studentSchoolId = req.user.schoolId;
+
+  try {
+    const currentTimeUTC = new Date(new Date().toISOString());
+
+    const isSubmitted = await db.query(`
+      SELECT is_submitted 
+      FROM student_scores
+      WHERE exam_id = $1 
+        AND student_school_id = $2`, 
+    [examId, studentSchoolId]);
+
+    if (isSubmitted.rows[0]?.is_submitted) return res.status(400).json({ error: 'Already submitted' });
+
+    const existingSession = await db.query(`
+      SELECT * FROM exam_sessions
+      WHERE exam_id = $1 AND student_school_id = $2
+        AND status = 'in-progress'
+    `, [examId, studentSchoolId]);
+
+    if (existingSession.rows.length > 0) {
+      return res.status(200).json({ message: 'Exam already in progress' });
+    }
+
+    if (existingSession.rows.length === 0) {
+      await db.query(`
+      INSERT INTO exam_sessions (exam_id, student_school_id, status, started_at)
+      VALUES ($1, $2, $3, $4)
+      RETURNING *`, 
+      [examId, studentSchoolId, 'in-progress', currentTimeUTC]);
+    }
+    
+    res.status(201).json({ message: 'Exam started'});
+  } catch (error) {
+    console.error('Error starting exam', error);
+    res.status(500).json({ error: 'Failed to start exam' });
+  }
+}
+
 
 //ALL QUESTION TYPE
 export const answerSubmission = async(req, res) => {
@@ -356,6 +403,8 @@ export const autoSubmitAllAnswers = async (req, res) => {
     if (isSubmitted.rows[0]?.is_submitted) {
       return res.status(400).json({ error: 'Already submitted' });
     }
+
+    
     await db.query(
       `UPDATE student_scores
        SET is_submitted = true
@@ -367,7 +416,7 @@ export const autoSubmitAllAnswers = async (req, res) => {
       SET status = 'submitted'
       WHERE exam_id = $1 AND student_school_id = $2`, 
       [examId, studentId]);
-    
+
     await autoScoringHelper(examId, studentId);
     res.status(200).json({ message: 'Exam marked as submitted' });
   } catch (error) {
@@ -376,29 +425,3 @@ export const autoSubmitAllAnswers = async (req, res) => {
   }
 };
 
-export const startExam = async(req, res) => {
-  const { examId } = req.params; 
-  const studentSchoolId = req.user.schoolId;
-
-  try {
-    const isScoreExisting = await db.query(`
-      SELECT total_score 
-      FROM student_scores
-      WHERE exam_id = $1
-        AND student_school_id = $2`, 
-      [examId, studentSchoolId]);
-
-    if (isScoreExisting.rows[0]?.total_score) {
-      return res.status(400).json({ error: 'Already scored' });
-    }
-
-    await db.query(`
-      INSERT INTO exam_sessions (status, started_at)
-      VALUES ($1, $2) RETURNING *`, 
-      ['in-progress', NOW]);
-
-  } catch (error) {
-    console.error('Error starting exam', error);
-    res.status(500).json({ error: 'Failed to start exam' });
-  }
-}
