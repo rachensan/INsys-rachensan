@@ -70,38 +70,40 @@ function Login() {
 
   return (
     <>
-    <div className="container" id="login-container">
-      <h1> Login </h1>
-      <div id="login-container-inner">
-        <form onSubmit={handleSubmit}>
-          <InputField 
-            label="Email"
-            name="email"
-            id="email"
-            type="email"
-            divClassName="email-group"
-            value={formLogin.email} 
-            onChange={handleChange}
-            placeholder="Enter your email" 
-          />
-          <InputField 
-            label="Password"
-            name="password"
-            id="password"
-            type="password"
-            divClassName="password-group"
-            value={formLogin.password} 
-            onChange={handleChange}
-            placeholder="Enter your passowrd" 
-          />
-          <a className="forgot-password" href="/forgot-password">Forgot Password?</a>
-          <Button className="login-btn" label="Login" type="submit" />
+    <div className="page-login">
+      <div className="container" id="login-container">
+        <h1> Login </h1>
+        <div id="login-container-inner">
+          <form onSubmit={handleSubmit}>
+            <InputField 
+              label="Email"
+              name="email"
+              id="email"
+              type="email"
+              divClassName="email-group"
+              value={formLogin.email} 
+              onChange={handleChange}
+              placeholder="Enter your email" 
+            />
+            <InputField 
+              label="Password"
+              name="password"
+              id="password"
+              type="password"
+              divClassName="password-group"
+              value={formLogin.password} 
+              onChange={handleChange}
+              placeholder="Enter your passowrd" 
+            />
+            <a className="forgot-password" href="/forgot-password">Forgot Password?</a>
+            <Button className="login-btn" label="Login" type="submit" />
 
-          <a href="/welcome-register">Create account</a>
-        </form>
+            <a href="/welcome-register">Create account</a>
+          </form>
+        </div>
       </div>
-      
     </div>
+    
     </>
   )
 

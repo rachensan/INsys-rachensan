@@ -144,14 +144,16 @@ input {
 }
 
 */
-
-
-
-
-
-
-
 /*LOGIN*/
+.page-login {
+    background-color: rgb(71, 51, 88);
+    min-height: 100vh;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+}
 
 .container#login-container {
     position: fixed;
