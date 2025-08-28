@@ -20,12 +20,17 @@ function RegisterStudent() {
 
   const [isVerified, setIsVerified] = useState(false);
   const [code, setCode] = useState(""); //otp
+  const [sentOTP, setSentOTP] = useState(false);
   const username = formRegister.username;
 
   const handleSendOtp = async () => {
     try { // did not use axiosConfig here so it's the full url
       const res = await axios.post("http://localhost:3000/api/student/register/email-otp", { username: username });
       alert(res.data.message);
+
+      if (res.data.isItSent) { //from backend res.json.. if message is sent
+        setSentOTP(true);
+      }
     } catch (err) {
       console.log(err.response?.data);
       alert("Failed to send OTP");
@@ -70,60 +75,67 @@ function RegisterStudent() {
 
   return (
     <>
-      {!isVerified ? ( 
-        <>
-        <div className="container" id="otp-code-container">
-          <h1>OTP Verification</h1>
-
-          <div className="form-group">
-            <InputField 
-              label="School Id"
-              name="username"
-              id="school-id"
-              value={formRegister.username} 
-              onChange={handleChange}
-              placeholder="Enter student id" 
-              disabled={isVerified}
-            />
+      {!isVerified ? (
+        !sentOTP ? (
+          <div className='page-s-registration'>
+            <div className="container" id="otp-code-container">
+              <h1>OTP Verification</h1>
+              <button type="button" className='back-button'> ← </button>
+              <div className="form-group">
+                <InputField 
+                  label="School Id"
+                  name="username"
+                  id="school-id"
+                  value={formRegister.username} 
+                  onChange={handleChange}
+                  placeholder="Enter student id" 
+                  disabled={isVerified}
+                />
+              </div>
+            <Button type="button" onClick={handleSendOtp} label='Send OTP' disabled={isVerified}/>
           </div>
-          
-        <Button type="button" onClick={handleSendOtp} label='Send OTP' disabled={isVerified}/>
-        <p className="resend-link">
-          <a href="#" id="resend-otp">Didn't get a code? Resend</a>
-        </p>
-
-        <div className="form-group">
-          <InputField 
-            label="OTP Code"
-            name="code" //otp
-            id="otp-code"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            placeholder="Enter OTP"
-            disabled={isVerified}
-          />
         </div>
-        
-        <Button type="button" onClick={handleVerifyOtp} label='Verify' disabled={isVerified}/>
-        </div>
-        </>
+        ) : (
+          <div className='page-s-registration'>
+            <div className='container' id='otp-code-container'>
+              <button type="button" className='back-button'> ← </button>
+              <div className="form-group">
+                <InputField 
+                  label="OTP Code"
+                  name="code" //otp
+                  id="otp-code"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                  placeholder="Enter OTP"
+                  disabled={isVerified}
+                />
+              </div>
+              <p className="resend-link">
+                <a href="#" id="resend-otp">Didn't get a code? Resend</a>
+              </p>
+              <Button type="button" onClick={handleVerifyOtp} label='Verify' disabled={isVerified}/>
+            </div>
+          </div>
+        )
       ) : (
-        <>
-        <div className="container" id="registration-container" >
+        <div className='page-s-registration'>
+          <div className="container" id="registration-container" >
           <h1> Registration Form </h1>
           <form id="registration-form" onSubmit={handleSubmit}>  
             <InputField 
               label="Email"
               name="email"
               id="email"
+              type="email"
               value={`${formRegister.username}@pampangastateu.edu.ph`}
-              placeholder="Enter your first name"
+              placeholder="Enter Student ID"
               disabled={true}
             /> 
             <InputField 
               label="Password"
               name="password"
               id="password" 
+              type="password"
               value={formRegister.password}
               onChange={handleChange}
               placeholder="Enter your password"
@@ -156,6 +168,20 @@ function RegisterStudent() {
               />
             </div>
 
+            <div className='form-group'>
+              <RadioButton
+                divClassName="form-group"
+                label="Gender"
+                name="userGender"
+                value={formRegister.userGender}
+                onChange={handleChange}
+                options={[
+                  { label: "Male", value: "Male" },
+                  { label: "Female", value: "Female" },
+                  { label: "Other", value: "Other" }
+                ]}
+              />
+            </div>
             <SelectField
               divClassName="form-group"
               label="College Department"
@@ -171,26 +197,12 @@ function RegisterStudent() {
                 { label: "GA", value: "GA" }
               ]}
             />
-            <div className='form-group'>
-              <RadioButton
-                divClassName="form-group"
-                label="Gender"
-                name="userGender"
-                value={formRegister.userGender}
-                onChange={handleChange}
-                options={[
-                  { label: "Male", value: "Male" },
-                  { label: "Female", value: "Female" },
-                  { label: "Other", value: "Other" }
-                ]}
-              />
-            </div>
+            
             <Button type="submit" label='Submit Registration idk'/>
             {/* triggers <form onSubmit={handleSubmit}/> */}
           </form>
+          </div>
         </div>
-          
-        </>
       )}
     </>
   );

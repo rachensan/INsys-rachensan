@@ -96,7 +96,7 @@ useEffect(() => {
   return(
     <>
     <AuthLoader>
-      <LogoutButton /> <br/><br/><br/>
+     {/* { <LogoutButton /> <br/><br/><br/>} */}
 
       <Routes>
         <Route element={<ProtectedRoute allowedRoles={["teacher"]} />}>

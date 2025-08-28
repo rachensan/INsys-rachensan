@@ -148,257 +148,168 @@ input {
 
 
 
-/*===============Raizza===============*/
-
-/* sa fonts to */
-@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
-
-/* wag mo pala to tatanggalin */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
-}
-
-body {
-    background: linear-gradient(135deg, #2a2a72 0%, #009ffd 60%);
-    min-height: 100vh;
-    color: #fff;
-    overflow: auto; 
-}
 
 
-.container#registration-container {
-    max-width: 500px;  /* adjust mo nalang to, yung container ng regis*/
+
+/*LOGIN*/
+
+.container#login-container {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 90%;
-    max-height: 80vh; 
-    background-color: rgba(255, 255, 255, 0.4);
-    padding: 2.3rem;
-    border-radius: 21px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    width: 85%;
+    max-width: 360px;
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    padding: 1.5rem;
+    border-radius: 18px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     z-index: 1000;
 }
 
-/* hiniwalay ko dahil don sa size ng container ng regis*/
-.container#otp-container,
-.container#otp-code-container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-    max-width: 500px;
-    max-height: 80vh;
-    background-color: rgba(255, 255, 255, 0.4);
-    padding: 2.3rem;
-    border-radius: 21px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    z-index: 1000;
-}
-
-
-#registration-form {
+#login-container-inner {
     flex: 1;
-    overflow-y: auto; 
-    padding-bottom: 0rem; 
-}
-
-
-#registration-form {
-    scrollbar-width: thin; 
-    scrollbar-color: rgba(255, 255, 255, 0.2) transparent; 
-}
-
-
-#registration-form::-webkit-scrollbar {
-    width: 9px; 
-}
-
-#registration-form::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-#registration-form::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3); 
-    border-radius: 10px; 
-}
-
-#registration-form::-webkit-scrollbar-thumb:hover {
-    background: rgba(67, 93, 210, 0.10); 
-}
-
-
-#otp-form,
-#otp-code-form {
-    flex: 1;
-    padding-bottom: 1rem; 
-}
-
-
-.back-button {
-    position: fixed;
-    top: 1rem;
-    left: 1rem;
-    padding: 0.5rem;
-    background: none;
-    border: none;
-    color: #ffffff; 
-    font-size: 1.7rem; 
-    cursor: pointer;
-    z-index: 1002; 
-}
-
-
-#registration-form button[type="submit"],
-#otp-form button[type="submit"],
-#otp-code-form button[type="submit"] {
-    width: 100%; 
-    padding: 0.75rem;
-    background-color: rgba(31, 167, 230, 0.5);
-    color: white;
-    border: none;
-    border-radius: 15px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    margin-top: 1rem; 
-}
-
-
-#registration-form button[type="submit"]:hover,
-#otp-form button[type="submit"]:hover,
-#otp-code-form button[type="submit"]:hover {
-    background-color: #0056b3;
+    padding-bottom: 0.6rem;
 }
 
 h1 {
     text-align: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     color: #ffffff;
+    font-size: 1.6rem;
+    font-weight: 500;
 }
 
-/* distansya ng mga txt */
-.form-group {
-    margin-bottom: 1rem;
+.email-group {
+    margin-bottom: 0.8rem;
 }
 
 label {
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.4rem;
     color: #ffffff;
+    font-size: 0.9rem;
 }
 
-/* yung mga box box saka input */
 input[type="email"],
-input[type="password"],
-input[type="text"],
-select {
-    color: #000000; 
+input[type="password"] {
+    color: #000000;
     width: 100%;
-    padding: 0.75rem;
-    background-color: #dee8f2;
+    padding: 0.6rem;
+    background-color: #ffffff;
     border: 0.5px solid #e0d2d2;
-    border-radius: 15px;
-    font-size: 1rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
 }
 
 input[type="email"]:focus,
-input[type="password"]:focus,
-input[type="text"]:focus,
-select:focus {
+input[type="password"]:focus {
     outline: none;
-    border-color: #2851d8; /* border pag nag seselect ka */
-    box-shadow: 0 0 5px rgba(36, 117, 204, 0.7);
+    border-color: #2851d8;
+    box-shadow: 0 0 4px rgba(36, 117, 204, 0.7);
 }
 
 input[type="email"]::placeholder,
-input[type="password"]::placeholder,
-input[type="text"]::placeholder {
+input[type="password"]::placeholder {
     color: #817979;
     opacity: 1;
 }
 
-/* ito yung nagtabi sa first at last name */
-.name-group {
-    display: flex;
-    gap: 1rem;
+.password-group {
+    position: relative;
 }
 
-.name-group .form-group {
-    flex: 1;
+.forgot-password-container {
+    text-align: right;
+    margin-top: 0.4rem;
 }
 
-/* adjdust mo nlng to pag di ayos sayo, yung distance ng gender */
-.radio-group {
-    display: flex;
-    gap: 1.5rem;
-}
-
-.radio-group label {
-    margin-bottom: 0;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-select {
-    appearance: none;
-    background-size: 1rem;
-}
-
-.otp-message {
-    font-size: 0.9rem;
-    color: #dad3d3;
-    margin-bottom: 1rem;
-    text-align: center;
-}
-
-.otp-message span {
-    color: #007bff;
-    font-size: 0.9rem;
-}
-
-.resend-link {
-    text-align: center;
-    margin-top: 1rem;
-}
-
-.resend-link a {
+.forgot-password {
     color: #ffffff;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     text-decoration: underline;
     cursor: pointer;
 }
 
-.resend-link a:hover {
+.forgot-password:hover {
     color: #0056b3;
 }
 
-/* saka ko na tong responsiveness 
-@media (max-width: 600px) {
-    .container {
-        padding: 1rem;
-        margin: 0.5rem;
+.login-btn,
+.signup-btn {
+    width: 100%;
+    padding: 0.6rem;
+    background-color: rgba(31, 167, 230, 0.5);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 0.8rem;
+}
+
+.login-btn:hover,
+.signup-btn:hover {
+    background-color: #0056b3;
+}
+
+.line {
+    margin: 1rem 0;
+    position: relative;
+    text-align: center;
+}
+
+.line span {
+    color: #ffffff;
+    font-size: 0.8rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0 8px;
+}
+
+.line::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.3);
+    z-index: -1;
+}
+
+/* Responsive Design */
+@media (max-width: 400px) {
+    .container#login-container {
+        width: 90%;
+        max-width: 300px;
+        padding: 1.2rem;
     }
 
-    .name-group {
-        flex-direction: column;
-        gap: 0;
+    h1 {
+        font-size: 1.4rem;
     }
 
-    .radio-group {
-        flex-direction: column;
-        gap: 0.5rem;
+    input[type="email"],
+    input[type="password"],
+    .login-btn,
+    .signup-btn {
+        font-size: 0.85rem;
+        padding: 0.5rem;
+    }
+
+    .forgot-password {
+        font-size: 0.75rem;
+    }
+
+    .form-group {
+        margin-bottom: 0.6rem;
+    }
+
+    .divider {
+        margin: 0.8rem 0;
     }
 }
-*/
