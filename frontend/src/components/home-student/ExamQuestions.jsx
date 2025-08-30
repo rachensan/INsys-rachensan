@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../../context/AuthContext";
 import RadioButtonOptions from "../RadioButtonOptions";
+import InputField from "../InputFields"
 
 
 const MultiChoiceComp = ({mcqText, mcqOptions, name, divClassName, onChange, value}) => {
@@ -27,6 +28,27 @@ const MultiChoiceComp = ({mcqText, mcqOptions, name, divClassName, onChange, val
   )
 }
 
+const IdentificationComp = ({mcqText, name, divClassName, placeholder, onChange, value}) => {
+  return (
+    <>
+      <div>
+        <div style={{ backgroundColor: 'lightgray' }}>
+          <p>{mcqText}</p>
+        </div>
+        <div style={{ backgroundColor: 'darkgreen' }}>
+          <InputField 
+            name={name}
+            value={value || ""} //must be string or number
+            onChange={onChange}
+            placeholder={placeholder}
+            divClassName={divClassName}
+          />
+        </div>
+      </div>
+    </>
+  )
+}
+
 
 function ExamQuestions() {
   const { accessToken } = useAuth();
@@ -36,6 +58,7 @@ function ExamQuestions() {
   const [current, setCurrent] = useState(0);
 
   const [ selectedAnswer, setSelectedAnswer ] = useState('');
+  const [ inputExamCode, setInputExamCode ] = useState('');
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -67,10 +90,11 @@ function ExamQuestions() {
     <div>
       <h2>Question {current + 1}</h2> 
       {
-      (() => {console.log(optionsArray)
-        console.log(selectedAnswer)
+      (() => {
+        //console.log(optionsArray)
+        //console.log(selectedAnswer)
         //(()=>{})() → we will call the function right away,,, das why we have () at the end
-        switch (examQuestions[current].question_type) {
+        switch (examQuestions[current].question_type) { //question-type here
           case "multiplechoice":
             return (
               <MultiChoiceComp 
@@ -81,8 +105,17 @@ function ExamQuestions() {
                 onChange={(e) => setSelectedAnswer(e.target.value)}
               />
             )
-          // case "identification":
-          //   return <p>{examQuestions[current].question_text} (ID UI)</p>;
+          case "identification":
+            return (
+              <IdentificationComp
+                mcqText={examQuestions[current].question_text}
+                name={`q${current}`} 
+                value={selectedAnswer}
+                onChange={(e) => setSelectedAnswer(e.target.value)}
+                placeholder="... "
+                divClassName="antok-ka-na-ba"
+              />
+            )
           // case "truefalse":
           //   return <p>{examQuestions[current].question_text} (TF UI)</p>;
         
@@ -98,6 +131,7 @@ function ExamQuestions() {
       
 
       <div>
+        <p>  {examQuestions[current].question_text} </p>
         <br/><br/><br/>
         <button
           disabled={current === 0}

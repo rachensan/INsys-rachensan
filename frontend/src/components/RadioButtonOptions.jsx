@@ -13,7 +13,7 @@ function RadioButtonOptions({ label, name, value, onChange, options, divClassNam
               <input
                 type="radio"
                 id={id}
-                name={name}
+                name={name} 
                 value={option}
                 checked={value === option}
                 onChange={onChange}
@@ -29,3 +29,17 @@ function RadioButtonOptions({ label, name, value, onChange, options, divClassNam
 }
 
 export default RadioButtonOptions;
+
+/*
+  <RadioButtonOptions
+    name={name}
+    value={value}
+    onChange={onChange} //(e) => setCode(e.target.value)
+    options={mcqOptions}
+    divClassName={divClassName}
+  />
+
+
+
+
+*/
