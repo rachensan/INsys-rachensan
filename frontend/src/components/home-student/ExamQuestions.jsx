@@ -35,7 +35,28 @@ const IdentificationComp = ({mcqText, name, divClassName, placeholder, onChange,
         <div style={{ backgroundColor: 'lightgray' }}>
           <p>{mcqText}</p>
         </div>
-        <div style={{ backgroundColor: 'darkgreen' }}>
+        <div style={{ backgroundColor: 'skyblue' }}>
+          <InputField 
+            name={name}
+            value={value || ""} //must be string or number
+            onChange={onChange}
+            placeholder={placeholder}
+            divClassName={divClassName}
+          />
+        </div>
+      </div>
+    </>
+  )
+}
+
+const EssayComp = ({mcqText, name, divClassName, placeholder, onChange, value}) => {
+  return (
+    <>
+      <div>
+        <div style={{ backgroundColor: 'lightgray' }}>
+          <p>{mcqText}</p>
+        </div>
+        <div style={{ backgroundColor: 'lightgreen' }}>
           <InputField 
             name={name}
             value={value || ""} //must be string or number
@@ -108,6 +129,18 @@ function ExamQuestions() {
           case "identification":
             return (
               <IdentificationComp
+                mcqText={examQuestions[current].question_text}
+                name={`q${current}`} 
+                value={selectedAnswer}
+                onChange={(e) => setSelectedAnswer(e.target.value)}
+                placeholder="... "
+                divClassName="antok-ka-na-ba"
+              />
+            )
+
+          case "essay":
+            return (
+              <EssayComp
                 mcqText={examQuestions[current].question_text}
                 name={`q${current}`} 
                 value={selectedAnswer}
