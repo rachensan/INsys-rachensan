@@ -2,9 +2,9 @@ import axios from 'axios';
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom'
 import InputField from "../components/InputFields.jsx"
-import RadioButton from "../components/RadioButton.jsx";
 import SelectField from "../components/SelectFields.jsx";
 import Button from '../components/Buttons.jsx';
+import RadioButtonGender from '../components/RadioButtonGender.jsx';
 
 function RegisterStudent() {
   const navigate = useNavigate();
@@ -169,7 +169,7 @@ function RegisterStudent() {
             </div>
 
             <div className='form-group'>
-              <RadioButton
+              <RadioButtonGender
                 divClassName="form-group"
                 label="Gender"
                 name="userGender"

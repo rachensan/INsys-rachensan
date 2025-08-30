@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom'
 
 import InputField from "../components/InputFields.jsx"
-import RadioButton from "../components/RadioButton.jsx";
 import SelectField from "../components/SelectFields.jsx";
 import Button from '../components/Buttons.jsx';
+import RadioButtonGender from '../components/RadioButtonGender.jsx';
 
 function RegisterTeacher() {
   const navigate = useNavigate();
@@ -152,7 +152,7 @@ function RegisterTeacher() {
               { label: "GA", value: "GA" }
             ]}
           />
-          <RadioButton
+          <RadioButtonGender
             label="Gender"
             name="userGender"
             value={formRegister.userGender}
