@@ -4,6 +4,19 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../../context/AuthContext";
 
+const MultiChoiceComp = ({questionText}) => {
+  return (
+    <>
+      <div>
+        <div style={{ backgroundColor: 'light-gray' }}>
+          <p>{questionText}</p>
+        </div>
+        
+      </div>
+    </>
+  )
+}
+
 
 function ExamQuestions() {
   const { accessToken } = useAuth();
@@ -12,7 +25,6 @@ function ExamQuestions() {
   const { examId } = useParams(); //not params.,, dapat galing sa code
   const [ examQuestions, setExamQuestions ] = useState([]);
   const [current, setCurrent] = useState(0);
-
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -36,6 +48,10 @@ function ExamQuestions() {
     <>
     <div>
       <h2>Question {current + 1}</h2>
+      
+
+
+
       <p>{examQuestions[current].question_text}</p>
 
       <div>
@@ -52,6 +68,10 @@ function ExamQuestions() {
           Next
         </button>
       </div>
+
+
+
+
     </div>
     </>
   )
