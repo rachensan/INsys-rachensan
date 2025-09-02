@@ -6,6 +6,7 @@ import axios from '../utils/axiosConfig.js';
 import { useExams } from '../hooks/useExams.js';
 //components
 import Button from '../components/Buttons.jsx';
+import SelectField from '../components/SelectFields.jsx';
 import DraftExams from '../components/home-teacher/DraftExams.jsx';
 import OngoingExams from '../components/home-teacher/OngoingExams.jsx';
 import CompletedExams from '../components/home-teacher/CompletedExams.jsx';
@@ -45,6 +46,12 @@ function HomeTeacher() {
     load();
   }, []);
 
+  const optionsArray = [
+    { value: "draft", label: "Draft" },
+    { value: "published", label: "Ongoing" },
+    { value: "completed", label: "Completed" }
+  ];
+
   return (
     <>
       <button onClick={() => setShowModal(true)}>Create Exam</button>
@@ -62,10 +69,19 @@ function HomeTeacher() {
         )}
       
 
+      <SelectField 
+        label="Status" 
+        name="status"
+        value={status}
+        onChange={(e) => setStatus(e.target.value)}
+        options={optionsArray}
+      />
 
-      <Button label="Drafts" onClick={() => setStatus("draft")} />
+{/* 
+      <Button label="Drafts" onClick={() => setStatus('draft')} />
       <Button label="Ongoing" onClick={() => setStatus('published')} />
-      <Button label="Completed" onClick={() => setStatus('completed')} />
+      <Button label="Completed" onClick={() => setStatus('completed')} /> 
+*/}
       
       {status === 'draft' && 
       <DraftExams 

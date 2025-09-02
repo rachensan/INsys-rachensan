@@ -8,6 +8,8 @@ function RadioButtonOptions({ label, name, value, onChange, options, divClassNam
       <div className="radio-group">
         {options.map((option, index) => {
           const id = `${name}-${index}`
+
+          const safeValue = value ?? ''; 
           return (
             <React.Fragment key={index}>
               <input
@@ -15,7 +17,7 @@ function RadioButtonOptions({ label, name, value, onChange, options, divClassNam
                 id={id}
                 name={name} 
                 value={option}
-                checked={value === option}
+                checked={safeValue === option}
                 onChange={onChange}
                 required={index === 0} // only first one has required
               />

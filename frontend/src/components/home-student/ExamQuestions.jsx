@@ -5,6 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import RadioButtonOptions from "../RadioButtonOptions";
 import InputField from "../InputFields"
+import SelectField from "../SelectFields";
 
 
 const MultiChoiceComp = ({mcqText, mcqOptions, name, divClassName, onChange, value}) => {
@@ -28,12 +29,12 @@ const MultiChoiceComp = ({mcqText, mcqOptions, name, divClassName, onChange, val
   )
 }
 
-const IdentificationComp = ({mcqText, name, divClassName, placeholder, onChange, value}) => {
+const IdentificationComp = ({idenText, name, divClassName, placeholder, onChange, value}) => {
   return (
     <>
       <div>
         <div style={{ backgroundColor: 'lightgray' }}>
-          <p>{mcqText}</p>
+          <p>{idenText}</p>
         </div>
         <div style={{ backgroundColor: 'skyblue' }}>
           <InputField 
@@ -49,12 +50,12 @@ const IdentificationComp = ({mcqText, name, divClassName, placeholder, onChange,
   )
 }
 
-const EssayComp = ({mcqText, name, divClassName, placeholder, onChange, value}) => {
+const EssayComp = ({essayText, name, divClassName, placeholder, onChange, value}) => {
   return (
     <>
       <div>
         <div style={{ backgroundColor: 'lightgray' }}>
-          <p>{mcqText}</p>
+          <p>{essayText}</p>
         </div>
         <div style={{ backgroundColor: 'lightgreen' }}>
           <InputField 
@@ -62,6 +63,27 @@ const EssayComp = ({mcqText, name, divClassName, placeholder, onChange, value}) 
             value={value || ""} //must be string or number
             onChange={onChange}
             placeholder={placeholder}
+            divClassName={divClassName}
+          />
+        </div>
+      </div>
+    </>
+  )
+}
+
+const TrueFalseComp = ({tfText, tfOptions, name, divClassName, onChange, value}) => {
+  return (
+    <>
+      <div>
+        <div style={{ backgroundColor: 'lightgray' }}>
+          <p>{tfText}</p>
+        </div>
+        <div style={{ backgroundColor: 'pink' }}>
+          <RadioButtonOptions
+            name={name}
+            value={value}
+            onChange={onChange}
+            options={tfOptions}
             divClassName={divClassName}
           />
         </div>
@@ -99,13 +121,18 @@ function ExamQuestions() {
 
   if (!examQuestions.length) return <p>Loading questions...</p>;
 
-  const optionsArray = [
+  const optionsArrayMCQ = [
     examQuestions[current].option_a,
     examQuestions[current].option_b,
     examQuestions[current].option_c,
     examQuestions[current].option_d,
   ];
-  
+
+  const optionsArrayTF = [
+    examQuestions[current].option_a,
+    examQuestions[current].option_b
+  ];
+
   return (
     <>
     <div>
@@ -120,7 +147,7 @@ function ExamQuestions() {
             return (
               <MultiChoiceComp 
                 mcqText={examQuestions[current].question_text}
-                mcqOptions={optionsArray}
+                mcqOptions={optionsArrayMCQ}
                 name={`q${current}`} 
                 value={selectedAnswer}
                 onChange={(e) => setSelectedAnswer(e.target.value)}
@@ -129,7 +156,7 @@ function ExamQuestions() {
           case "identification":
             return (
               <IdentificationComp
-                mcqText={examQuestions[current].question_text}
+                idenText={examQuestions[current].question_text}
                 name={`q${current}`} 
                 value={selectedAnswer}
                 onChange={(e) => setSelectedAnswer(e.target.value)}
@@ -141,17 +168,25 @@ function ExamQuestions() {
           case "essay":
             return (
               <EssayComp
-                mcqText={examQuestions[current].question_text}
+                essayText={examQuestions[current].question_text}
                 name={`q${current}`} 
-                value={selectedAnswer}
+                value={'edit this answer container, bruh'}//save to db and clear the last selectedAnswer
                 onChange={(e) => setSelectedAnswer(e.target.value)}
                 placeholder="... "
                 divClassName="antok-ka-na-ba"
               />
             )
-          // case "truefalse":
-          //   return <p>{examQuestions[current].question_text} (TF UI)</p>;
-        
+          case "truefalse":
+            return (
+              <TrueFalseComp 
+                tfText={examQuestions[current].question_text}
+                tfOptions={optionsArrayTF}
+                name={`q${current}`} 
+                value={selectedAnswer}
+                onChange={(e) => setSelectedAnswer(e.target.value)}
+              />
+            )
+
           default: 
             return null;
         }
