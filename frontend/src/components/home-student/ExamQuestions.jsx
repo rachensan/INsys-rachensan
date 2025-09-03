@@ -6,6 +6,7 @@ import { useAuth } from "../../context/AuthContext";
 import RadioButtonOptions from "../RadioButtonOptions";
 import InputField from "../InputFields"
 import SelectField from "../SelectFields";
+import Buttons from "../Buttons"
 
 
 const MultiChoiceComp = ({mcqText, mcqOptions, name, divClassName, onChange, value}) => {
@@ -133,6 +134,35 @@ function ExamQuestions() {
     examQuestions[current].option_b
   ];
 
+  const handleStudentAnswer = async() => { //adds blank form just for displaying empty form UI 
+    const currentQuestion = examQuestions[current];
+
+    try {
+      const config = {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        withCredentials: true
+      };
+
+//  questionId, studentSchoolId, studentAnswer, examId  //
+      await axios.post(`/student-answers/submit`, {
+        examId,
+        questionId: currentQuestion.question_id,
+        studentAnswer: selectedAnswer
+      }, config);
+
+      console.log("student answer saved to DB... save student_answers table");
+      //clear answer for next question
+      setSelectedAnswer('');
+
+      //go to next question
+      if (current < examQuestions.length - 1) {
+        setCurrent((prev) => prev + 1);
+      }
+    } catch (error) {
+      alert(error.response?.data?.error || "Failed to save answer");
+    }
+  }
+
   return (
     <>
     <div>
@@ -201,18 +231,19 @@ function ExamQuestions() {
       <div>
         <p>  {examQuestions[current].question_text} </p>
         <br/><br/><br/>
-        <button
+
+        {/* <button
           disabled={current === 0}
           onClick={() => setCurrent((prev) => prev - 1)}
         >
           Previous
-        </button>
-        <button
-          disabled={current === examQuestions.length - 1}
-          onClick={() => setCurrent((prev) => prev + 1)}
-        >
-          Next
-        </button>
+        </button> */}
+
+        <Buttons 
+          label={current === examQuestions.length - 1? "Submit Exam" : "NEXT question bij"}
+          onClick={handleStudentAnswer}  //() => setCurrent((prev) => prev + 1)
+        />
+          
       </div>
 
 

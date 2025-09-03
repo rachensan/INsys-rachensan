@@ -148,11 +148,12 @@ export const startExam = async(req, res) => {
 
 //ALL QUESTION TYPE
 export const answerSubmission = async(req, res) => {
-  const { questionId, studentSchoolId, studentAnswer, examId } = req.body;
+  const studentSchoolId = req.user.schoolId;
+  const { questionId, studentAnswer, examId } = req.body;
       //no req.params because we get the info if they are validated/verified examinee
 
   try {
-
+//======= check if exam is submitted =======//
     const isSubmitted = await db.query(`
     SELECT is_submitted FROM student_scores
     WHERE exam_id = $1 AND student_school_id = $2`, 
@@ -161,6 +162,7 @@ export const answerSubmission = async(req, res) => {
     if (isSubmitted.rows[0]?.is_submitted) {
       return res.status(400).json({ error: 'Already submitted' });
     }
+// ======= // ======= // ======= // ======= //
 
     const correctAnswerFromDB = await db.query(
       `SELECT correct_answer FROM questions 
