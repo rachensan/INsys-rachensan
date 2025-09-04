@@ -301,7 +301,8 @@ export const manualEssayScoring = async(req, res) => {
 
 //this is for one exam info 
 export const getInfoPerExam = async(req, res) => {
-  const { studentId, examId } = req.params;
+  const studentId = req.user.schoolId;
+  const { examId } = req.params;
 
   try {
     const result = await db.query(`

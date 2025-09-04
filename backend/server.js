@@ -185,7 +185,7 @@ import { getQuestionsForStudent } from "./controllers/questionControllers/GET.js
   app.post('/api/student/exams/:examId/start', studentOnly, startExam);
   app.post('/api/student/verify', studentOnly, verifyExamAccess);
   
-  app.get('/api/student/:studentId/exams/:examId/info', studentOnly, getInfoPerExam);
+  app.get('/api/student/exams/:examId/info', studentOnly, getInfoPerExam);
   app.get('/api/student/:studentId/exam-history', studentOnly);
   app.get('/api/exams/questions/:examId', studentOnly, getQuestionsForStudent) 
       //questions by exam.. limited selection in db, for student only.
