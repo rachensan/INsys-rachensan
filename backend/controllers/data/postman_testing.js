@@ -138,14 +138,14 @@ const postmanLinks = [
     link: "http://localhost:3000/api/exams/search?title=exam",
   },
   {
-    WHAT: "Sort Exam Status",
+    WHAT: "Sort Exam Status", //draft, published, completed
     FUNC: getExamsByStatus,
     CRUD: "GET",
     path: "/api/exams/status",
     link: "http://localhost:3000/api/exams/status?filter=pending",
   },
   {
-    WHAT: "Update Exam Status",
+    WHAT: "Update Exam Status", //draft, published, completed
     FUNC: updateExamStatus,
     CRUD: "PATCH",
     path: "/api/exams/:examId/status",
@@ -281,7 +281,7 @@ const postmanLinks = [
     WHAT: "Showing One Exam Details",
     FUNC: getInfoPerExam,
     CRUD: "GET",
-    path: "/api/students/:studentId/exams/:examId/info",
+    path: "/api/students/exams/:examId/info",
     link: "http://localhost:3000/api/student/2021307605/exams/1/info" 
   }, 
   {
@@ -319,6 +319,13 @@ const postmanLinks = [
     body: {
       "sectionName" : "BSIT 1-D"
     }
+  },
+  {
+    WHAT: "Submit Exam When Answered All Questions",
+    FUNC: submitAllAnswers,
+    CRUD: "POST",
+    path: "/api/student/:studentId/exams/:examId/submit",
+    link: "http://localhost:3000/api/student/2021307605/exams/1/submit"
   },
   {
     WHAT: "Auto Submit Exam When Time Ends",

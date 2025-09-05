@@ -68,7 +68,7 @@ app.use('/api/teacher', teacherAuthRoutes);
 
 
 //verify student
-  import { verifyExamAccess, answerSubmission, autoScoringTemplate, manualEssayScoring, getInfoPerExam, getStudentExamHistory, autoSubmitAllAnswers, startExam } from "./controllers/studentQuery.js";
+  import { verifyExamAccess, answerSubmission, autoScoringTemplate, manualEssayScoring, getInfoPerExam, getStudentExamHistory, autoSubmitAllAnswers, startExam, submitAllAnswers } from "./controllers/studentQuery.js";
 
 //userCONTROLLERS
   //GET
@@ -190,9 +190,12 @@ import { getQuestionsForStudent } from "./controllers/questionControllers/GET.js
   app.get('/api/exams/questions/:examId', studentOnly, getQuestionsForStudent) 
       //questions by exam.. limited selection in db, for student only.
 
-  app.post('/api/student/:studentId/exams/:examId/auto-submit', studentOnly, autoSubmitAllAnswers);
-  
+  app.post('/api/student/exams/:examId/auto-submit', studentOnly, autoSubmitAllAnswers);
+      //time sensitive
+  app.post('/api/student/exams/:examId/submit', studentOnly, submitAllAnswers);
+      //answer all question, then submit
   app.post('/api/student-answers/submit', studentOnly, answerSubmission); 
+      //per question submission
       //autoScoringLogic works here
   app.put('/api/student-scores/score', autoScoringTemplate); 
       //backup tool

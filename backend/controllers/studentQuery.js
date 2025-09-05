@@ -360,7 +360,8 @@ export const getStudentExamHistory = async(req, res) => {
 
 
 export const autoSubmitAllAnswers = async (req, res) => {
-  const { examId, studentId } = req.params;
+  const studentId = req.user.schoolId;
+  const { examId } = req.params;
 
   try {
 //====== objective questions
@@ -428,3 +429,23 @@ export const autoSubmitAllAnswers = async (req, res) => {
   }
 };
 
+export const submitAllAnswers = async(req, res) => {
+  const studentId = req.user.schoolId;
+  const { examId } = req.params;
+
+  try {
+    await db.query(
+      `UPDATE student_scores
+       SET is_submitted = true
+       WHERE exam_id = $1 AND student_school_id = $2`,
+      [examId, studentId]);
+
+    await db.query(`
+      UPDATE exam_sessions
+      SET status = 'submitted'
+      WHERE exam_id = $1 AND student_school_id = $2`, 
+      [examId, studentId]);
+  } catch (error) {
+    
+  }
+}
