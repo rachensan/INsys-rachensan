@@ -194,9 +194,10 @@ import { getQuestionsForStudent } from "./controllers/questionControllers/GET.js
       //time sensitive
   app.post('/api/student/exams/:examId/submit', studentOnly, submitAllAnswers);
       //answer all question, then submit
-  app.post('/api/student-answers/submit', studentOnly, answerSubmission); 
+  app.post('/api/student-answers/:examId/submit', studentOnly, answerSubmission); 
       //per question submission
       //autoScoringLogic works here
+
   app.put('/api/student-scores/score', autoScoringTemplate); 
       //backup tool
       //admin suspects incorrect scoring

@@ -81,14 +81,8 @@ export const verifyExamAccess = async(req, res) => {
 
     if (isStarted.rows.length === 1) {
       return res.status(200).json({ message: 'Already Allowed. Proceed to exam', exam: result.rows[0] });
-    } else { //if starting for the first time, we insert user data
-      await db.query(
-      `INSERT INTO student_scores (student_school_id, exam_id, section_name, student_name) 
-      VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING`, //conflict= If multiple requestslike 'enter', it might insert into the db again
-      [studentSchoolId, result.rows[0].exam_id, inputSection, studentName]
-    );
     }
-
+    
     res.status(200).json({ message: 'Exam entry granted', exam: result.rows[0] });
   } catch (error) {
     console.error('Error verifying exam entry:', {
@@ -106,19 +100,70 @@ export const verifyExamAccess = async(req, res) => {
 
 export const startExam = async(req, res) => {
   const { examId } = req.params; 
+  const { inputCode, inputSection } = req.body;
   const studentSchoolId = req.user.schoolId;
+  const userId = req.user.userId; 
+  let studentName = null;
 
   try {
     const currentTimeUTC = new Date(new Date().toISOString());
 
+    //========= kuha lang tayo ng info sa user dito, not really that important sa logic =========//
+    const resUserInfo = await db.query(`
+      SELECT school_id, first_name, last_name
+      FROM users
+      WHERE user_id = $1
+      `, [userId]);
+
+    if (resUserInfo.rows.length === 0) return res.status(404).json({ error: "User not found, can't access exam" }) //prbly expired token, cuz the userId is from jwt payload
+       
+    const resUser = resUserInfo.rows[0];
+    const studentName = `${resUser.last_name}, ${resUser.first_name}`;
+    //========= ========= ========= ========= ========= ========= ========= ========= =========//
+
+    const result = await db.query( //gives us the exam info
+      `SELECT *,
+        e.start_datetime AS start_utc,
+        e.end_datetime   AS end_utc,
+        e.exam_id 
+      FROM examinations e
+      JOIN section_takers s
+        ON e.exam_id = s.exam_id 
+      WHERE e.exam_code = $1 
+        AND s.section_name = $2
+        AND e.status = 'published'`,
+      [inputCode, inputSection]
+    );
+
     const isSubmitted = await db.query(`
-      SELECT is_submitted 
-      FROM student_scores
-      WHERE exam_id = $1 
-        AND student_school_id = $2`, 
-    [examId, studentSchoolId]);
+      SELECT * FROM student_scores
+      WHERE student_school_id = $1
+        AND section_name = $2
+        AND exam_id = $3
+        AND is_submitted = true`
+    , [studentSchoolId, inputSection, examId]);
 
     if (isSubmitted.rows[0]?.is_submitted) return res.status(400).json({ error: 'Already submitted' });
+
+
+    //will check if you already answered some questions.. idk if i did the per question yet
+    const isStarted = await db.query(`
+      SELECT * 
+      FROM student_scores
+      WHERE student_school_id = $1
+        AND section_name = $2
+        AND exam_id = $3
+        AND is_submitted = false
+      `, [studentSchoolId, inputSection, examId]);
+
+    if (isStarted.rows.length === 1) {
+      return res.status(200).json({ message: 'Already Allowed. Proceed to exam', exam: result.rows[0] });
+    } else { //if starting for the first time, we insert user data
+      await db.query(
+      `INSERT INTO student_scores (student_school_id, exam_id, section_name, student_name) 
+      VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING`, //conflict= If multiple requestslike 'enter', it might insert into the db again
+      [studentSchoolId, examId, inputSection, studentName]);
+    }
 
     const existingSession = await db.query(`
       SELECT * FROM exam_sessions
@@ -127,17 +172,24 @@ export const startExam = async(req, res) => {
     `, [examId, studentSchoolId]);
 
     if (existingSession.rows.length > 0) {
-      return res.status(200).json({ message: 'Exam already in progress' });
+      console.log("🔎 Found existing session:", existingSession.rows[0]);
+      return res.status(200).json({ message: 'Exam already in progress', session: existingSession.rows[0] 
+      });
     }
 
-    if (existingSession.rows.length === 0) {
-      await db.query(`
+    //if no session found -- create one
+    const newSession = await db.query(`
       INSERT INTO exam_sessions (exam_id, student_school_id, status, started_at)
       VALUES ($1, $2, $3, $4)
-      RETURNING *`, 
-      [examId, studentSchoolId, 'in-progress', currentTimeUTC]);
-    }
-    
+      RETURNING *
+    `, [examId, studentSchoolId, 'in-progress', currentTimeUTC]);
+    //console.log("🆕 New session created:", newSession.rows[0]);
+
+    res.status(201).json({ 
+      message: 'Exam session started', 
+      session: newSession.rows[0] 
+    });
+
     res.status(201).json({ message: 'Exam started'});
   } catch (error) {
     console.error('Error starting exam', error);
@@ -148,8 +200,9 @@ export const startExam = async(req, res) => {
 
 //ALL QUESTION TYPE
 export const answerSubmission = async(req, res) => {
+  const { examId } = req.params;
   const studentSchoolId = req.user.schoolId;
-  const { questionId, studentAnswer, examId } = req.body;
+  const { questionId, studentAnswer } = req.body;
       //no req.params because we get the info if they are validated/verified examinee
 
   try {
@@ -164,33 +217,47 @@ export const answerSubmission = async(req, res) => {
     }
 // ======= // ======= // ======= // ======= //
 
-    const correctAnswerFromDB = await db.query(
-      `SELECT correct_answer FROM questions 
-       WHERE exam_id = $1 AND question_id = $2`, 
-       [examId, questionId]
+    const questionRow = await db.query(
+      `SELECT question_type, correct_answer 
+       FROM questions 
+       WHERE exam_id = $1 AND question_id = $2`,
+      [examId, questionId]
     );
-    const correctAnswer = correctAnswerFromDB.rows[0]?.correct_answer;
 
-    const questionTypeFromDB = await db.query(`SELECT question_type FROM questions WHERE exam_id = $1 AND question_id = $2`, [examId, questionId]);
-    const questionType = questionTypeFromDB.rows[0]?.question_type;
-
+    const questionType = questionRow.rows[0]?.question_type;
+    const correctAnswer = questionRow.rows[0]?.correct_answer;
     const isCorrect = correctAnswer && correctAnswer.trim().toLowerCase() === studentAnswer.trim().toLowerCase(); //1 or 0
 
-    const didAnswer = await db.query(`
-      SELECT student_answer 
-      FROM student_answers
-      WHERE exam_id = $1
-        AND question_id = $2`, [examId, questionId])
+    const didAnswer = await db.query(
+        `SELECT 1 FROM student_answers
+         WHERE exam_id = $1 AND question_id = $2 AND student_school_id = $3`,
+        [examId, questionId, studentSchoolId]
+    );
 
     if (didAnswer.rows.length != 0) {
       return res.status(400).json({ error: 'Question already answered' });
     }
 
     if (questionType === 'essay') {
-      const result = await db.query(`INSERT INTO essay_answers 
-      (question_id, student_school_id, student_answer) VALUES ($1, $2, $3) RETURNING *`, [questionId, studentSchoolId, studentAnswer]);
+      const session = await db.query(
+        `SELECT session_id FROM exam_sessions
+        WHERE exam_id = $1 AND student_school_id = $2`,
+        [examId, studentSchoolId]
+      );
 
-       res.status(201).json(result.rows[0]);
+      if (session.rows.length === 0) {
+        return res.status(400).json({ error: "No active exam session found" });
+      }
+      const sessionId = session.rows[0].session_id;
+
+      //insert essay ans linked to session
+      const result = await db.query(
+        `INSERT INTO essay_answers (session_id, question_id, student_school_id, student_answer)
+        VALUES ($1, $2, $3, $4) RETURNING *`,
+        [sessionId, questionId, studentSchoolId, studentAnswer]
+      );
+
+      res.status(201).json(result.rows[0]);
     } else {
       const result = await db.query(`INSERT INTO student_answers (exam_id, question_id, student_school_id, student_answer, is_correct) VALUES ($1, $2, $3,$4, $5) RETURNING *`,[examId, questionId, studentSchoolId, studentAnswer, isCorrect]);
 
@@ -200,7 +267,7 @@ export const answerSubmission = async(req, res) => {
     }
   } catch (error) {
     console.error('Error saving exam entry:', error);
-    res.status(500).json({ error: 'Failed to save answers' });
+    res.status(500).json({ error: error.message || 'Failed to save answers' });
   }
 }
 
@@ -308,7 +375,7 @@ export const getInfoPerExam = async(req, res) => {
     const result = await db.query(`
       SELECT
         e.exam_id, e.title,
-        u.full_name AS teacher_name,
+        (u.first_name || ' ' || u.last_name) AS teacher_name_db,
         s.section_name, s.submitted_at, s.total_score
       FROM student_scores s
       JOIN examinations e ON s.exam_id = e.exam_id
@@ -445,7 +512,10 @@ export const submitAllAnswers = async(req, res) => {
       SET status = 'submitted'
       WHERE exam_id = $1 AND student_school_id = $2`, 
       [examId, studentId]);
+
+    return res.status(200).json({ message: "Exam submitted successfully" });
   } catch (error) {
-    
+    console.error("Error submitting exam:", error);
+    return res.status(500).json({ error: "Failed to submit exam" });
   }
 }
