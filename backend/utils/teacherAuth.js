@@ -26,7 +26,10 @@ teacherAuthRoutes.post ('/register/email-otp', async(req, res) => { //email inpu
     const otp = await generateOTP(email, "register"); //wait for redis to store this
     await sendUserEmail({ email, token: otp, context: "register" }); //nodemailer
 
-    res.status(201).json({ message: "OTP sent to email."});
+    res.status(201).json({ 
+      message: "OTP sent to email.",
+      isItSent: true,
+    });
   } catch (error) {
     console.error('Error Verifying Email', error);
     res.status(500).json({ error: 'Failed to verify email' });

@@ -20,15 +20,19 @@ function RegisterTeacher() {
     college: ""
   });
 
-
   const [isVerified, setIsVerified] = useState(false);
   const [code, setCode] = useState(""); //otp
+  const [sentOTP, setSentOTP] = useState(false);
   const username = formRegister.username;
 
   const handleSendOtp = async () => {
     try {
       const res = await axios.post("http://localhost:3000/api/teacher/register/email-otp", { username: username });
       alert(res.data.message);
+
+      if (res.data.isItSent) { //from backend res.json.. if message is sent
+        setSentOTP(true);
+      }
     } catch (err) {
       console.log(err.response?.data);
       alert("Failed to send OTP");
@@ -77,30 +81,50 @@ function RegisterTeacher() {
   return (
     <>
     {!isVerified ? (
-      <>
-        <InputField 
-          label="School Id"
-          name="username"
-          value={formRegister.username} 
-          onChange={handleChange}
-          placeholder="Enter student id" 
-          disabled={isVerified}
-        />
-        <Button onClick={handleSendOtp} label='Send OTP' disabled={isVerified}/>
-
-        <InputField 
-          name="code" //otp
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          placeholder="Enter OTP"
-          disabled={isVerified}
-        />
-        <Button onClick={handleVerifyOtp} label='Verify' disabled={isVerified}/>
-      </>
+        !sentOTP ? (
+          <div className='page-s-registration'>
+            <div className="container" id="otp-code-container">
+              <h1>OTP Verification</h1>
+              <button type="button" className='back-button'> ← </button>
+              <div className="form-group">
+                <InputField 
+                  label="School Id"
+                  name="username"
+                  value={formRegister.username} 
+                  onChange={handleChange}
+                  placeholder="Enter school id" 
+                  disabled={isVerified}
+                />
+              </div>
+            <Button onClick={handleSendOtp} label='Send OTP' disabled={isVerified}/>
+          </div>
+        </div>
+        ) : (
+          <div className='page-s-registration'>
+            <div className='container' id='otp-code-container'>
+              <button type="button" className='back-button'> ← </button>
+              <div className="form-group">
+                <InputField 
+                  label="OTP Code"
+                  name="code" //otp
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                  placeholder="Enter OTP"
+                  disabled={isVerified}
+                />
+              </div>
+              <p className="resend-link">
+                <a href="#" id="resend-otp">Didn't get a code? Resend</a>
+              </p>
+            <Button onClick={handleVerifyOtp} label='Verify' disabled={isVerified}/>
+            </div>
+          </div>
+        )
     ) : (
-      <>
-        <form onSubmit={handleSubmit}>
-          <h2> Registration Form </h2>
+      <div className='page-s-registration'>
+        <div className="container" id="registration-container" >
+        <h1> Registration Form </h1>
+        <form id="registration-form" onSubmit={handleSubmit}>
           <InputField 
             label="Email"
             name="email"
@@ -122,20 +146,24 @@ function RegisterTeacher() {
             onChange={handleChange}
             placeholder="Re-type your password"
           /> 
-          <InputField 
-            label="First Name"
-            name="firstName"
-            value={formRegister.firstName}
-            onChange={handleChange}
-            placeholder="Enter your first name"
-          /> 
-          <InputField 
-            label="Last Name"
-            name="lastName"
-            value={formRegister.lastName}
-            onChange={handleChange}
-            placeholder="Enter your last name"
-          />
+
+          <div class="name-group">
+            <InputField 
+              label="First Name"
+              name="firstName"
+              value={formRegister.firstName}
+              onChange={handleChange}
+              placeholder="Enter your first name"
+            /> 
+            <InputField 
+              label="Last Name"
+              name="lastName"
+              value={formRegister.lastName}
+              onChange={handleChange}
+              placeholder="Enter your last name"
+            />
+          </div>
+
           <InputField 
             label="School ID"
             name="schoolId"
@@ -143,6 +171,20 @@ function RegisterTeacher() {
             onChange={handleChange}
             placeholder="Enter your school ID"
           /> 
+
+          <div className='form-group'>
+            <RadioButtonGender
+              label="Gender"
+              name="userGender"
+              value={formRegister.userGender}
+              onChange={handleChange}
+              options={[
+                { label: "Male", value: "Male" },
+                { label: "Female", value: "Female" },
+                { label: "Other", value: "Other" }
+              ]}
+            />
+          </div>
           <SelectField
             label="College Department"
             name="college"
@@ -156,25 +198,12 @@ function RegisterTeacher() {
               { label: "GA", value: "GA" }
             ]}
           />
-          <RadioButtonGender
-            label="Gender"
-            name="userGender"
-            value={formRegister.userGender}
-            onChange={handleChange}
-            options={[
-              { label: "Male", value: "Male" },
-              { label: "Female", value: "Female" },
-              { label: "Other", value: "Other" }
-            ]}
-          />
+          
           <Button type="submit" label='Submit Registration idk'/>
         </form>
-      </>
+        </div>
+      </div>
     )}
-    
-
-    
-    
     </>
   );
 }
