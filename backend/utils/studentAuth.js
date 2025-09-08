@@ -27,9 +27,9 @@ studentAuthRoutes.post ('/register/email-otp', async(req, res) => { //email inpu
     //check school_id if used or not
     const checkSchoolId = await db.query (`SELECT * FROM users WHERE school_id = $1`, [schoolId]);
 
-    if (checkEmail.rows.length > 0) return res.status(200).json({message: 'Email is already used. Proceed to Log-In'})
+    if (checkEmail.rows.length > 0) return res.status(400).json({message: 'Email is already used. Proceed to Log-In'})
 
-    if (checkSchoolId.rows.length > 0) return res.status(200).json({message: 'School ID already used.'})
+    if (checkSchoolId.rows.length > 0) return res.status(400).json({message: 'School ID already used.'})
 
     //generate OTP and send email
     const otp = await generateOTP(email, "register"); //wait for redis to store this

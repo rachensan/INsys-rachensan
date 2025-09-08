@@ -74,10 +74,11 @@ CREATE TABLE questions (
         question_id INT REFERENCES questions(question_id) ON DELETE CASCADE,
         student_school_id BIGINT REFERENCES users(school_id) ON DELETE CASCADE,
         student_answer TEXT,
-        is_correct BOOLEAN,
-        CONSTRAINT student_answers_session_id_fkey
-        FOREIGN KEY (session_id) REFERENCES exam_sessions(session_id) ON DELETE CASCADE, CONSTRAINT student_answers_question_id_fkey
-        FOREIGN KEY (question_id) REFERENCES questions(question_id) ON DELETE CASCADE
+        is_correct BOOLEAN
+        -- CONSTRAINT student_answers_session_id_fkey
+        -- FOREIGN KEY (session_id) REFERENCES exam_sessions(session_id) ON DELETE CASCADE, 
+        -- CONSTRAINT student_answers_question_id_fkey
+        -- FOREIGN KEY (question_id) REFERENCES questions(question_id) ON DELETE CASCADE
       );
 
   -- 4.2 ESSAY_ANSWERS TABLE 
@@ -87,10 +88,11 @@ CREATE TABLE questions (
         question_id INT REFERENCES questions(question_id) ON DELETE CASCADE,
         student_school_id BIGINT REFERENCES users(school_id) ON DELETE CASCADE,
         student_answer TEXT,
-        essay_score INT DEFAULT 0,
-        CONSTRAINT essay_answers_session_id_fkey
-        FOREIGN KEY (session_id) REFERENCES exam_sessions(session_id) ON DELETE CASCADE, CONSTRAINT essay_answers_question_id_fkey
-        FOREIGN KEY (question_id) REFERENCES questions(question_id) ON DELETE CASCADE
+        essay_score INT DEFAULT 0
+        -- CONSTRAINT essay_answers_session_id_fkey
+        -- FOREIGN KEY (session_id) REFERENCES exam_sessions(session_id) ON DELETE CASCADE, 
+        -- CONSTRAINT essay_answers_question_id_fkey
+        -- FOREIGN KEY (question_id) REFERENCES questions(question_id) ON DELETE CASCADE
       );
 
   -- 4.3 STUDENT_SCORES TABLE
@@ -98,7 +100,11 @@ CREATE TABLE questions (
         score_id SERIAL PRIMARY KEY,
         session_id INT REFERENCES exam_sessions(session_id) ON DELETE CASCADE,
         exam_id INT REFERENCES examinations(exam_id) ON DELETE CASCADE,
-        student_school_id BIGINT, CONSTRAINT student_scores_student_school_id_fkey FOREIGN KEY (student_school_id) REFERENCES users(school_id) ON DELETE CASCADE,
+        student_school_id BIGINT, 
+
+        CONSTRAINT student_scores_student_school_id_fkey 
+        FOREIGN KEY (student_school_id) REFERENCES users(school_id) ON DELETE CASCADE,
+         
         student_name TEXT NOT NULL,
         total_score INT DEFAULT 0,
         objective_score INT DEFAULT 0,

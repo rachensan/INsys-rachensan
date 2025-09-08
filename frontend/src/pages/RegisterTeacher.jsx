@@ -53,9 +53,13 @@ function RegisterTeacher() {
   
     axios.post("http://localhost:3000/api/teacher/register/user-info", formRegister)
       .then(res => {
-        console.log(res.data.message);
-        alert(res.data.message);
-        navigate("/login");
+        if (res.status === 201) {
+          console.log(res.data.message);
+          alert(res.data.message);
+          navigate("/login");
+        } else {
+          alert(res.data.message); //show error, no navigate
+        }
       })
       .catch(err => {
         console.log(err.response?.data);
