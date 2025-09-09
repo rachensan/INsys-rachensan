@@ -191,7 +191,7 @@ function SelectedSection({ setSelectedSectionName }) {
           }}
           options={courseOptions}
           disabled={!selectedCourse || !isEditing}
-        />
+        /> <br/>
         <SelectField
           name="year"
           value={selectedYear}

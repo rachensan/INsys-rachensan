@@ -60,13 +60,14 @@ export default function CheckboxDropdown({
           }}
         >
           {options.map(opt => (
-            <label
+            <label 
               key={opt.value}
               style={{
                 display: "flex",
                 alignItems: "center",
                 padding: "4px 8px",
                 cursor: "pointer",
+                color: "#000"
               }}
             >
               <input
