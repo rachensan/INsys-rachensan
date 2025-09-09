@@ -9,7 +9,7 @@ const teacherAuthRoutes = express.Router();
 const saltRounds = 5;
 
 teacherAuthRoutes.post ('/register/email-otp', async(req, res) => { //email input
-  const { username } = req.body;
+  const { username, schoolId } = req.body;
   const email = `${username}@pampangastateu.edu.ph`;
 
   if (!username) return res.status(400).json({ message: 'Missing username' });
@@ -19,8 +19,11 @@ teacherAuthRoutes.post ('/register/email-otp', async(req, res) => { //email inpu
   try {
     //check email if used or not
     const checkEmail = await db.query (`SELECT * FROM users WHERE email = $1`, [email]);
+    //check school_id if used or not
+    const checkSchoolId = await db.query (`SELECT * FROM users WHERE school_id = $1`, [schoolId]);
 
-    if (checkEmail.rows.length > 0) return res.status(200).json({message: 'Email is already used. Proceed to Log-In'})
+    if (checkEmail.rows.length > 0) return res.status(400).json({message: 'Email is already used. Proceed to Log-In'})
+    if (checkSchoolId.rows.length > 0) return res.status(400).json({message: 'School ID already used.'})
 
     //generate OTP and send email
     const otp = await generateOTP(email, "register"); //wait for redis to store this
@@ -66,21 +69,21 @@ teacherAuthRoutes.post ('/register/user-info', async(req, res) => { //complete i
   if (!username) return res.status(400).json({ message: 'Missing username' });
   if (!schoolId) return res.status(400).json({ message: 'Missing school ID' });
 
-//check school_id if used or not
-  const checkSchoolId = await db.query (`SELECT * FROM users WHERE school_id = $1`, [schoolId]);
-  if (checkSchoolId.rows.length > 0) return res.status(200).json({message: 'School ID already used.'})
-
-  //check email if used or not
-  const checkEmail = await db.query (`SELECT * FROM users WHERE email = $1`, [email]);
-
-  if (checkEmail.rows.length > 0) return res.status(200).json({message: 'Email is already used. Proceed to Log-In'})
-
-  const verified = await redisClient.get(`verifiedEmail:${email}`);
-  if (!verified) {
-    return res.status(403).json({ message: "Email not verified" });
-  }
-
   try {
+    //check school_id if used or not
+    const checkSchoolId = await db.query (`SELECT * FROM users WHERE school_id = $1`, [schoolId]);
+    if (checkSchoolId.rows.length > 0) return res.status(400).json({message: 'School ID already used.'})
+
+    //check email if used or not
+    const checkEmail = await db.query (`SELECT * FROM users WHERE email = $1`, [email]);
+
+    if (checkEmail.rows.length > 0) return res.status(400).json({message: 'Email is already used. Proceed to Log-In'})
+
+    const verified = await redisClient.get(`verifiedEmail:${email}`);
+    if (!verified) {
+      return res.status(403).json({ message: "Email not verified. Try refreshing the page" });
+    }
+
     //password hashing uwu
     const hash = await bcrypt.hash(password, saltRounds) ;
 
@@ -93,7 +96,7 @@ teacherAuthRoutes.post ('/register/user-info', async(req, res) => { //complete i
     `, [email, hash, firstName, lastName, schoolId, userGender, college, 'teacher']); //changed password to hash (hashed password)
 
     await redisClient.del(`verifiedEmail:${email}`);//delete temporary user info
-    return res.status(200).json({ message: 'User registered successfully' });
+    return res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
     console.error('Error Registering', error);
     res.status(500).json({ error: 'Failed to register' });

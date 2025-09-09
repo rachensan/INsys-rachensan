@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'axios'; //did not use axiosConfig here so use the full url
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom'
 
@@ -61,12 +61,13 @@ function RegisterTeacher() {
           console.log(res.data.message);
           alert(res.data.message);
           navigate("/login");
-        } else {
+        } else { 
           alert(res.data.message); //show error, no navigate
         }
       })
       .catch(err => {
         console.log(err.response?.data);
+        alert(err.response?.data?.message || "Something went wrong");
       });
   }
 
@@ -88,7 +89,7 @@ function RegisterTeacher() {
               <button type="button" className='back-button'> ← </button>
               <div className="form-group">
                 <InputField 
-                  label="School Id"
+                  label="Username"
                   name="username"
                   value={formRegister.username} 
                   onChange={handleChange}

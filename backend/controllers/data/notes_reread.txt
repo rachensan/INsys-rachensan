@@ -48,7 +48,9 @@ section_takers depends on examinations
 
 questions depends on examinations
 
+dalawa env mo bui:
 
+backend:
 # Server
 PORT=3000
 
@@ -68,5 +70,6 @@ JWT_ACCESS_EXPIRES_IN=15m   # example: 15 minutes
 NDM_USER=gunshogun333@gmail.com
 NDM_PASSWORD=tndrpuojgthtbttb
 
+frontend:
 # Frontend (Vite)
-VITE_API_BASE_URL=http://localhost:5000/api
+VITE_API_BASE_URL=http://localhost:3000/api

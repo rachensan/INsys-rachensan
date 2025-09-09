@@ -8,7 +8,7 @@ export const generateAccessToken = (userPayload) => {
       role: userPayload.role
     }, 
     process.env.JWT_ACCESS_SECRET,
-    { expiresIn: process.env.JWT_ACCESS_EXPIRES_IN }
+    { expiresIn: process.env.JWT_ACCESS_EXPIRES_IN || "15m" }
   );
 };
 
@@ -21,7 +21,7 @@ export const generateRefreshToken = (userPayload) => {
       fullName: userPayload.fullName
     },
     process.env.JWT_REFRESH_SECRET, 
-    { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN });
+    { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || "7d" });
 }
 
 export const verifyToken = (token, secret) => {

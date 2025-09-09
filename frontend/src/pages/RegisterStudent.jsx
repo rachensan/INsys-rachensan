@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'axios'; //did not use axiosConfig here so use the full url
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom'
 import InputField from "../components/InputFields.jsx"
@@ -24,7 +24,7 @@ function RegisterStudent() {
   const username = formRegister.username;
 
   const handleSendOtp = async () => {
-    try { // did not use axiosConfig here so it's the full url
+    try { //did not use axiosConfig here so it's the full url
       const res = await axios.post("http://localhost:3000/api/student/register/email-otp", { username: username });
       alert(res.data.message);
 

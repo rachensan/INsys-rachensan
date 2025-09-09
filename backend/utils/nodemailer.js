@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
-dotenv.config({ path: '../../.env', quiet: true });
+dotenv.config({ path: '../.env', quiet: true });
 
 
 // Create a test account or replace with real credentials.
