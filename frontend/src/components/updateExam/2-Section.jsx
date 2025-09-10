@@ -95,19 +95,30 @@ function SelectedSection({ setSelectedSectionName }) {
   }, [accessToken, examId, selectedCourse]);
   
   //Once both GET are loaded, set selected values
+  // useEffect(() => {
+  //   console.log("dbSections:", dbSections);
+
+  //   if (dbSections.length > 0) {
+  //     setSelectedSections(dbSections.map(s => ({ id: s.section_id })));
+  //   }
+
+  //   if (sectionData.length > 0 && dbSections[0]?.course_code) {
+  //     setSelectedCourse(dbSections[0].course_code);
+  //     setSelectedYear(dbSections[0].year_number);
+  //   }
+
+  // }, [sectionData, dbSections]);
+
+  const [initialized, setInitialized] = useState(false);
   useEffect(() => {
-    console.log("dbSections:", dbSections);
-
-    if (dbSections.length > 0) {
+    if (!initialized && dbSections.length > 0) { //if !initialized {copies values from DB into your state}
+      //run only once: load defaults from DB into state, then stop overwriting user changes (doing onChange in select course)
       setSelectedSections(dbSections.map(s => ({ id: s.section_id })));
-    }
-
-    if (sectionData.length > 0 && dbSections[0]?.course_code) {
       setSelectedCourse(dbSections[0].course_code);
       setSelectedYear(dbSections[0].year_number);
+      setInitialized(true);
     }
-
-  }, [sectionData, dbSections]);
+  }, [dbSections, initialized]);
 
   const courseOptions = [...new Set(sectionData.map(d => d.course_code))]
     .map(c => ({ label: c, value: c }));
@@ -185,7 +196,7 @@ function SelectedSection({ setSelectedSectionName }) {
           name="course"
           value={selectedCourse}
           onChange={(e) => {
-            setSelectedCourse(e.target.value);
+            setSelectedCourse(e.target.value)
             setSelectedYear("");
             setSelectedSections([]);
           }}
@@ -226,10 +237,6 @@ function SelectedSection({ setSelectedSectionName }) {
           </p>
         ))}
       </div>
-
-
-
-
     </div>
   );
 }
