@@ -110,6 +110,7 @@ CREATE TABLE questions (
         objective_score INT DEFAULT 0,
         essay_score INT DEFAULT 0,
         section_name TEXT,
+        is_submitted BOOLEAN DEFAULT FALSE,
         submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         UNIQUE (exam_id, student_school_id) --  prevent duplicate scores per student per exam
       );
