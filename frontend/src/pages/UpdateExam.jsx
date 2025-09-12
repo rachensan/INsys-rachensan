@@ -1,6 +1,6 @@
 import axios from '../utils/axiosConfig.js';
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from '../context/AuthContext.jsx';
 
 import SelectField from '../components/SelectFields.jsx';
@@ -15,6 +15,7 @@ import ScheduledTakers from '../components/updateExam/2-Schedule.jsx';
 function UpdateExam() {
   const { accessToken } = useAuth();
   const { examId } = useParams();
+  const navigate = useNavigate();
 
   const [questionForms, setQuestionForms] = useState([]);
   const [selectedSectionName, setSelectedSectionName] = useState([]);
@@ -77,6 +78,7 @@ function UpdateExam() {
     try { 
       await axios.patch(`/exams/${examId}/status`, {status: 'published'}, config);
       console.log("Exam published!");
+      navigate('/teacher-dashboard');
     } catch (err) {
       console.error("Failed to publish exam:", err);
     }

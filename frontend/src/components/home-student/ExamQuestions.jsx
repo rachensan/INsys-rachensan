@@ -161,7 +161,7 @@ function ExamQuestions() {
       };
 
 //  questionId (nasa backend na), studentSchoolId, studentAnswer, examId  //
-      await axios.post(`/student-answers/submit`, {
+      await axios.post(`/student-answers/${examId}/submit`, {
         examId,
         questionId: currentQuestion.question_id,
         studentAnswer: selectedAnswer
