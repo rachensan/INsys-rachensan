@@ -9,7 +9,30 @@ import InputField from "../InputFields"
 import SelectField from "../SelectFields";
 import Button from "../Buttons"
 
-export const FinishExamInfo = ({ examTitle, examAutomatedScore }) => {
+export const FinishExamInfo = ({ examTitle, examAutomatedScore }) => { 
+  const navigate = useNavigate();
+  const { accessToken } = useAuth();
+  
+  const { examId } = useParams(); 
+
+  const submitToTrue = async() => {
+    try {
+      const config = {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        withCredentials: true
+      };
+
+      await axios.post(`/student/exams/${examId}/submit`, { examId }, config);
+    } catch (error) {
+      console.log(
+        error.response?.data?.error ||
+        error.response?.data ||
+        error.message
+      );
+      alert(error.response?.data?.error || "Failed to submit = true");
+    }
+
+  }
   return (
     <>
       <div>
@@ -17,10 +40,14 @@ export const FinishExamInfo = ({ examTitle, examAutomatedScore }) => {
         <p>{examAutomatedScore}</p>
         <Button 
           label={'Done'}
-          onClick={() => navigate('/student-entry')} 
+          onClick={async() => {
+            await submitToTrue();
+            navigate('/student-entry')
+          }} 
         />
       </div>
     </>
 
   )
 }
+ 

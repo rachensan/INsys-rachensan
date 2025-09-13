@@ -138,13 +138,11 @@ export const startExam = async(req, res) => {
     const isSubmitted = await db.query(`
       SELECT * FROM student_scores
       WHERE student_school_id = $1
-        AND section_name = $2
-        AND exam_id = $3
+        AND exam_id = $2
         AND is_submitted = true`
-    , [studentSchoolId, inputSection, examId]);
+    , [studentSchoolId, examId]);
 
-    if (isSubmitted.rows[0]?.is_submitted) return res.status(400).json({ error: 'Already submitted' });
-
+    if (isSubmitted.rows[0]?.is_submitted) return res.status(400).json({ error: 'Exam submitted. Can only take once.' });
 
     //will check if you already answered some questions.. idk if i did the per question yet
     const isStarted = await db.query(`
@@ -213,7 +211,7 @@ export const answerSubmission = async(req, res) => {
     [examId, studentSchoolId]);
 
     if (isSubmitted.rows[0]?.is_submitted) {
-      return res.status(400).json({ error: 'Already submitted' });
+      return res.status(400).json({ error: 'Exam already submitted' });
     }
 // ======= // ======= // ======= // ======= //
 
@@ -477,7 +475,6 @@ export const autoSubmitAllAnswers = async (req, res) => {
       return res.status(400).json({ error: 'Already submitted' });
     }
 
-    
     await db.query(
       `UPDATE student_scores
        SET is_submitted = true
@@ -498,6 +495,7 @@ export const autoSubmitAllAnswers = async (req, res) => {
   }
 };
 
+//manual submission, after done answering.
 export const submitAllAnswers = async(req, res) => {
   const studentId = req.user.schoolId;
   const { examId } = req.params;
