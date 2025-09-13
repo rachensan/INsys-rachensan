@@ -105,6 +105,7 @@ function ExamQuestions() {
 
   const [ selectedAnswer, setSelectedAnswer ] = useState('');
   const [examInfo, setExamInfo] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -144,17 +145,18 @@ function ExamQuestions() {
 
   if (!examQuestions.length) return <p>Loading questions...</p>;
 
-  const optionsArrayMCQ = [
-    examQuestions[current].option_a,
-    examQuestions[current].option_b,
-    examQuestions[current].option_c,
-    examQuestions[current].option_d,
-  ];
+  //nasa render logic to: return(...)
+  // const optionsArrayMCQ = [
+  //   examQuestions[current].option_a,
+  //   examQuestions[current].option_b,
+  //   examQuestions[current].option_c,
+  //   examQuestions[current].option_d,
+  // ];
 
-  const optionsArrayTF = [
-    examQuestions[current].option_a,
-    examQuestions[current].option_b
-  ];
+  // const optionsArrayTF = [
+  //   examQuestions[current].option_a,
+  //   examQuestions[current].option_b
+  // ];
 
   const handleStudentAnswer = async() => { //adds blank form just for displaying empty form UI 
     const currentQuestion = examQuestions[current];
@@ -175,19 +177,15 @@ function ExamQuestions() {
       console.log("student answer saved to DB... save student_answers table");
       //clear answer for next question
       setSelectedAnswer('');
-
-      //go to next question
-      if (current < examQuestions.length - 1) {
-        setCurrent((prev) => prev + 1);
-      }
     } catch (error) {
       alert(error.response?.data?.error || "Failed to save answer");
     }
   }
 
-  return (
+  const q = examQuestions.length > 0 ? examQuestions[current] : null;  //will use in return(...) for shortcut
+return (
     <>
-    {examInfo ? (
+    {submitted ? (
       <div>
         <FinishExamInfo 
           examTitle={examInfo.title}
@@ -198,63 +196,76 @@ function ExamQuestions() {
             //if no question remains (anu hah):(navigate to exam score/details page)
       <div>
         <h2>Question {current + 1}</h2> 
-        {
-          (() => {
-            //console.log(optionsArray)
-            //console.log(selectedAnswer)
-            //(()=>{})() → we will call the function right away,,, das why we have () at the end
-            switch (examQuestions[current].question_type) { //question-type here
-              case "multiplechoice":
-                return (
-                  <MultiChoiceComp 
-                    mcqText={examQuestions[current].question_text}
-                    mcqOptions={optionsArrayMCQ}
-                    name={`q${current}`} 
-                    value={selectedAnswer}
-                    onChange={(e) => setSelectedAnswer(e.target.value)}
-                  />
-                )
-              case "identification":
-                return (
-                  <IdentificationComp
-                    idenText={examQuestions[current].question_text}
-                    name={`q${current}`} 
-                    value={selectedAnswer}
-                    onChange={(e) => setSelectedAnswer(e.target.value)}
-                    placeholder="... "
-                    divClassName="antok-ka-na-ba"
-                  />
-                )
+        {!submitted && q && (
+          <>
+            {/* console.log(optionsArray) */}
+            {/* console.log(selectedAnswer) */}
+          
+            {(() => {
+              const optionsArrayMCQ = [
+                q.option_a,
+                q.option_b,
+                q.option_c,
+                q.option_d,
+              ];
 
-              case "essay":
-                return (
-                  <EssayComp
-                    essayText={examQuestions[current].question_text}
-                    name={`q${current}`} 
-                    value={'edit this answer container, bruh'}//save to db and clear the last selectedAnswer
-                    onChange={(e) => setSelectedAnswer(e.target.value)}
-                    placeholder="... "
-                    divClassName="antok-ka-na-ba"
-                  />
-                )
-              case "truefalse":
-                return (
-                  <TrueFalseComp 
-                    tfText={examQuestions[current].question_text}
-                    tfOptions={optionsArrayTF}
-                    name={`q${current}`} 
-                    value={selectedAnswer}
-                    onChange={(e) => setSelectedAnswer(e.target.value)}
-                  />
-                )
-              default: 
-                return null;
-            }
-          }) ()
-        }
-        
+              const optionsArrayTF = [
+                q.option_a,
+                q.option_b,
+              ];
+
+              switch (q.question_type) { //question-type here
+                case "multiplechoice":
+                  return (
+                    <MultiChoiceComp 
+                      mcqText={q.question_text}
+                      mcqOptions={optionsArrayMCQ}
+                      name={`q${current}`} 
+                      value={selectedAnswer}
+                      onChange={(e) => setSelectedAnswer(e.target.value)}
+                    />
+                  )
+                case "identification":
+                  return (
+                    <IdentificationComp
+                      idenText={q.question_text}
+                      name={`q${current}`} 
+                      value={selectedAnswer}
+                      onChange={(e) => setSelectedAnswer(e.target.value)}
+                      placeholder="... "
+                      divClassName="antok-ka-na-ba"
+                    />
+                  )
+                case "essay":
+                  return (
+                    <EssayComp
+                      essayText={q.question_text}
+                      name={`q${current}`} 
+                      value={'edit this answer container, bruh'} //save to db and clear the last selectedAnswer
+                      onChange={(e) => setSelectedAnswer(e.target.value)}
+                      placeholder="... "
+                      divClassName="antok-ka-na-ba"
+                    />
+                  )
+                case "truefalse":
+                  return (
+                    <TrueFalseComp 
+                      tfText={q.question_text}
+                      tfOptions={optionsArrayTF}
+                      name={`q${current}`} 
+                      value={selectedAnswer}
+                      onChange={(e) => setSelectedAnswer(e.target.value)}
+                    />
+                  )
+                default: 
+                  return null;
+              }
+            })()}
+          </>
+        )}
         <div>
-          <p>  {examQuestions[current].question_text} </p>
+          {/*q might be null if examQuestions empty*/}
+          <p>{q ? q.question_text : ""}</p> 
           <br/><br/><br/>
                   {/* <button
                     disabled={current === 0}
@@ -263,14 +274,15 @@ function ExamQuestions() {
                     Previous
                   </button> */}
           <Button 
-            label={current === examQuestions.length - 1? "Submit Exam" : "NEXT question bij"}
+            label={current === examQuestions.length - 1 ? "Submit Exam" : "NEXT question bij"}
             onClick={async() => {
               await handleStudentAnswer();
 
               if (current === examQuestions.length - 1) { 
                 //(array minus 1) is the last object
                 //fetch exam info -> triggers showing FinishExamInfo
-                fetchExamInfo(); //submit
+                await fetchExamInfo();
+                setSubmitted(true);
               } else {
                 setCurrent(prev => prev + 1); //push state past last question
               }
