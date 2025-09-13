@@ -97,6 +97,7 @@ const TrueFalseComp = ({tfText, tfOptions, name, divClassName, onChange, value})
 
 function ExamQuestions() {
   const { accessToken } = useAuth();
+  const navigate = useNavigate();
 
   const { examId } = useParams(); //not params.,, dapat galing sa code
   const [ examQuestions, setExamQuestions ] = useState([]);
@@ -130,8 +131,12 @@ function ExamQuestions() {
     try {
       const res = await axios.get(`/student/exams/${examId}/info`, config);
       setExamInfo(res.data);
-      navigate('/student-entry');
     } catch (error) {
+      console.log(
+        error.response?.data?.error ||
+        error.response?.data ||
+        error.message
+      );
       alert(error.response?.data?.error || "Something went wrong in getting fetchExamInfo");
     }
   }
@@ -182,7 +187,14 @@ function ExamQuestions() {
 
   return (
     <>
-    {current < examQuestions.length ? ( 
+    {examInfo ? (
+      <div>
+        <FinishExamInfo 
+          examTitle={examInfo.title}
+          examAutomatedScore={examInfo.total_score}
+        />
+      </div>
+    ): ( 
             //if no question remains (anu hah):(navigate to exam score/details page)
       <div>
         <h2>Question {current + 1}</h2> 
@@ -252,22 +264,19 @@ function ExamQuestions() {
                   </button> */}
           <Button 
             label={current === examQuestions.length - 1? "Submit Exam" : "NEXT question bij"}
-            onClick={() => {
-              handleStudentAnswer();
+            onClick={async() => {
+              await handleStudentAnswer();
 
-              if (current === examQuestions.length - 1) { //array minus 1 is the last object
-                fetchExamInfo(); // submit + navigate
+              if (current === examQuestions.length - 1) { 
+                //(array minus 1) is the last object
+                //fetch exam info -> triggers showing FinishExamInfo
+                fetchExamInfo(); //submit
+              } else {
+                setCurrent(prev => prev + 1); //push state past last question
               }
             }}  
           />
         </div>
-      </div>
-    ) : (
-      <div>
-        <FinishExamInfo 
-          examTitle={examInfo.title}
-          examAutomatedScore={examInfo.total_score}
-        />
       </div>
     )}
     

@@ -365,8 +365,8 @@ export const manualEssayScoring = async(req, res) => {
       return totalEssayScore;
     }
 
-
-//this is for one exam info 
+//Purpose: Fetch details of one specific exam for the logged-in student. example: exam details after exam ends
+//Response: Single exam object (title, teacher, section, submitted_at, total_score).
 export const getInfoPerExam = async(req, res) => {
   const studentId = req.user.schoolId;
   const { examId } = req.params;
@@ -395,6 +395,8 @@ export const getInfoPerExam = async(req, res) => {
   }
 }
 
+//Purpose: Fetch all exam records/history of a given student. 
+// Response: List/array of exam objects, ordered by submitted_at DESC (latest first).
 export const getStudentExamHistory = async(req, res) => {
   const { studentId } = req.params;
 
