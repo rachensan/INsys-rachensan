@@ -41,7 +41,7 @@ function MultipleChoice({ questionId, questionText, options, correctAnswer, poin
 
   return (
     <>
-    <div className='multiplechoiceDiv'>
+    <div className='nested_container'>
       <Button label={isEditing ? "Save" : "Edit"} onClick={handleClick} />
       <br/>
       <InputField className="points" 

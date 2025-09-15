@@ -58,7 +58,7 @@ export const EditableQuestionForm = ({ data, onSave, onDelete, defaultEditing = 
   ];
 
   return (
-    <div className="editable-question">
+    <div className="question-container-whole">
       <SelectField
         label="Question Type"
         name="questionType"
@@ -66,7 +66,7 @@ export const EditableQuestionForm = ({ data, onSave, onDelete, defaultEditing = 
         onChange={handleTypeChange}
         options={questionTypes}
       />
-      <button className="delete-ques-btn" onClick={() => onDelete(data.question_id)}>Delete</button>
+      <button className="delete-question-button" onClick={() => onDelete(data.question_id)}>Delete</button>
 
 
       {type === 'identification' && <Identification {...commonProps} />}
@@ -89,11 +89,9 @@ export const EditableQuestionForm = ({ data, onSave, onDelete, defaultEditing = 
 
 export const QuestionAdd = ({ onClick }) => {
   return (
-    <div className="addQuesDiv" >
-      <button className='question1-btn' onClick={onClick}>
-        Add Question
-      </button>
-    </div>
+    <button className="add-question-button" onClick={onClick}>
+      <i class="fa-solid fa-plus"></i> Add Question
+    </button>
   );
 }
 

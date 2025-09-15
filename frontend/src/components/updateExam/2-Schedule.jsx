@@ -16,21 +16,22 @@ const TimePickerComponent = ({ value, onChange }) => {
         onChange={onChange}
         disableClock={true}
         clearIcon={null}
+        class="time_picker"
       />
     </div>
   );
 };
 
 
-function ScheduledTakers() {
+function ScheduledTakers({ setStartDateTime, setEndDateTime }) { //nasa UpdateExam yuing dalawang to, so i can get it out here
   const [startDate, setStartDate] = useState("");
   const [startTime, setStartTime] = useState("06:45");
   const [durationHours, setDurationHours] = useState(1);
   const [durationMinutes, setDurationMinutes] = useState(0);
 
   //LocaleString display-friendly version
-  const [startDateTime, setStartDateTime] = useState("");
-  const [endDateTime, setEndDateTime] = useState("");
+  // const [startDateTime, setStartDateTime] = useState("");
+  // const [endDateTime, setEndDateTime] = useState("");
     //toLocaleString() === 8/12/2025, 9:15:00 AM
 
   //ISO format for DB
@@ -121,63 +122,50 @@ function ScheduledTakers() {
   };
 
   return (
-    <div style={{ fontFamily: "sans-serif" }}>
-      <button onClick={handleSave}>Save Schedule</button>
-{/* ========================= DATE ========================= */}  
-      <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
-        <div>
-          <label>Start Date:</label>
-          <input
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            style={{ width: "140px" }}
-          />
+    <>
+        {/* ========================= DURATION ========================= */}
+        <div className="duration-container">
+          <label className="select-label">Set Duration / Time and Date</label>
+          <div>
+            <input
+              type="number"
+              min="0"
+              value={durationHours}
+              onChange={(e) => setDurationHours(e.target.value)}
+              style={{ width: "50px" }}
+            />
+            <span>h</span>
+            <input
+              type="number"
+              min="0"
+              max="59"
+              value={durationMinutes}
+              onChange={(e) => setDurationMinutes(e.target.value)}
+              style={{ width: "50px" }}
+            />
+            <span>m</span>
+          </div>
+          <button className="save-duration-button" onClick={handleSave}>Save Schedule</button>
         </div>
-{/* ========================= TIME-PICKER COMPONENT ========================= */}        
-        <div>
-          <label>Start Time:</label>
+        {/* ======= TIME-PICKER COMPONENT ======= */}        
+        <div className="time-container">
+          <label className="time-label">Set Time:</label>
           <TimePickerComponent
             value={startTime}
             onChange={setStartTime}
             label="Start Time"
           />
         </div>
-      </div>
-{/* ========================= DURATION ========================= */}
-      <div style={{ marginBottom: "10px" }}>
-        <label>Duration:</label>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: "5px" }}>
+        {/* ==== DATE ==== */}  
+        <div className="date-container">
+          <label className="date-label">Set Date:</label>
           <input
-            type="number"
-            min="0"
-            value={durationHours}
-            onChange={(e) => setDurationHours(e.target.value)}
-            style={{ width: "50px" }}
+            type="date"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
           />
-          <span>h</span>
-          <input
-            type="number"
-            min="0"
-            max="59"
-            value={durationMinutes}
-            onChange={(e) => setDurationMinutes(e.target.value)}
-            style={{ width: "50px" }}
-          />
-          <span>m</span>
         </div>
-      </div>
-{/* ========================= START AND END TIME DISPLAY ========================= */}
-      <div className="scheduled-takers-div">
-        <div>
-          Start Date/Time: {startDateTime || "—"}
-        </div>
-        <div>
-          End Date/Time: {endDateTime || "—"}
-        </div>
-      </div>
-      
-    </div>
+    </>
   );
 }
 

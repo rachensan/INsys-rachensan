@@ -185,13 +185,11 @@ function SelectedSection({ setSelectedSectionName }) {
   
 
   return (
-    <div className="section-div">
-      <div className="section-choosing-div">
-        <Button
-          label={isEditing ? "Save" : "Edit"}
-          disabled={!selectedCourse || !selectedYear || selectedSections.length === 0}
-          onClick={handleSaveSections}
-        />        
+    <>
+      <label className="select-label">Select</label>
+      
+      {/* <!-- FIRST CONTAINER --> */}
+      <div className="dropdown-group">
         <SelectField
           name="course"
           value={selectedCourse}
@@ -225,9 +223,20 @@ function SelectedSection({ setSelectedSectionName }) {
           disabled={!selectedYear || !isEditing}
         />
       </div>
-      
-      <div className="selected-section-div">
-        Selected:
+
+      <div>
+        <Button
+          className="save-section-button"
+          label={isEditing ? "Save" : "Edit"}
+          disabled={!selectedCourse || !selectedYear || selectedSections.length === 0}
+          onClick={handleSaveSections}
+        />    
+      </div>
+        
+        
+      {/* <!-- SECOND CONTAINER --> */}
+      <div className="second-container">
+        <label class="select-label">Selected Section</label>
         {dbSections.map((s) => (
           <p 
             key={s.section_id}
@@ -237,7 +246,7 @@ function SelectedSection({ setSelectedSectionName }) {
           </p>
         ))}
       </div>
-    </div>
+    </>
   );
 }
 

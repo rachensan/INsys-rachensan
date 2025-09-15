@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 
 import SelectField from '../components/SelectFields.jsx';
 import Button from '../components/Buttons.jsx';
+import InputField from '../components/InputFields.jsx';
 
 //updateExam folder
 import SelectedSection from '../components/updateExam/2-Section.jsx';
@@ -19,6 +20,9 @@ function UpdateExam() {
 
   const [questionForms, setQuestionForms] = useState([]);
   const [selectedSectionName, setSelectedSectionName] = useState([]);
+
+  const [startDateTime, setStartDateTime] = useState(null);
+  const [endDateTime, setEndDateTime] = useState(null);
 
   const [examInfo, setExamInfo] = useState(null); //title, code, stats, sched, sect
   const [examQues, setExamQues] = useState(null); //questions
@@ -139,64 +143,96 @@ function UpdateExam() {
     }
   }
 
+
   return (
     <>
-      <div>
-        <div>
-          <div>
-            <label>Title: </label>
-            <input className="title-input"
-              type="text"
+      <div className="ancestor">
+
+        {/*<!-- 1 HEADER -->*/}
+        <div className="header">
+          <div className="left-group">
+            <Button className="back-button" label="<" onClick={() => navigate(-1)} />
+            <InputField 
+              className="exam-title"
               name="title"
+              type="text"
               value={examInfo.title}
               onChange={(e) => {
                 setExamInfo({ ...examInfo, [e.target.name]: e.target.value });
               }}
-              placeholder="...Exam Title"
+              placeholder="Enter Title Exam"
             />
-            <Button label="Save" onClick={handleSaveExamInfo} />
+            <Button className="header-save-button" label="Save" onClick={handleSaveExamInfo} />
+            <p className="exam-code" placeholder="Exam Code">{examInfo.exam_code}</p>
+            <Button className="randomize-button" label="Randomize"/>
           </div>
-
-          <p>Code: {examInfo.exam_code}</p>
           <p>Status: {examInfo.status}</p>
-          <Button label="Publish" onClick={handlePublish} />
+          <Button className="publish-button" label="Publish" onClick={handlePublish} />
         </div>
+        
 
-        <p>Sections: </p>
-        <div>
-          <SelectedSection setSelectedSectionName={setSelectedSectionName}/>
-        </div>
+        {/*<!-- 2 MAIN || questions and tools-->*/}
+        <div className="main-content">
+          {/*<!-- 2.1 questions -->*/}
+          <div className="question-container">
+            {examQues.map((q) => (
+              <EditableQuestionForm
+                key={q.question_id}
+                data={q}
+                onSave={handleSaveQuestion}
+                onDelete={handleDeleteQuestion}
+              />
+            ))}
+            {/* Adding of question FORM */}
+            {questionForms.map((form) => (
+              <AddQuestionForm
+                key={form.id}
+                formId={form.id}
+                exam={examQues}
+                setExam={setExamQues}
+                onSave={handleSaveQuestion}
+              />
+            ))}
+            <QuestionAdd onClick={handleQuestionAdd} />
+            </div>
 
-        <div>
-          <ScheduledTakers selectedSectionName={selectedSectionName}/>
+              {/*<!-- 2.2 tools -->*/}
+            <div className="tools-container">
+              <label className="tool-label">Tools</label>
+              {/*<!-- 1 CONTAINER -->*/}
+              <div className="select-container">
+                <SelectedSection setSelectedSectionName={setSelectedSectionName}/>
+              </div>
+              {/*<!-- 2 CONTAINER -->*/}
+              <div class="second-container">
+                <label class="select-label">Selected Section</label>
+              </div>
+              {/*<!-- 3 CONTAINER -->*/}
+              <div className="set-time-container">
+                <ScheduledTakers 
+                  selectedSectionName={selectedSectionName}
+                  setStartDateTime={setStartDateTime}
+                  setEndDateTime={setEndDateTime}
+                />
+              </div>
+              {/*<!-- 4 CONTAINER -->*/}
+              <div className="display-date-container">
+                <label className="select-label">Selected Time</label>
+                <div className="date-time-group">
+                  Start Date/Time: {startDateTime || "—"}
+                  End Date/Time: {endDateTime || "—"}
+                </div>
+              </div>
+          </div>
         </div>
+          
+
+
+        
+
+
+      
       </div>
-      
-
-      {examQues.map((q) => (
-        <EditableQuestionForm
-          key={q.question_id}
-          data={q}
-          onSave={handleSaveQuestion}
-          onDelete={handleDeleteQuestion}
-        />
-      ))}
-
-
-    {/*   Adding of question FORM  */}
-
-      {questionForms.map((form) => (
-        <AddQuestionForm
-          key={form.id}
-          formId={form.id}
-          exam={examQues}
-          setExam={setExamQues}
-          onSave={handleSaveQuestion}
-        />
-      )
-      )}
-      
-      <QuestionAdd onClick={handleQuestionAdd} />
     </>
   );
 }

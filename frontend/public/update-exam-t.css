@@ -141,11 +141,12 @@ input {
 
 .ancestor {
   position: fixed;
+  padding: 10px;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: #f0f0f0;
+  background-color: #ff0000;
   display: flex;
   flex-direction: column; /* Stack header on top */
 }
@@ -193,6 +194,9 @@ input {
 
 /* Main Content Container */
 .main-content {
+  padding: 20px;
+  border: 4px solid rgb(20, 238, 0);
+  background-color: #464646;
   display: flex;
   flex-direction: row; /* Question and tools containers side by side */
   width: 100%;
@@ -382,7 +386,8 @@ input {
 .tools-container {
   width: 30%;
   height: 100%; /* Full height of main_content */
-  background-color: #EDF1FA;
+  border: 4px solid rgb(20, 238, 0);
+  background-color: #b7c6e9;
   display: flex;
   flex-direction: column;
   padding: 20px;

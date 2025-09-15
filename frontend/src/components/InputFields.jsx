@@ -26,6 +26,7 @@ export default InputField;
 
 /*
   <InputField 
+    className="ewan-ko"
     label="OTP"
     name="code"
     value={code} <-- must be string or number
