@@ -3,7 +3,7 @@ import React from "react";
 function InputField ({ label, type="text", name, value, onChange, placeholder, id, className, disabled=false }) {
   return (
     <>   
-      <label>{label}</label>
+      {/* <label>{label}</label> */}
       <input 
         required //works only in form submissions
         id={id || name}
@@ -24,7 +24,6 @@ export default InputField;
 /*
   <InputField 
     className="ewan-ko"
-    label="OTP"
     name="code"
     value={code} <-- must be string or number
     onChange={(e) => setCode(e.target.value)}

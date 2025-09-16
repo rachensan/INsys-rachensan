@@ -34,11 +34,11 @@ function TrueFalse({ questionId, questionText, options, correctAnswer, points, o
 
   return (
     <>
-    <div className='truefalseDiv'>
+    <div className="tf-container">
       <Button label={isEditing ? "Save" : "Edit" } onClick={handleClick} />
       <br/>
-      <InputField className="points" 
-        label="Points"
+      <label>Points</label>
+      <InputField className="points"
         type="number"
         name="points"
         value={editPoints}
@@ -47,8 +47,8 @@ function TrueFalse({ questionId, questionText, options, correctAnswer, points, o
         disabled={!isEditing}
       />
       <div>
+        <label>Question:</label>
         <InputField className="question-text"
-          label="Question:"
           name="questionText"
           value={editQuestion}
           onChange={(e) => setEditQuestion(e.target.value)}

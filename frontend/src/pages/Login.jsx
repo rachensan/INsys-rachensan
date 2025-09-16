@@ -76,8 +76,8 @@ function Login() {
         <div id="login-container-inner">
           <form onSubmit={handleSubmit}>
             <div className="email-group">
+              <label>Email</label>
               <InputField 
-                label="Email"
                 name="email"
                 id="email"
                 type="email"
@@ -87,8 +87,8 @@ function Login() {
               />
             </div>
             <div className="password-group">
+              <label>Password</label>
               <InputField 
-              label="Password"
               name="password"
               id="password"
               type="password"

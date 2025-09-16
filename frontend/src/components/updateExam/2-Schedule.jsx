@@ -145,7 +145,7 @@ function ScheduledTakers({ setStartDateTime, setEndDateTime }) { //nasa UpdateEx
             />
             <span>m</span>
           </div>
-          <button className="save-duration-button" onClick={handleSave}>Save Schedule</button>
+          <button className="save-duration-button" onClick={handleSave}>Save S</button>
         </div>
         {/* ======= TIME-PICKER COMPONENT ======= */}        
         <div className="time-container">

@@ -88,8 +88,8 @@ function RegisterTeacher() {
               <h1>OTP Verification</h1>
               <button type="button" className='back-button'> ← </button>
               <div className="form-group">
+                <label>Username</label>
                 <InputField 
-                  label="Username"
                   name="username"
                   value={formRegister.username} 
                   onChange={handleChange}
@@ -105,8 +105,8 @@ function RegisterTeacher() {
             <div className='container' id='otp-code-container'>
               <button type="button" className='back-button'> ← </button>
               <div className="form-group">
+                <label>OTP Code</label>
                 <InputField 
-                  label="OTP Code"
                   name="code" //otp
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
@@ -126,22 +126,22 @@ function RegisterTeacher() {
         <div className="container" id="registration-container" >
         <h1> Registration Form </h1>
         <form id="registration-form" onSubmit={handleSubmit}>
+          <label>Email</label>
           <InputField 
-            label="Email"
             name="email"
             value={`${formRegister.username}@pampangastateu.edu.ph`}
             placeholder="Enter your first name"
             disabled={true}
           /> 
+          <label>Password</label>
           <InputField 
-            label="Password"
             name="password"
             value={formRegister.password}
             onChange={handleChange}
             placeholder="Enter your password"
           /> 
+          <label>Re-type Password</label>
           <InputField 
-            label="Re-type Password"
             name="retypePassword"
             value={formRegister.retypePassword}
             onChange={handleChange}
@@ -149,15 +149,15 @@ function RegisterTeacher() {
           /> 
 
           <div class="name-group">
+            <label>First Name</label>
             <InputField 
-              label="First Name"
               name="firstName"
               value={formRegister.firstName}
               onChange={handleChange}
               placeholder="Enter your first name"
             /> 
+            <label>Last Name</label>
             <InputField 
-              label="Last Name"
               name="lastName"
               value={formRegister.lastName}
               onChange={handleChange}
@@ -165,8 +165,8 @@ function RegisterTeacher() {
             />
           </div>
 
+          <label>School ID</label>
           <InputField 
-            label="School ID"
             name="schoolId"
             value={formRegister.schoolId}
             onChange={handleChange}

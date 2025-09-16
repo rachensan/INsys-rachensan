@@ -68,16 +68,16 @@ function ForgotPassword() {
       {/*{!isVerified ? ( */}
         <>
         <p> Forgot Password </p>
+        <label>Email</label>
         <InputField 
-          label="Email"
           name="email"
           value={form.email} 
           onChange={handleChange}
           placeholder="Enter student id"
         />
         <Button label="Send OTP" onClick={handleSendOtp} />
+        <label>OTP</label>
         <InputField 
-          label="OTP"
           name="code"
           value={code} 
           onChange={(e) => setCode(e.target.value)}
@@ -87,15 +87,15 @@ function ForgotPassword() {
         </>
       {/* ) : ( */}
         <>
+        <label>password</label>
         <InputField 
-          label="password"
           name="password"
           value={form.password} 
           onChange={(e) => setForm({ ...form, password: e.target.value })}
           placeholder="Password"
         />
+        <label>re-type password</label>
         <InputField 
-          label="re-type password"
           name="retypePassword"
           value={form.retypePassword} 
           onChange={(e) => setForm({ ...form, retypePassword: e.target.value })}

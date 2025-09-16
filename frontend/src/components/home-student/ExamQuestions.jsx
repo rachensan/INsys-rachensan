@@ -44,7 +44,6 @@ const IdentificationComp = ({idenText, name, divClassName, placeholder, onChange
             value={value || ""} //must be string or number
             onChange={onChange}
             placeholder={placeholder}
-            divClassName={divClassName}
           />
         </div>
       </div>
@@ -65,7 +64,6 @@ const EssayComp = ({essayText, name, divClassName, placeholder, onChange, value}
             value={value || ""} //must be string or number
             onChange={onChange}
             placeholder={placeholder}
-            divClassName={divClassName}
           />
         </div>
       </div>

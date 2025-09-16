@@ -41,11 +41,12 @@ function MultipleChoice({ questionId, questionText, options, correctAnswer, poin
 
   return (
     <>
-    <div className='nested_container'>
+    <div className="nested-container">
+
       <Button label={isEditing ? "Save" : "Edit"} onClick={handleClick} />
       <br/>
-      <InputField className="points" 
-        label="Points"
+      {/* <label>Points</label> */}
+      <InputField className="walapa" 
         type="number"
         name="points"
         value={editPoints}
@@ -53,49 +54,46 @@ function MultipleChoice({ questionId, questionText, options, correctAnswer, poin
         onChange={(e) => setEditPoints(Math.max(1, parseInt(e.target.value) || 1))}
         disabled={!isEditing}
       />
-      
-      <div>
-        <InputField className="question-text"
-          label="Question"
+        
+        <textarea className="exambox"
           name="questionText"
           value={editQuestion}
           onChange={(e) => setEditQuestion(e.target.value)}
           placeholder="Type the question here"
           disabled={!isEditing}
         />
-      </div>
 
 {/* INPUTING WRONG CHOICES/OPTIONS*/}
-      <div>
-        {choices.map((choice, index) => (
-          <InputField
-            key={index}
-            className="choices-text"
-            label={`${String.fromCharCode(65 + index)}:`}
-            name={`option${index}`}
-            value={choice}
-            onChange={(e) => {
-              const updated = [...choices];
-              updated[index] = e.target.value;
-              setChoices(updated);
-            }}
-            placeholder={`Option ${index + 1}`}
-            disabled={!isEditing}
-          />
-        ))}
-      </div>
-      
-{/* INPUTING THE ACTUAL RIGHT ANSWER*/}
-      <div>
-        <InputField className="answer-text" 
-          label="Correct Answer"
+        <label className="choices-label">Choices:</label>
+        <div className="option-inputs"> {/* only options here */}
+          {choices.map((choice, index) => (
+            <>
+            <InputField
+              key={index}
+              className="option-input"
+              name={`option${index}`}
+              value={choice}
+              onChange={(e) => {
+                const updated = [...choices];
+                updated[index] = e.target.value;
+                setChoices(updated);
+              }}
+              placeholder={`Option ${index + 1}`}
+              disabled={!isEditing}
+            />
+            </>
+            
+          ))}
+        </div>
+        <label className="correct-answer-label">Correct Answer:</label>
+        {/* INPUTING THE ACTUAL RIGHT ANSWER*/}
+        <InputField className="correct-answer-input"
           name="correctAnswer"
           value={editAnswer}
           onChange={(e) => setEditAnswer(e.target.value)}
-          placeholder="Type the correct answer"
+          placeholder="Set Correct Answer"
           disabled={!isEditing}
         />
-      </div>
     </div>
       
     </>

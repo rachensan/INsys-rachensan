@@ -173,8 +173,10 @@ function UpdateExam() {
 
         {/*<!-- 2 MAIN || questions and tools-->*/}
         <div className="main-content">
+
           {/*<!-- 2.1 questions -->*/}
           <div className="question-container">
+            <label class="question-label">Question</label>
             {examQues.map((q) => (
               <EditableQuestionForm
                 key={q.question_id}
@@ -193,45 +195,42 @@ function UpdateExam() {
                 onSave={handleSaveQuestion}
               />
             ))}
+            
             <QuestionAdd onClick={handleQuestionAdd} />
-            </div>
-
-              {/*<!-- 2.2 tools -->*/}
-            <div className="tools-container">
-              <label className="tool-label">Tools</label>
-              {/*<!-- 1 CONTAINER -->*/}
-              <div className="select-container">
-                <SelectedSection setSelectedSectionName={setSelectedSectionName}/>
-              </div>
-              {/*<!-- 2 CONTAINER -->*/}
-              <div class="second-container">
-                <label class="select-label">Selected Section</label>
-              </div>
-              {/*<!-- 3 CONTAINER -->*/}
-              <div className="set-time-container">
-                <ScheduledTakers 
-                  selectedSectionName={selectedSectionName}
-                  setStartDateTime={setStartDateTime}
-                  setEndDateTime={setEndDateTime}
-                />
-              </div>
-              {/*<!-- 4 CONTAINER -->*/}
-              <div className="display-date-container">
-                <label className="select-label">Selected Time</label>
-                <div className="date-time-group">
-                  Start Date/Time: {startDateTime || "—"}
-                  End Date/Time: {endDateTime || "—"}
-                </div>
-              </div>
           </div>
-        </div>
+
+          {/*<!-- 2.2 tools -->*/}
+          <div className="tools-container">
+            <label className="tool-label">Tools</label>
+            {/*<!-- 1 CONTAINER -->*/}
+            <div className="select-container">
+              <SelectedSection setSelectedSectionName={setSelectedSectionName}/>
+            </div>
+            {/*<!-- 2 CONTAINER -->*/}
+            <div class="second-container">
+              <label class="select-label">Selected Section</label>
+              <p>{selectedSectionName}</p>
+            </div>
+            {/*<!-- 3 CONTAINER -->*/}
+            <div className="set-time-container">
+              <ScheduledTakers 
+                selectedSectionName={selectedSectionName}
+                setStartDateTime={setStartDateTime}
+                setEndDateTime={setEndDateTime}
+              />
+            </div>
+            {/*<!-- 4 CONTAINER -->*/}
+            <div className="display-date-container">
+              <label className="select-label">Selected Time</label>
+              <div className="date-time-group">
+                Start Date/Time: {startDateTime || "—"} <br/>
+                End Date/Time: {endDateTime || "—"}
+              </div>
+            </div>
+          </div> {/* tool content */}
+        </div> {/* main content */}
           
 
-
-        
-
-
-      
       </div>
     </>
   );

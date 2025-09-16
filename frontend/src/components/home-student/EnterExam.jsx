@@ -55,15 +55,15 @@ function EnterExam() {
     <>
     {!isVerified ? (
       <>
-      <InputField 
-        label="Code: "
+      <label>"Code: "</label>
+      <InputField
         name="code"
         value={inputExamCode} 
         onChange={(e) => setInputExamCode(e.target.value)}
         placeholder="Enter exam code"
       />
+      <label>"Section: "</label>
       <InputField 
-        label="Section: "
         name="section"
         value={inputExamSection} 
         onChange={(e) => setInputExamSection(e.target.value)}

@@ -1,6 +1,6 @@
 import React from "react";
 
-function RadioButtonOptions({ label, name, value, onChange, options, divClassName = "form-group"
+function RadioButtonOptions({ label, name, value, onChange, options, divClassName = ""
 }) {
   return (
     <div className={divClassName}>

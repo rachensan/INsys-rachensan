@@ -38,6 +38,14 @@ footer p {
 }
 
 */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
 /*LOGIN*/
 .page-login {
     background-color: rgb(71, 51, 88);

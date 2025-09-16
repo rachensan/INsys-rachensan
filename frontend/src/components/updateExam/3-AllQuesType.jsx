@@ -58,22 +58,24 @@ export const EditableQuestionForm = ({ data, onSave, onDelete, defaultEditing = 
   ];
 
   return (
-    <div className="question-container-whole">
+    <>
+      <label class="question-type-label">Question Type:</label>
       <SelectField
-        label="Question Type"
+        className="question-type-dropdown"
         name="questionType"
         value={type}
         onChange={handleTypeChange}
         options={questionTypes}
       />
-      <button className="delete-question-button" onClick={() => onDelete(data.question_id)}>Delete</button>
-
-
+      <div class="button-group">
+        <button className="delete-question-button" onClick={() => onDelete(data.question_id)}>Delete</button>
+      </div>
+      
       {type === 'identification' && <Identification {...commonProps} />}
       {type === 'multiplechoice' && <MultipleChoice {...commonProps} options={optionsArray} />}
       {type === 'truefalse' && <TrueFalse {...commonProps} />}
       {type === 'essay' && <Essay {...commonProps} />}
-    </div>
+    </>
   );
 }
 
@@ -147,7 +149,7 @@ function AddQuestionForm({ exam, onSave, formId, defaultEditing = false  }) { //
 
 
   return (
-    <div className="question1Div">
+    <>
       <SelectField
         label="Question Type"
         name="questionType"
@@ -161,11 +163,23 @@ function AddQuestionForm({ exam, onSave, formId, defaultEditing = false  }) { //
         ]}
       />
 
-      {selectedType === "identification" && <Identification {...commonProps} />}
-      {selectedType === "multiplechoice" && <MultipleChoice {...commonProps} />}
-      {selectedType === "truefalse" && <TrueFalse {...commonProps} />}
+      {selectedType === "identification" && (
+        <>
+          <Identification {...commonProps} />
+        </>
+        )}
+      {selectedType === "multiplechoice" && (
+        <>
+        <MultipleChoice {...commonProps} />
+        </>        
+      )}
+      {selectedType === "truefalse" && (
+        <>
+        <TrueFalse {...commonProps}/>
+        </>
+      )}
       {selectedType === "essay" && <Essay {...commonProps} />}
-    </div>
+    </>
   );
 }
 

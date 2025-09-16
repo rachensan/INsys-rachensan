@@ -1,6 +1,6 @@
 import React from "react";
 
-function RadioButtonGender({ label, name, value, onChange, options, divClassName = "form-group"
+function RadioButtonGender({ label, name, value, onChange, options, divClassName = ""
 }) {
   return (
     <div className={divClassName}>

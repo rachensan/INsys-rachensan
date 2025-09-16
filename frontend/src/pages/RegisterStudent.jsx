@@ -82,8 +82,8 @@ function RegisterStudent() {
               <h1>OTP Verification</h1>
               <button type="button" className='back-button'> ← </button>
               <div className="form-group">
+                <label>School Id</label>
                 <InputField 
-                  label="School Id"
                   name="username"
                   id="school-id"
                   value={formRegister.username} 
@@ -100,8 +100,8 @@ function RegisterStudent() {
             <div className='container' id='otp-code-container'>
               <button type="button" className='back-button'> ← </button>
               <div className="form-group">
-                <InputField 
-                  label="OTP Code"
+                <label>OTP Code</label>
+                <InputField
                   name="code" //otp
                   id="otp-code"
                   value={code}
@@ -122,8 +122,8 @@ function RegisterStudent() {
           <div className="container" id="registration-container" >
           <h1> Registration Form </h1>
           <form id="registration-form" onSubmit={handleSubmit}>  
+            <label>Email</label>
             <InputField 
-              label="Email"
               name="email"
               id="email"
               type="email"
@@ -131,8 +131,8 @@ function RegisterStudent() {
               placeholder="Enter Student ID"
               disabled={true}
             /> 
+            <label>Password</label>
             <InputField 
-              label="Password"
               name="password"
               id="password" 
               type="password"
@@ -140,8 +140,8 @@ function RegisterStudent() {
               onChange={handleChange}
               placeholder="Enter your password"
             /> 
+            <label>Re-type Password</label>
             <InputField 
-              label="Re-type Password"
               name="retypePassword"
               id="retype-password"
               value={formRegister.retypePassword}
@@ -150,16 +150,16 @@ function RegisterStudent() {
             /> 
 
             <div class="name-group">
+              <label>First Name</label>
               <InputField 
-                label="First Name"
                 name="firstName"
                 id="first-name" 
                 value={formRegister.firstName}
                 onChange={handleChange}
                 placeholder="Enter your first name"
               /> 
+              <label>Last Name</label>
               <InputField 
-                label="Last Name"
                 name="lastName"
                 id="last-name" 
                 value={formRegister.lastName}
