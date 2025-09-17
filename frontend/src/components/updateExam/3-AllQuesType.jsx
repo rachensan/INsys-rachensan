@@ -150,8 +150,9 @@ function AddQuestionForm({ exam, onSave, formId, defaultEditing = false  }) { //
 
   return (
     <>
+      <label class="question-type-label">Question Type:</label>
       <SelectField
-        label="Question Type"
+        className="question-type-dropdown"
         name="questionType"
         value={selectedType}
         onChange={handleQuesTypeChange}
@@ -178,7 +179,11 @@ function AddQuestionForm({ exam, onSave, formId, defaultEditing = false  }) { //
         <TrueFalse {...commonProps}/>
         </>
       )}
-      {selectedType === "essay" && <Essay {...commonProps} />}
+      {selectedType === "essay" && (
+        <>
+          <Essay {...commonProps} />
+        </>
+        )}
     </>
   );
 }
