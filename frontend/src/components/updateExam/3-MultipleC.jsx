@@ -42,10 +42,7 @@ function MultipleChoice({ questionId, questionText, options, correctAnswer, poin
   return (
     <>
     <div className="nested-container">
-
-      <Button label={isEditing ? "Save" : "Edit"} onClick={handleClick} />
-      <br/>
-      {/* <label>Points</label> */}
+      <Button className="save-button" label={isEditing ? "Save" : "Edit"} onClick={handleClick} />
       <InputField className="points" 
         type="number"
         name="points"
@@ -54,7 +51,6 @@ function MultipleChoice({ questionId, questionText, options, correctAnswer, poin
         onChange={(e) => setEditPoints(Math.max(1, parseInt(e.target.value) || 1))}
         disabled={!isEditing}
       />
-        
       <textarea className="exambox"
         name="questionText"
         value={editQuestion}
@@ -62,8 +58,7 @@ function MultipleChoice({ questionId, questionText, options, correctAnswer, poin
         placeholder="Type the question here"
         disabled={!isEditing}
       />
-
-{/* INPUTING WRONG CHOICES/OPTIONS*/}
+      {/* INPUTING WRONG CHOICES/OPTIONS*/}
       <label className="choices-label">Choices:</label>
       <div className="option-inputs"> {/* only options here */}
         {choices.map((choice, index) => (
@@ -82,7 +77,6 @@ function MultipleChoice({ questionId, questionText, options, correctAnswer, poin
             disabled={!isEditing}
           />
           </>
-          
         ))}
       </div>
       <label className="correct-answer-label">Correct Answer:</label>

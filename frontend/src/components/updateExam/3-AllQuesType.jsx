@@ -71,10 +71,26 @@ export const EditableQuestionForm = ({ data, onSave, onDelete, defaultEditing = 
         <button className="delete-question-button" onClick={() => onDelete(data.question_id)}>Delete</button>
       </div>
       
-      {type === 'identification' && <Identification {...commonProps} />}
-      {type === 'multiplechoice' && <MultipleChoice {...commonProps} options={optionsArray} />}
-      {type === 'truefalse' && <TrueFalse {...commonProps} />}
-      {type === 'essay' && <Essay {...commonProps} />}
+      {type === "identification" && (
+        <>
+          <Identification {...commonProps} />
+        </>
+        )}
+      {type === "multiplechoice" && (
+        <>
+        <MultipleChoice {...commonProps} />
+        </>        
+      )}
+      {type === "truefalse" && (
+        <>
+        <TrueFalse {...commonProps}/>
+        </>
+      )}
+      {type === "essay" && (
+        <>
+          <Essay {...commonProps} />
+        </>
+      )}
     </>
   );
 }
@@ -183,7 +199,7 @@ function AddQuestionForm({ exam, onSave, formId, defaultEditing = false  }) { //
         <>
           <Essay {...commonProps} />
         </>
-        )}
+      )}
     </>
   );
 }

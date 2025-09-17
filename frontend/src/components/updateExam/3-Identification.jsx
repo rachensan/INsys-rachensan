@@ -35,7 +35,6 @@ function Identification({ questionId, questionText, correctAnswer, points, onSav
     <>
     <div className="identification-container">
       <Button label={isEditing ? "Save" : "Edit"} onClick={handleClick} />
-      <label>Points</label>
       <InputField className="points"
         type="number"
         name="points"
@@ -44,23 +43,23 @@ function Identification({ questionId, questionText, correctAnswer, points, onSav
         onChange={(e) => setEditPoints(Math.max(1, parseInt(e.target.value) || 1))}
         disabled={!isEditing}
       />
-      <label>Question</label>
-      <InputField className="question-text"
+      <textarea className="exambox"
         name="questionText"
         value={editQuestion}
         onChange={(e) => setEditQuestion(e.target.value)}
+        placeholder="Type the question here"
         disabled={!isEditing}
       />
-      <label>Correct Answer</label>
-      <InputField className="answer-text"
+      <label className="choices-label">Identification:</label> 
+      <InputField className="identification-input"
         name="correctAnswer"
         value={editAnswer}
         onChange={(e) => setEditAnswer(e.target.value)}
+        placeholder="Enter Answer"
         disabled={!isEditing}
       />
     </div>
     </>
-    
     );
 }
 

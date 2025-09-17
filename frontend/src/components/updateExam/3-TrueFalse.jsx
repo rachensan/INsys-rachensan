@@ -36,8 +36,6 @@ function TrueFalse({ questionId, questionText, options, correctAnswer, points, o
     <>
     <div className="tf-container">
       <Button label={isEditing ? "Save" : "Edit" } onClick={handleClick} />
-      <br/>
-      <label>Points</label>
       <InputField className="points"
         type="number"
         name="points"
@@ -46,30 +44,24 @@ function TrueFalse({ questionId, questionText, options, correctAnswer, points, o
         onChange={(e) => setEditPoints(Math.max(1, parseInt(e.target.value) || 1))}
         disabled={!isEditing}
       />
-      <div>
-        <label>Question:</label>
-        <InputField className="question-text"
-          name="questionText"
-          value={editQuestion}
-          onChange={(e) => setEditQuestion(e.target.value)}
-          placeholder="Type the question here"
-          disabled={!isEditing}
-        />
-      </div>
+      <textarea className="exambox"
+        name="questionText"
+        value={editQuestion}
+        onChange={(e) => setEditQuestion(e.target.value)}
+        placeholder="Type the question here"
+        disabled={!isEditing}
+      />
 
-      <div>
-
-        <label>Correct Answer:</label>
-          <select
-            name="truefalse"
-            value={editAnswer}
-            onChange={(e) => setEditAnswer(e.target.value)}
-            disabled={!isEditing} 
-          >
-            <option value="True">True</option>
-            <option value="False">False</option>
-          </select>
-      </div>
+      <label clasName="choices-label">True or False:</label>
+      <select className="tf-dropdown"
+        name="truefalse"
+        value={editAnswer}
+        onChange={(e) => setEditAnswer(e.target.value)}
+        disabled={!isEditing} 
+      >
+        <option value="True">True</option>
+        <option value="False">False</option>
+      </select>
     </div>
     </>
   )

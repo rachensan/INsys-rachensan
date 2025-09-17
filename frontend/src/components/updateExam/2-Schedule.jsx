@@ -123,48 +123,49 @@ function ScheduledTakers({ setStartDateTime, setEndDateTime }) { //nasa UpdateEx
 
   return (
     <>
-        {/* ========================= DURATION ========================= */}
-        <div className="duration-container">
-          <label className="select-label">Set Duration / Time and Date</label>
-          <div>
-            <input
-              type="number"
-              min="0"
-              value={durationHours}
-              onChange={(e) => setDurationHours(e.target.value)}
-              style={{ width: "50px" }}
-            />
-            <span>h</span>
-            <input
-              type="number"
-              min="0"
-              max="59"
-              value={durationMinutes}
-              onChange={(e) => setDurationMinutes(e.target.value)}
-              style={{ width: "50px" }}
-            />
-            <span>m</span>
-          </div>
-          <button className="save-duration-button" onClick={handleSave}>Save S</button>
-        </div>
-        {/* ======= TIME-PICKER COMPONENT ======= */}        
-        <div className="time-container">
-          <label className="time-label">Set Time:</label>
-          <TimePickerComponent
-            value={startTime}
-            onChange={setStartTime}
-            label="Start Time"
-          />
-        </div>
-        {/* ==== DATE ==== */}  
-        <div className="date-container">
-          <label className="date-label">Set Date:</label>
+      <label className="select-label">Set Duration / Time and Date</label>
+      {/* ========================= DURATION ========================= */}
+      <div className="duration-container">
+        <label className="duration-label">Duration:</label>
+        <div className="duration-inner-container">
           <input
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
+            type="number"
+            min="0"
+            value={durationHours}
+            onChange={(e) => setDurationHours(e.target.value)}
+            style={{ width: "50px" }}
           />
+          <span>h</span>
+          <input
+            type="number"
+            min="0"
+            max="59"
+            value={durationMinutes}
+            onChange={(e) => setDurationMinutes(e.target.value)}
+            style={{ width: "50px" }}
+          />
+          <span>m</span>
         </div>
+        <button className="save-duration-button" onClick={handleSave}>Save S</button>
+      </div>
+      {/* ======= TIME-PICKER COMPONENT ======= */}        
+      <div className="time-container">
+        <label className="time-label">Set Time:</label>
+        <TimePickerComponent
+          value={startTime}
+          onChange={setStartTime}
+          label="Start Time"
+        />
+      </div>
+      {/* ==== DATE ==== */}  
+      <div className="date-container">
+        <label className="date-label">Set Date:</label>
+        <input
+          type="date"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+        />
+      </div>
     </>
   );
 }

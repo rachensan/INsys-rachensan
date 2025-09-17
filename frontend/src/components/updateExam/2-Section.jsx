@@ -187,10 +187,9 @@ function SelectedSection({ setSelectedSectionName }) {
   return (
     <>
       <label className="select-label">Select</label>
-      
-      {/* <!-- FIRST CONTAINER --> */}
       <div className="dropdown-group">
         <SelectField
+          className="department-dropdown"
           name="course"
           value={selectedCourse}
           onChange={(e) => {
@@ -200,8 +199,9 @@ function SelectedSection({ setSelectedSectionName }) {
           }}
           options={courseOptions}
           disabled={!selectedCourse || !isEditing}
-        /> <br/>
+        />
         <SelectField
+          className="year-dropdown"
           name="year"
           value={selectedYear}
           onChange={(e) => {
@@ -211,27 +211,26 @@ function SelectedSection({ setSelectedSectionName }) {
           options={yearOptions}
           disabled={!selectedCourse || !isEditing}
         />
-
-        <CheckboxDropdown
-          options={sectionOptions.map((s) => ({
-            value: s.section_id,
-            label: s.section_name,
-          }))}
-          selected={selectedSections}
-          onChange={setSelectedSections}
-          placeholder="Select sections"
-          disabled={!selectedYear || !isEditing}
-        />
+        <div className="section-dropdown">
+          <CheckboxDropdown
+            options={sectionOptions.map((s) => ({
+              value: s.section_id,
+              label: s.section_name,
+            }))}
+            selected={selectedSections}
+            onChange={setSelectedSections}
+            placeholder="Select sections"
+            disabled={!selectedYear || !isEditing}
+          />
+        </div>
       </div>
 
-      <div>
-        <Button
-          className="save-section-button"
-          label={isEditing ? "Save" : "Edit"}
-          disabled={!selectedCourse || !selectedYear || selectedSections.length === 0}
-          onClick={handleSaveSections}
-        />    
-      </div>
+      <Button
+        className="save-section-button"
+        label={isEditing ? "Save" : "Edit"}
+        disabled={!selectedCourse || !selectedYear || selectedSections.length === 0}
+        onClick={handleSaveSections}
+      />    
         
         
       {/* <!-- SECOND CONTAINER --> */}

@@ -151,7 +151,7 @@ function UpdateExam() {
         {/*<!-- 1 HEADER -->*/}
         <div className="header">
           <div className="left-group">
-            <Button className="back-button" label="<" onClick={() => navigate(-1)} />
+            <Button className="back-button-exam" label="<" onClick={() => navigate(-1)} />
             <InputField 
               className="exam-title"
               name="title"
@@ -171,10 +171,9 @@ function UpdateExam() {
         </div>
         
 
-        {/*<!-- 2 MAIN || questions and tools-->*/}
+        {/*<!-- Div 2 -->*/}
         <div className="main-content">
-
-          {/*<!-- 2.1 questions -->*/}
+          {/*<!-- Div 2.1 -->*/} {/*<!-- questions -->*/}
           <div className="question-container">
             <label class="question-label">Question</label>
             {examQues.map((q) => (
@@ -206,12 +205,8 @@ function UpdateExam() {
             <div className="select-container">
               <SelectedSection setSelectedSectionName={setSelectedSectionName}/>
             </div>
+
             {/*<!-- 2 CONTAINER -->*/}
-            <div class="second-container">
-              <label class="select-label">Selected Section</label>
-              <p>{selectedSectionName}</p>
-            </div>
-            {/*<!-- 3 CONTAINER -->*/}
             <div className="set-time-container">
               <ScheduledTakers 
                 selectedSectionName={selectedSectionName}
@@ -223,8 +218,10 @@ function UpdateExam() {
             <div className="display-date-container">
               <label className="select-label">Selected Time</label>
               <div className="date-time-group">
-                Start Date/Time: {startDateTime || "—"} <br/>
-                End Date/Time: {endDateTime || "—"}
+                <label class="date-time-label">Start Date/Time: {startDateTime || "—"}
+                <br/>
+                </label>
+                <label class="date-time-label">End Date/Time: {endDateTime || "—"}</label>
               </div>
             </div>
           </div> {/* tool content */}
