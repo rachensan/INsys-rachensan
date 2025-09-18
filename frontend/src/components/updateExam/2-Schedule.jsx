@@ -132,7 +132,12 @@ function ScheduledTakers({ setStartDateTime, setEndDateTime }) { //nasa UpdateEx
             type="number"
             min="0"
             value={durationHours}
-            onChange={(e) => setDurationHours(e.target.value)}
+            onChange={(e) => {
+              let val = e.target.value;
+              // keep only numbers and max 2 digits
+              if (val.length > 2) val = val.slice(0, 2);
+              setDurationHours(Math.max(0, parseInt(val) || 0));
+            }}
             style={{ width: "50px" }}
           />
           <span>h</span>
@@ -141,7 +146,13 @@ function ScheduledTakers({ setStartDateTime, setEndDateTime }) { //nasa UpdateEx
             min="0"
             max="59"
             value={durationMinutes}
-            onChange={(e) => setDurationMinutes(e.target.value)}
+            onChange={(e) => {
+              let val = e.target.value;
+              if (val.length > 2) val = val.slice(0, 2);
+              setDurationMinutes(
+                Math.min(59, Math.max(0, parseInt(val) || 0))
+              );
+            }}
             style={{ width: "50px" }}
           />
           <span>m</span>

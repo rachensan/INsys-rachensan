@@ -230,8 +230,7 @@ function SelectedSection({ setSelectedSectionName }) {
         label={isEditing ? "Save" : "Edit"}
         disabled={!selectedCourse || !selectedYear || selectedSections.length === 0}
         onClick={handleSaveSections}
-      />    
-        
+      />   
         
       {/* <!-- SECOND CONTAINER --> */}
       <div className="second-container">

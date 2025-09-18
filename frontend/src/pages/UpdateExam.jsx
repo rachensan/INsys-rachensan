@@ -201,12 +201,12 @@ function UpdateExam() {
           {/*<!-- 2.2 tools -->*/}
           <div className="tools-container">
             <label className="tool-label">Tools</label>
-            {/*<!-- 1 CONTAINER -->*/}
+            {/*<!-- 1 -->*/}
             <div className="select-container">
               <SelectedSection setSelectedSectionName={setSelectedSectionName}/>
             </div>
 
-            {/*<!-- 2 CONTAINER -->*/}
+            {/*<!-- 2 -->*/}
             <div className="set-time-container">
               <ScheduledTakers 
                 selectedSectionName={selectedSectionName}
@@ -214,7 +214,7 @@ function UpdateExam() {
                 setEndDateTime={setEndDateTime}
               />
             </div>
-            {/*<!-- 4 CONTAINER -->*/}
+            {/*<!-- 3 -->*/}
             <div className="display-date-container">
               <label className="select-label">Selected Time</label>
               <div className="date-time-group">

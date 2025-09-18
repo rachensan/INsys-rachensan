@@ -40,22 +40,23 @@ export const EditableQuestionForm = ({ data, onSave, onDelete, defaultEditing = 
     }
   };
 
-  const commonProps = { //from DB so snake_case
-    questionId: formData.question_id,
-    questionText: formData.question_text,
-    questionType: formData.question_type,
-    correctAnswer: formData.correct_answer,
-    points: formData.points,
-    onSave: onSave,
-    defaultEditing: isEditing,
-  };
-
   const optionsArray = [
     formData.option_a,
     formData.option_b,
     formData.option_c,
     formData.option_d,
   ];
+
+  const commonProps = { //from DB so snake_case
+    questionId: formData.question_id,
+    questionText: formData.question_text,
+    questionType: formData.question_type,
+    correctAnswer: formData.correct_answer,
+    options: optionsArray,
+    points: formData.points,
+    onSave: onSave,
+    defaultEditing: isEditing,
+  };
 
   return (
     <>
