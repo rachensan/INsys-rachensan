@@ -104,22 +104,34 @@ function UpdateExam() {
     const questionId = Number.isInteger(data.questionId) ? data.questionId : null;
 
     try {
-      console.log("print questionId:", data.questionId); //will only print if we edit the existing question. undefined if it's a new  question, because questionId is from frontend, and we dont axios GET the data when we create, backend will handle the id creation.
+      console.log("print questionId:", data.questionId); 
+      //will only print if we edit the existing question. undefined if it's a new  question, 
+      //because questionId is from frontend, and we dont axios GET the data when we create, backend will handle the id creation.
 
       if (questionId) {//camelCase cuz it's from AllQuesType.jsx
         //if EXISTING --- UPDATE existing question
         await axios.patch(`/exams/${examId}/questions/${questionId}`, { ...data, exam_id: examId }, config);
-      } else {
-        //if NOT EXISTING --- POST create another question
-        await axios.post(`/questions/${examId}`, { ...data, exam_id: examId }, config);
-      }
+        
+        //update in place instead of refetching para di magulo yung sequence na showing sa frontend
+        setExamQues((prev) => {
+          const updated = [...prev];
+          const idx = updated.findIndex(q => q.question_id === questionId);
+          if (idx !== -1) {
+            updated[idx] = { ...updated[idx], ...data }; // merge changes
+            }
+            return updated;
+          });
 
-      //clear form
-      setQuestionForms([]); 
+        } else {
+          //if NOT EXISTING --- POST create another question
+          await axios.post(`/questions/${examId}`, { ...data, exam_id: examId }, config);
 
-      //refetch and update questions from DB.. best practice
-      const updatedQuestions = await axios.get(`/exams/${examId}/questions`, config);
-      setExamQues(updatedQuestions.data);
+          //refetch and update questions from DB.. best practice
+          const updatedQuestions = await axios.get(`/exams/${examId}/questions`, config);
+          setExamQues(updatedQuestions.data);
+        }
+        //clear add form
+        setQuestionForms([]);
     } catch (err) {
       console.error("Failed to create question:", err);
     }

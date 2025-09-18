@@ -88,9 +88,7 @@ function MultipleChoice({ questionId, questionText, options, correctAnswer, poin
         disabled={!isEditing}
       />
     </div>
-      
     </>
-    
   )
 }
 export default MultipleChoice;

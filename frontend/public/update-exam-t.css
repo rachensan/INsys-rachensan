@@ -480,6 +480,15 @@
   margin-top: 10px;
 }
 
+/* Edge + Chrome */
+input[type="number"].points::-webkit-inner-spin-button,
+input[type="number"].points::-webkit-outer-spin-button {
+  -webkit-appearance: inner-spin-button !important;
+  display: block !important;
+  opacity: 1 !important;
+  margin: 0;
+}
+
 .duration-label {
   margin-top: 10px;
   font-size: 14px;
