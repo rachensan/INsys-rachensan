@@ -23,7 +23,6 @@ function MultipleChoice({ questionId, questionText, options, correctAnswer, poin
         return;
       }
 
-
       onSave({
         questionId: questionId,
         questionText: editQuestion,

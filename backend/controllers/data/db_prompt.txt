@@ -19,7 +19,9 @@ CREATE TABLE users (
         student_school_id BIGINT REFERENCES users(school_id) ON DELETE CASCADE,
         status TEXT CHECK (status IN ('in-progress', 'submitted')) DEFAULT 'in-progress',
         started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        finished_at TIMESTAMP
+        finished_at TIMESTAMP,
+        question_order JSONB,   -- stores randomized order, e.g. [5,2,8,1,3]
+        current_index INT DEFAULT 0;
       );
 
 
