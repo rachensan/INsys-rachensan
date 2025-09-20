@@ -34,7 +34,7 @@ function Identification({ questionId, questionText, correctAnswer, points, onSav
   return (
     <>
     <div className="identification-container">
-      <Button label={isEditing ? "Save" : "Edit"} onClick={handleClick} />
+      <Button className="save-button" label={isEditing ? "Save" : "Edit"} onClick={handleClick} />
       <InputField className="points"
         type="number"
         name="points"

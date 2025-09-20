@@ -80,7 +80,7 @@ function RegisterStudent() {
           <div className='page-s-registration'>
             <div className="container" id="otp-code-container">
               <h1>OTP Verification</h1>
-              <button type="button" className='back-button'> ← </button>
+              <Button className="back-button" label="←" onClick={() => navigate(-1)} />
               <div className="form-group">
                 <label>School Id</label>
                 <InputField 
@@ -98,7 +98,7 @@ function RegisterStudent() {
         ) : (
           <div className='page-s-registration'>
             <div className='container' id='otp-code-container'>
-              <button type="button" className='back-button'> ← </button>
+              <Button className="back-button" label="←" onClick={() => setSentOTP(false)} />
               <div className="form-group">
                 <label>OTP Code</label>
                 <InputField

@@ -14,3 +14,28 @@ export const getQuestionsForStudent = async(req, res) => {
     res.status(500).json({error: 'Failed to GET questionsSs'});
   }
 }
+
+
+//checking unanswered questions, so student can resume to answering when accidentally exited
+export const getUnansweredQuestions = async(req, res) => {
+  const {examId} = req.params;
+  const studentId = req.user.schoolId;
+
+  try {
+    const result = await db.query(
+      `SELECT q.question_id, q.question_text, q.question_type, q.option_a, q.option_b, q.option_c, q.option_d, q.points 
+      FROM questions q
+      LEFT JOIN student_answers sa
+        ON sa.question_id = q.question_id
+        AND sa.exam_id = $1
+        AND sa.student_school_id = $2
+      WHERE q.exam_id = $1
+        AND sa.question_id = IS NULL
+        AND ea.question_id = IS NULL
+      ` [examId, studentId])
+      
+  } catch (error) {
+    console.error('Error cant GET unanswered questions', error)
+    res.status(500).json({error: 'Failed to GET unanswered questions'});
+  }
+}
