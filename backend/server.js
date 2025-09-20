@@ -104,7 +104,7 @@ app.use('/api/teacher', teacherAuthRoutes);
 
 //year and section
   import { addSection, courseData, yearLevelData, deleteSection, yearSection } from "./controllers/yearSection.js";
-import { getQuestionsForStudent } from "./controllers/questionControllers/GET.js";
+import { getQuestionsForStudent, getUnansweredQuestions } from "./controllers/questionControllers/GET.js";
 
 
   
@@ -189,6 +189,8 @@ import { getQuestionsForStudent } from "./controllers/questionControllers/GET.js
   app.get('/api/student/:studentId/exam-history', studentOnly);
   app.get('/api/exams/questions/:examId', studentOnly, getQuestionsForStudent) 
       //questions by exam.. limited selection in db, for student only.
+  app.get('/api/exams/unanswered/:examId', studentOnly, getUnansweredQuestions)
+      //unanswered questions, in-case accidentally exit page: still can answer the remaining questions
 
   app.post('/api/student/exams/:examId/auto-submit', studentOnly, autoSubmitAllAnswers);
       //time sensitive

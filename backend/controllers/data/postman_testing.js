@@ -96,6 +96,13 @@ const postmanLinks = [
     link: "http://localhost:3000/api/exams/questions/7"
   },
   {
+    WHAT: "Get Unanswered Questions By Exam", //if accidentally exited the website
+    FUNC: getUnansweredQuestions,
+    CRUD: "GET",
+    path: "/api/exams/unanswered/:examId",
+    link: "http://localhost:3000/api/exams/unanswered/7"
+  },
+  {
     WHAT: "Create Question",
     FUNC: createQuestion,
     CRUD: "POST",

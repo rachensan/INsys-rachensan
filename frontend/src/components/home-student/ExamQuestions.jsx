@@ -92,6 +92,20 @@ const TrueFalseComp = ({tfText, tfOptions, name, divClassName, onChange, value})
   )
 }
 
+function shuffle(array) {
+  let currentIndex = array.length, randomIndex;
+
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]
+    ];
+  }
+
+  return array;
+}
 
 function ExamQuestions() {
   const { accessToken } = useAuth();
@@ -112,9 +126,15 @@ function ExamQuestions() {
         withCredentials: true
       }; 
       try {
-        const res = await axios.get(`/exams/questions/${examId}`, config);
-        setExamQuestions(res.data); //assuming backend sends array
+        const res = await axios.get(`/exams/unanswered/${examId}`, config);
+        //this will give us res.status(200).json({ objectives: objectives.rows, essays: essays.rows });
+
+        const shuffledObjectives = shuffle(res.data.objectives);
+        const combined = [...shuffledObjectives, ...res.data.essays];
+
+        setExamQuestions(combined);
       } catch (error) {
+        console.error(error);
         alert(error.response?.data?.error || "Something went wrong in fetchingQuestions");
       }
     } 
