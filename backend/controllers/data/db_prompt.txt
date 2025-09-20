@@ -21,7 +21,8 @@ CREATE TABLE users (
         started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         finished_at TIMESTAMP,
         question_order JSONB,   -- stores randomized order, e.g. [5,2,8,1,3]
-        current_index INT DEFAULT 0;
+        current_index INT DEFAULT 0,
+        time_remaining INT -- store seconds left for accuracy
       );
 
 

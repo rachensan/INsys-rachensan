@@ -188,6 +188,7 @@ import { getQuestionsForStudent, getUnansweredQuestions } from "./controllers/qu
   app.get('/api/student/exams/:examId/info', studentOnly, getInfoPerExam);
   app.get('/api/student/:studentId/exam-history', studentOnly);
   app.get('/api/exams/questions/:examId', studentOnly, getQuestionsForStudent) 
+      //not used because we use the unanswered route (below this)
       //questions by exam.. limited selection in db, for student only.
   app.get('/api/exams/unanswered/:examId', studentOnly, getUnansweredQuestions)
       //unanswered questions, in-case accidentally exit page: still can answer the remaining questions

@@ -92,20 +92,6 @@ const TrueFalseComp = ({tfText, tfOptions, name, divClassName, onChange, value})
   )
 }
 
-function shuffle(array) {
-  let currentIndex = array.length, randomIndex;
-
-  while (currentIndex !== 0) {
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
-
-    [array[currentIndex], array[randomIndex]] = [
-      array[randomIndex], array[currentIndex]
-    ];
-  }
-
-  return array;
-}
 
 function ExamQuestions() {
   const { accessToken } = useAuth();
@@ -129,8 +115,7 @@ function ExamQuestions() {
         const res = await axios.get(`/exams/unanswered/${examId}`, config);
         //this will give us res.status(200).json({ objectives: objectives.rows, essays: essays.rows });
 
-        const shuffledObjectives = shuffle(res.data.objectives);
-        const combined = [...shuffledObjectives, ...res.data.essays];
+        const combined = [...res.data.objectives, ...res.data.essays];
 
         setExamQuestions(combined);
       } catch (error) {
