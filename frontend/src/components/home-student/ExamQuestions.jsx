@@ -100,6 +100,9 @@ function ExamQuestions() {
   const { examId } = useParams(); //not params.,, dapat galing sa code
   const [ examQuestions, setExamQuestions ] = useState([]);
   const [current, setCurrent] = useState(0);
+  const [examSession, setExamSession] = useState(null);
+  const [loadingQuestions, setLoadingQuestions] = useState(true);
+  const [loadingExamInfo, setLoadingExamInfo] = useState(false);
 
   const [ selectedAnswer, setSelectedAnswer ] = useState('');
   const [examInfo, setExamInfo] = useState(null);
@@ -107,6 +110,7 @@ function ExamQuestions() {
 
   useEffect(() => {
     const fetchQuestions = async () => {
+      setLoadingQuestions(true);
       const config = {
         headers: { Authorization: `Bearer ${accessToken}` },
         withCredentials: true
@@ -121,17 +125,36 @@ function ExamQuestions() {
       } catch (error) {
         console.error(error);
         alert(error.response?.data?.error || "Something went wrong in fetchingQuestions");
+      } finally {
+        setLoadingQuestions(false);
       }
     } 
-    fetchQuestions();
-  }, [examId]);
+    const fetchSession = async () => {
+      const config = {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        withCredentials: true
+      }; 
+      try {
+        const res = await axios.get(`/exams/session/${examId}`, config);
 
+        setExamSession(res.data.status);
+      } catch (error) {
+        console.error(error);
+        alert(error.response?.data?.error || "Something went wrong in fetchingQuestions");
+      }
+    }
+
+    fetchQuestions(); 
+    fetchSession();
+  }, [examId]);
 
   const fetchExamInfo = async() => {
     const config = {
       headers: { Authorization: `Bearer ${accessToken}` },
       withCredentials: true
     }; 
+
+    setLoadingExamInfo(true);
     try {
       const res = await axios.get(`/student/exams/${examId}/info`, config);
       setExamInfo(res.data);
@@ -142,11 +165,17 @@ function ExamQuestions() {
         error.message
       );
       alert(error.response?.data?.error || "Something went wrong in getting fetchExamInfo");
+    } finally {
+      setLoadingExamInfo(false);
     }
   }
 
-
-  if (!examQuestions.length) return <p>Loading questions...</p>;
+  useEffect(() => {
+    if (!loadingQuestions && examSession === 'in-progress' && examQuestions.length === 0) {
+      fetchExamInfo();   // get exam details
+      setSubmitted(true);
+    }
+  }, [loadingQuestions, examQuestions, examSession]);
 
   //nasa render logic to: return(...)
   // const optionsArrayMCQ = [
@@ -190,10 +219,14 @@ return (
     <>
     {submitted ? (
       <div>
+        {loadingExamInfo ? ( <p>Loading exam questions...</p>) : examInfo ? (
         <FinishExamInfo 
           examTitle={examInfo.title}
           examAutomatedScore={examInfo.total_score}
         />
+        ) : (
+          <p>No exam info found.</p>
+        )}
       </div>
     ): ( 
             //if no question remains (anu hah):(navigate to exam score/details page)

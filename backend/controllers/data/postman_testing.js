@@ -94,6 +94,13 @@ const postmanLinks = [
     CRUD: "GET",
     path: "/api/exams/questions/:examId",
     link: "http://localhost:3000/api/exams/questions/7"
+  }, 
+  {
+    WHAT: "Get Sessions By Exam", //for student SELECT limited info
+    FUNC: getExamSession,
+    CRUD: "GET",
+    path: "/api/exams/session/:examId",
+    link: "http://localhost:3000/api/exams/session/7"
   },
   {
     WHAT: "Get Unanswered Questions By Exam", //if accidentally exited the website

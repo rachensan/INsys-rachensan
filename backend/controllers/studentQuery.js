@@ -187,8 +187,6 @@ export const startExam = async(req, res) => {
       message: 'Exam session started', 
       session: newSession.rows[0] 
     });
-
-    res.status(201).json({ message: 'Exam started'});
   } catch (error) {
     console.error('Error starting exam', error);
     res.status(500).json({ error: 'Failed to start exam' });

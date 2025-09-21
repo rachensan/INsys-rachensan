@@ -67,7 +67,7 @@ export const getExamById = async(req, res) => {
   }
 }
 
-export const getExamsByStatus = async(req, res) => {
+export const getExamsByStatus = async(req, res) => { //draft, on-going, completed
   const userId = req.user.userId;
   const { filter } = req.query;
   try {
@@ -208,5 +208,26 @@ export const getExamSchedule = async(req, res) => { //for teacher side, to see A
   } catch (error) {
     console.error("Error getting finalized schedule", error);
     res.status(500).json({ error: "Failed to get exam schedule" });
+  }
+}
+
+export const getExamSession = async(req, res) => { //includes: status: in-progress or submitted
+  const {examId} = req.params;
+  const studentId = req.user.schoolId;
+
+  try {
+    const result = await db.query(`
+      SELECT status, started_at, finished_at, current_index, time_remaining
+        FROM exam_sessions
+      WHERE exam_id = $1
+        AND student_school_id = $2
+    `, [examId, studentId]);
+
+    if (result.rows.length === 0) return res.status(404).json({ error: "No matching exam-session found" })
+
+    res.status(200).json(result.rows[0]);
+  } catch (error) {
+    console.error("Error getting exam-session status", error);
+    res.status(500).json({ error: "Failed to get exam-session status" });
   }
 }

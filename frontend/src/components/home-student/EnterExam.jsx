@@ -45,6 +45,7 @@ function EnterExam() {
     try {
       const res = await axios.post(`/student/exams/${examId}/start`, {}, config); 
       console.log(res.status)
+      
       navigate(`/exam/start/${examId}`);
     } catch (error) {
       alert(error.response?.data?.error || "Something went wrong");

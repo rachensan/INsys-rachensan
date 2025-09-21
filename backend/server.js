@@ -83,7 +83,7 @@ app.use('/api/teacher', teacherAuthRoutes);
 
 //examCONTROLLERS
   //GET
-    import { getAllExams, getExamById, getExamsByTitle, getExamsByStatus, getExamCode, getSectionTakersByExamId, getAllScoresByExam, getEssayPerStudent, getExamSchedule } from './controllers/examControllers/GET.js'
+    import { getAllExams, getExamById, getExamsByTitle, getExamsByStatus, getExamCode, getSectionTakersByExamId, getAllScoresByExam, getEssayPerStudent, getExamSchedule, getExamSession } from './controllers/examControllers/GET.js'
   //POST
     import { createExam, duplicateExam } from './controllers/examControllers/POST.js'
   //UPDATE
@@ -186,6 +186,8 @@ import { getQuestionsForStudent, getUnansweredQuestions } from "./controllers/qu
   app.post('/api/student/verify', studentOnly, verifyExamAccess);
   
   app.get('/api/student/exams/:examId/info', studentOnly, getInfoPerExam);
+  app.get('/api/exams/session/:examId', studentOnly, getExamSession);
+      //status, started_at, finished_at, current_index, time_remaining
   app.get('/api/student/:studentId/exam-history', studentOnly);
   app.get('/api/exams/questions/:examId', studentOnly, getQuestionsForStudent) 
       //not used because we use the unanswered route (below this)
