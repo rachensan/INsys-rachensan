@@ -73,7 +73,7 @@ function ForgotPassword() {
           name="email"
           value={form.email} 
           onChange={handleChange}
-          placeholder="Enter student id"
+          placeholder="Enter Email"
         />
         <Button label="Send OTP" onClick={handleSendOtp} />
         <label>OTP</label>
@@ -81,7 +81,7 @@ function ForgotPassword() {
           name="code"
           value={code} 
           onChange={(e) => setCode(e.target.value)}
-          placeholder="Enter student id"
+          placeholder="Enter OTP"
         />
         <Button label="Verify" onClick={handleVerifyOtp} />
         </>

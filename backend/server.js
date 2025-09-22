@@ -1,7 +1,9 @@
 import express from "express";
 import cors from "cors";
+import cron from "node-cron";
 import dotenv from 'dotenv';
 dotenv.config({ path: './.env', quiet: true });
+import { db } from "./db.js";
 
 //AUTH 
 import session from "express-session";
@@ -10,6 +12,7 @@ import teacherAuthRoutes from "./utils/teacherAuth.js";
 import studentAuthRoutes from "./utils/studentAuth.js";
 import authRoutes from "./utils/auth.js";
 import { verifyJWT, verifyRole, refreshAccessToken, clearToken } from "./utils/jwt.js";
+
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -107,9 +110,40 @@ app.use('/api/teacher', teacherAuthRoutes);
 import { getQuestionsForStudent, getUnansweredQuestions } from "./controllers/questionControllers/GET.js";
 
 
+
+
+
+//runs every minute
+cron.schedule("* * * * *", async () => {
+  try {
+    console.log("⏰ Checking expired exam sessions...");
+
+    // Find all active sessions that have ended
+    const expired = await db.query(`
+    SELECT s.exam_id, s.student_school_id
+      FROM exam_sessions s
+    JOIN examinations e ON s.exam_id = e.exam_id
+    WHERE s.status = 'in-progress'
+      AND e.end_datetime <= NOW()
+  `);
+
+    for (const row of expired.rows) {
+      // Call your existing auto-submit function
+      await autoSubmitAllAnswers(
+        {
+          params: { examId: row.exam_id },
+          user: { schoolId: row.student_school_id }
+        },
+        {
+          status: () => ({ json: () => {} }) // fake response object
+        }
+      );
+    }
+  } catch (err) {
+    console.error("Error running cron:", err);
+  }
+});
   
-
-
 
 
 
