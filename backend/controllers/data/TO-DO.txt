@@ -1,4 +1,0 @@
-Something went wrong in GETTING 'fetchExamInfo'
-maybe the get is too fast? let us POST is_submitted = true first before--
-loading the GET exam info thingy.
-
