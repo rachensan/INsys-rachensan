@@ -72,8 +72,6 @@
   width: 60%;
   height: 100%;
   background-color: #EDF1FA;
-  
-  background-color: rgb(56, 243, 203);
   overflow-y: auto;
   padding: 50px;
   display: flex;
