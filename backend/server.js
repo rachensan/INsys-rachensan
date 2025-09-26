@@ -86,7 +86,7 @@ app.use('/api/teacher', teacherAuthRoutes);
 
 //examCONTROLLERS
   //GET
-    import { getAllExams, getExamById, getExamsByTitle, getExamsByStatus, getExamCode, getSectionTakersByExamId, getAllScoresByExam, getEssayPerStudent, getExamSchedule, getExamSession } from './controllers/examControllers/GET.js'
+    import { getAllExams, getExamById, getExamsByTitle, getExamsByStatus, getExamCode, getSectionTakersByExamId, getAllScoresByExam, getEssayPerStudent, getExamSchedule, getExamSession, getStudentCurrentSession } from './controllers/examControllers/GET.js'
   //POST
     import { createExam, duplicateExam } from './controllers/examControllers/POST.js'
   //UPDATE
@@ -112,9 +112,9 @@ import { getQuestionsForStudent, getUnansweredQuestions } from "./controllers/qu
 
 
 
-
+/* 
 //runs every minute
-cron.schedule("* * * * *", async () => { //*/10 * * * * *
+cron.schedule("* * * * *", async () => { // * /10 * * * * *
   console.log("⏰ Checking expired exam sessions...");
 
   try {
@@ -148,7 +148,7 @@ cron.schedule("* * * * *", async () => { //*/10 * * * * *
     console.error("❌ Error running cron:", err);
   }
 });
-  
+*/ 
 
 
 
@@ -223,7 +223,9 @@ cron.schedule("* * * * *", async () => { //*/10 * * * * *
 // ========== STUDENT ROUTES ==========
   app.post('/api/student/exams/:examId/start', studentOnly, startExam);
   app.post('/api/student/verify', studentOnly, verifyExamAccess);
-  
+  app.get('/api/student/session', studentOnly, getStudentCurrentSession);
+      //for checking existing on-going exams before entering another one
+      
   app.get('/api/student/exams/:examId/info', studentOnly, getInfoPerExam);
   app.get('/api/exams/session/:examId', studentOnly, getExamSession);
       //status, started_at, finished_at, current_index, time_remaining

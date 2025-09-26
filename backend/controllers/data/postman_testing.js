@@ -96,7 +96,14 @@ const postmanLinks = [
     link: "http://localhost:3000/api/exams/questions/7"
   }, 
   {
-    WHAT: "Get Sessions By Exam", //for student SELECT limited info
+    WHAT: "Get If Sessions Is Existing", //check if there's an on-going exam
+    FUNC: getStudentCurrentSession,
+    CRUD: "GET",
+    path: "/api/student/session",
+    link: "http://localhost:3000/api/student/session"
+  },
+  {
+    WHAT: "Get Sessions By Exam", 
     FUNC: getExamSession,
     CRUD: "GET",
     path: "/api/exams/session/:examId",

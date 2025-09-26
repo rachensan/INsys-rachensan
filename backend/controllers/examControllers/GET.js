@@ -211,6 +211,7 @@ export const getExamSchedule = async(req, res) => { //for teacher side, to see A
   }
 }
 
+//checking for fetching status only
 export const getExamSession = async(req, res) => { //includes: status: in-progress or submitted
   const {examId} = req.params;
   const studentId = req.user.schoolId;
@@ -224,6 +225,28 @@ export const getExamSession = async(req, res) => { //includes: status: in-progre
     `, [examId, studentId]);
 
     if (result.rows.length === 0) return res.status(404).json({ error: "No matching exam-session found" })
+
+    res.status(200).json(result.rows[0]);
+  } catch (error) {
+    console.error("Error getting exam-session status", error);
+    res.status(500).json({ error: "Failed to get exam-session status" });
+  }
+}
+
+
+//landing page for checking if there is an ongoing exam for this student,, before proceeding in entering the code and subj
+export const getStudentCurrentSession = async(req, res) => { //status: in-progress or submitted
+  const studentId = req.user.schoolId;
+
+  try {
+    const result = await db.query(`
+      SELECT status, exam_id, current_index
+        FROM exam_sessions
+      WHERE student_school_id = $1
+        AND status = 'in-progress'
+      `, [studentId]);
+
+    if (result.rows.length === 0) return res.status(404).json({ message: "No exam-session found. Can enter other exam" })
 
     res.status(200).json(result.rows[0]);
   } catch (error) {
