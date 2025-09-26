@@ -114,33 +114,38 @@ import { getQuestionsForStudent, getUnansweredQuestions } from "./controllers/qu
 
 
 //runs every minute
-cron.schedule("* * * * *", async () => {
+cron.schedule("* * * * *", async () => { //*/10 * * * * *
+  console.log("⏰ Checking expired exam sessions...");
+
   try {
-    console.log("⏰ Checking expired exam sessions...");
-
-    // Find all active sessions that have ended
-    const expired = await db.query(`
-    SELECT s.exam_id, s.student_school_id
+    //Fetch all active sessions(in-progress) that should have ended
+    const { rows: expiredSessions } = await db.query(`
+      SELECT s.exam_id, s.student_school_id
       FROM exam_sessions s
-    JOIN examinations e ON s.exam_id = e.exam_id
-    WHERE s.status = 'in-progress'
-      AND e.end_datetime <= NOW()
-  `);
+      JOIN examinations e ON s.exam_id = e.exam_id
+      WHERE s.status = 'in-progress'
+        AND e.end_datetime <= NOW()
+    `);
 
-    for (const row of expired.rows) {
-      // Call your existing auto-submit function
-      await autoSubmitAllAnswers(
-        {
-          params: { examId: row.exam_id },
-          user: { schoolId: row.student_school_id }
-        },
-        {
-          status: () => ({ json: () => {} }) // fake response object
-        }
-      );
+    if (expiredSessions.length === 0) {
+      console.log("No expired sessions found.");
+      return;
     }
+
+    // Submit all expired sessions in parallel
+    await Promise.all(expiredSessions.map(session => 
+      autoSubmitAllAnswers({ 
+          params: { examId: session.exam_id }, 
+          user: { schoolId: session.student_school_id } 
+        },
+        { status: () => ({ json: () => {} }) } // fake response
+      )
+    ));
+
+    console.log(`✅ Auto-submitted ${expiredSessions.length} expired exam sessions.`);
+
   } catch (err) {
-    console.error("Error running cron:", err);
+    console.error("❌ Error running cron:", err);
   }
 });
   

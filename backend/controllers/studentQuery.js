@@ -429,64 +429,109 @@ export const autoSubmitAllAnswers = async (req, res) => {
   const { examId } = req.params;
 
   try {
-//====== objective questions
-    const questionType_Obj = ['multiplechoice', 'identification', 'truefalse']
-    const unansweredQuestions_Obj =  await db.query(`
-      SELECT q.question_id, s.student_answer
-      FROM questions q LEFT JOIN student_answers s
+    // ======= GET SESSION ID =======
+    const { rows: sessionRows } = await db.query(`
+      SELECT session_id
+      FROM exam_sessions
+      WHERE exam_id = $1 AND student_school_id = $2
+    `, [examId, studentId]);
+
+    if (!sessionRows[0]) {
+      return res.status(404).json({ error: 'Session not found' });
+    }
+
+    const sessionId = sessionRows[0].session_id;
+
+    //====== objective questions
+    const questionType_Obj = ['multiplechoice', 'identification', 'truefalse'];
+    const unansweredQuestions_Obj = await db.query(`
+      SELECT q.question_id
+      FROM questions q
+      LEFT JOIN student_answers s
         ON q.question_id = s.question_id
         AND s.student_school_id = $1
       WHERE q.question_type = ANY ($2)
         AND q.exam_id = $3
-        AND s.student_school_id IS NULL`, 
-      [studentId, questionType_Obj, examId]);
+        AND s.student_school_id IS NULL
+    `, [studentId, questionType_Obj, examId]);
 
-      for (const row of unansweredQuestions_Obj.rows) {
-        await db.query(`
-          INSERT INTO student_answers (student_school_id, exam_id, question_id, student_answer, is_correct) VALUES ($1, $2, $3, $4, $5) RETURNING *`, 
-          [studentId, examId, row.question_id, ' ', false]);
+    // Batch insert unanswered objective questions
+    if (unansweredQuestions_Obj.rows.length > 0) {
+      const values = [];
+      const params = [];
+      let paramIndex = 1;
+
+      for (const q of unansweredQuestions_Obj.rows) {
+        values.push(`($${paramIndex++}, $${paramIndex++}, $${paramIndex++}, $${paramIndex++}, $${paramIndex++})`);
+        params.push(sessionId, examId, q.question_id, ' ', false);
       }
-//=======
-//+++++++ subjective questions
-    const unansweredQuestions_Ess =  await db.query(`
-      SELECT q.question_id, e.student_answer
-      FROM questions q LEFT JOIN essay_answers e
+
+      await db.query(`
+        INSERT INTO student_answers (session_id, exam_id, question_id, student_answer, is_correct)
+        VALUES ${values.join(', ')}
+      `, params);
+    }
+
+    //======= subjective questions
+    const unansweredQuestions_Ess = await db.query(`
+      SELECT q.question_id
+      FROM questions q
+      LEFT JOIN essay_answers e
         ON q.question_id = e.question_id
         AND e.student_school_id = $1
       WHERE q.question_type = $2
         AND q.exam_id = $3
-        AND e.student_school_id IS NULL`, 
-      [studentId, 'essay', examId]);
+        AND e.student_school_id IS NULL
+    `, [studentId, 'essay', examId]);
 
-      for (const row of unansweredQuestions_Ess.rows) {
-        await db.query(`
-          INSERT INTO essay_answers (student_school_id, exam_id, question_id, student_answer, essay_score) VALUES ($1, $2, $3, $4, $5) RETURNING *`, 
-          [studentId, examId, row.question_id, ' ', 0]);
+    // Batch insert unanswered essay questions
+    if (unansweredQuestions_Ess.rows.length > 0) {
+      const values = [];
+      const params = [];
+      let paramIndex = 1;
+
+      for (const q of unansweredQuestions_Ess.rows) {
+        values.push(`($${paramIndex++}, $${paramIndex++}, $${paramIndex++}, $${paramIndex++}, $${paramIndex++})`);
+        params.push(sessionId, q.question_id, studentId, ' ', 0);
       }
-//+++++++
-    const isSubmitted = await db.query(`
-      SELECT is_submitted FROM student_scores
-      WHERE exam_id = $1 AND student_school_id = $2`, 
-      [examId, studentId]);
 
-    if (isSubmitted.rows[0]?.is_submitted) {
-      return res.status(400).json({ error: 'Already submitted' });
+      await db.query(`
+        INSERT INTO essay_answers (session_id, question_id, student_school_id, student_answer, essay_score)
+        VALUES ${values.join(', ')}
+      `, params);
     }
 
-    await db.query(
-      `UPDATE student_scores
-       SET is_submitted = true
-       WHERE exam_id = $1 AND student_school_id = $2`,
-      [examId, studentId]);
+    // Check student_scores if already submitted
+    const isSubmitted = await db.query(`
+      SELECT is_submitted FROM student_scores
+      WHERE exam_id = $1 AND student_school_id = $2
+    `, [examId, studentId]);
 
+    // Always update exam_sessions first
     await db.query(`
       UPDATE exam_sessions
       SET status = 'submitted'
-      WHERE exam_id = $1 AND student_school_id = $2`, 
-      [examId, studentId]);
+      WHERE exam_id = $1 AND student_school_id = $2
+    `, [examId, studentId]);
 
+    if (isSubmitted.rows[0]?.is_submitted) {
+      return res.status(400).json({ error: 'Already submitted' });
+    } 
+    
+    // ---- Only reached if exam_scores is NOT already submitted ----
+    // Update student_scores to mark as submitted
+    await db.query(`
+      UPDATE student_scores
+      SET is_submitted = true, submitted_at = CURRENT_TIMESTAMP
+      WHERE exam_id = $1 AND student_school_id = $2
+    `, [examId, studentId]);
+
+
+    // Auto scoring
     await autoScoringHelper(examId, studentId);
+
     res.status(200).json({ message: 'Exam marked as submitted' });
+
   } catch (error) {
     console.error('Error submitting student exam', error);
     res.status(500).json({ error: 'Failed to mark exam as submitted' });
