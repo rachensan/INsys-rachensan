@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+
+<!-- family tree, hahaha
+
+                whole ______________________________
+         _________|____________                     |
+         |                    |                     |
+    side bar        main home content __________    |
+                                 |              |   |         
+                            grid contaainer__   |   |      
+                                  |          |  |   |
+                              grid items     |  |   |
+                                             |  |   |
+        end__________________________________|  |   |                                     
+    end ________________________________________|   |
+end_________________________________________________|
+                                            
+-->
+
+
+
+<body>
+    <!-- whole  -->
+    <!-- start -->
+    <div class="whole">
+
+        <!-- sidebar -->
+        <!-- start-->        
+         <div class="sidebar">
+            <div class="sidebar-image">
+                <img src="logo.png" alt="Sidebar Image">
+            </div>
+
+            <div class="sidebar-buttons">
+                <h1 class="sidebar-title">Tools</h1>
+                <button class="sidebar-btn"><i class="fas fa-plus"></i> Create Exam</button>
+                <button class="sidebar-btn"><i class="fas fa-chart-bar"></i> Exam Analytics</button>
+            </div>
+
+            <div class="profile-container">
+                <i class="fa-solid fa-user"></i>
+                <div class="profile-info">
+                    <div class="profile-name">Eryan Tungol</div>
+                    <div class="profile-title">CSS Instructor</div>
+                </div>
+            </div>
+        </div>
+        <!-- end sidebar -->
+
+
+
+
+        <!-- main home content -->
+        <!-- start -->
+        <div class="main-home-content">
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Search">
+                <select class="dropdown">
+                    <option value="completed">Completed</option>
+                    <option value="drafts">Drafts</option>
+                    <option value="ongoing">Ongoing</option>
+                </select>
+            </div>
+            <h1 class="sidebar-title">Exams</h1>
+
+
+
+            <!--  grid container -->
+            <!-- start grid container -->
+            <div class="grid-container">
+
+                
+
+                
+
+                <!-- grid item-->
+                <!--start-->
+                <div class="grid-item" data-id="1">    <!-- ikaw na bahala di alam kung lalagyan koba id yung grid-item, quiz, activity exam e -->
+                    <div class="kebab-menu">
+                        <i class="fas fa-ellipsis-v"></i>
+                        <ul class="kebab-options">
+                            <li>Rename</li>
+                            <li>Duplicate</li>
+                            <li>Delete</li>
+                        </ul>
+                    </div>
+                 
+                    <div class="exam-content">
+                        <i class="fas fa-folder"></i>
+                        <span>Anoto</span>
+                    </div>
+                    
+                    <div class="taskbar">
+                        <div class="taskbar-left">None</div>
+                        <div class="taskbar-right">Status: <span class="done-text">Done</span></div>
+                    </div>
+                </div>
+                <!-- end-->
+
+
+
+                  <div class="grid-item quiz-item" data-id="2">
+                    <div class="kebab-menu">
+                        <i class="fas fa-ellipsis-v"></i>
+                        <ul class="kebab-options">
+                            <li>Rename</li>
+                            <li>Duplicate</li>
+                            <li>Delete</li>
+                        </ul>
+                    </div>
+                 
+                    <div class="exam-content">
+                        <i class="fas fa-folder"></i>
+                        <span>Quiz 1</span>
+                    </div>
+                    
+                    <div class="taskbar">
+                        <div class="taskbar-left">Quiz</div>
+                        <div class="taskbar-right">Status: <span class="done-text">Done</span></div>
+                    </div>
+                </div>
+
+
+
+                <!-- grid item-->
+                <!--start-->
+                <div class="grid-item activity-item" data-id="3">
+                    <div class="kebab-menu">
+                        <i class="fas fa-ellipsis-v"></i>
+                        <ul class="kebab-options">
+                            <li>Rename</li>
+                            <li>Duplicate</li>
+                            <li>Delete</li>
+                        </ul>
+                    </div>
+                 
+                    <div class="exam-content">
+                        <i class="fas fa-folder"></i>
+                        <span>Activity 1</span>
+                    </div>
+                    
+                    <div class="taskbar">
+                        <div class="taskbar-left">Activity</div>
+                        <div class="taskbar-right">Status: <span class="done-text">Done</span></div>
+                    </div>
+                </div>
+                <!-- end-->
+
+
+                <!-- grid item-->
+                <!--start-->
+                <div class="grid-item exam-item" data-id="4">
+                    <div class="kebab-menu">
+                        <i class="fas fa-ellipsis-v"></i>
+                        <ul class="kebab-options">
+                            <li>Rename</li>
+                            <li>Duplicate</li>
+                            <li>Delete</li>
+                        </ul>
+                    </div>
+                 
+                    <div class="exam-content">
+                        <i class="fas fa-folder"></i>
+                        <span>Exam 1</span>
+                    </div>
+                    
+                    <div class="taskbar">
+                        <div class="taskbar-left">Exam</div>
+                        <div class="taskbar-right">Status: <span class="done-text">Done</span></div>
+                    </div>
+                </div>
+                <!-- end-->
+
+
+                <!-- grid item-->
+                <!--start-->
+                <div class="grid-item exam-item" data-id="5">
+                    <div class="kebab-menu">
+                        <i class="fas fa-ellipsis-v"></i>
+                        <ul class="kebab-options">
+                            <li>Rename</li>
+                            <li>Duplicate</li>
+                            <li>Delete</li>
+                        </ul>
+                    </div>
+                 
+                    <div class="exam-content">
+                        <i class="fas fa-folder"></i>
+                        <span>Exam 1</span>
+                    </div>
+                    
+                    <div class="taskbar">
+                        <div class="taskbar-left">Exam</div>
+                        <div class="taskbar-right">Status: <span class="done-text">Done</span></div>
+                    </div>
+                </div>
+                <!-- end-->
+
+
+                
+
+
+               
+               
+            </div>
+            <!-- end grid container -->
+
+        </div>
+        <!-- end main home content-->
+
+    </div>
+    <!--end whole div-->
+
+    
+</body>
+</html>
+
+<!-- 
+
+    nilagyan ko siya kulay sa css
+     grey = default (grid- item)
+     green = quiz (grid-item quiz-item)
+     yellow = activity (grid-item activity-item)
+     blue = exam
+     
+     -->
