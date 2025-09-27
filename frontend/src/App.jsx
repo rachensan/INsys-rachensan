@@ -74,11 +74,11 @@ useEffect(() => {
   axios.post("/refresh", {}, { withCredentials: true })
     .then(res => {
       const newToken = res.data.accessToken;
-      const { userId, schoolId, fullName, role } = res.data.user || {};
+      const { userId, schoolId, nameFNfirst, nameLNfirst, role } = res.data.user || {};
 
       setAccessToken(res.data.accessToken);
-      setUser({ userId, schoolId, fullName, role });
-                            console.log("User after refresh: (obj)", { userId, schoolId, fullName, role }); //obj. for debugging only
+      setUser({ userId, schoolId, nameFNfirst, nameLNfirst, role });
+                            console.log("User after refresh: (obj)", { userId, schoolId, nameFNfirst, nameLNfirst, role }); //obj. for debugging only
 
       axios.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
       console.log("Access token set:", newToken);
@@ -96,8 +96,6 @@ useEffect(() => {
   return(
     <>
     <AuthLoader>
-     <LogoutButton /> <br/><br/><br/>
-
       <Routes>
         <Route element={<ProtectedRoute allowedRoles={["teacher"]} />}>
           <Route path='/teacher-dashboard' element={<HomeTeacher />} />

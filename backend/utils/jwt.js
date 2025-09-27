@@ -18,7 +18,8 @@ export const generateRefreshToken = (userPayload) => {
       userId: userPayload.userId,
       schoolId: userPayload.schoolId,
       role: userPayload.role,
-      fullName: userPayload.fullName
+      nameFNfirst: userPayload.nameFNfirst,
+      nameLNfirst: userPayload.nameLNfirst
     },
     process.env.JWT_REFRESH_SECRET, 
     { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || "7d" });
@@ -70,7 +71,7 @@ export const refreshAccessToken = (req, res) => {
 
     res.json({
       accessToken: newAccessToken,
-      user: decoded, //already contains userId, schoolId, fullName, role
+      user: decoded, //already contains userId, schoolId, nameFNfirst, nameLNfirst, role
     });
   } catch (err) {
     return res.status(403).json({ error: "Invalid refresh token" });

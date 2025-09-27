@@ -4,7 +4,8 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState({ //comes from userPayload,,, should be the same
-    fullName: "",
+    nameLNfirst: "",
+    nameFNfirst: "",
     userId: "",
     schoolId: "",
     role: "",

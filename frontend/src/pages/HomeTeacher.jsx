@@ -2,10 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from '../utils/axiosConfig.js';
 
+//context
+import { useAuth } from '../context/AuthContext.jsx';
 //hooks
 import { useExams } from '../hooks/useExams.js';
+
 //components
 import Button from '../components/Buttons.jsx';
+import LogoutButton from '../components/Logout.jsx'
 import SelectField from '../components/SelectFields.jsx';
 import DraftExams from '../components/home-teacher/DraftExams.jsx';
 import OngoingExams from '../components/home-teacher/OngoingExams.jsx';
@@ -13,6 +17,7 @@ import CompletedExams from '../components/home-teacher/CompletedExams.jsx';
 
 function HomeTeacher() {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   //========= home filter status =========//
   const { exams, deleteExam, duplicateExam, fetchAllExams } = useExams();
@@ -37,7 +42,6 @@ function HomeTeacher() {
     }
   };
   
-
   useEffect(() => {
     const load = async () => {
       const data = await fetchAllExams;
@@ -54,20 +58,46 @@ function HomeTeacher() {
 
   return (
     <>
-      <button onClick={() => setShowModal(true)}>Create Exam</button>
-        {showModal && (
-          <div className="modal">
-            <input
-              type="text"
-              placeholder="Enter exam title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-            <button onClick={handleCreate}>Confirm</button>
-            <button onClick={() => setShowModal(false)}>Cancel</button>
-          </div>
-        )}
+    <div className="sidebar">
+      <div className="sidebar-image">
+        <img src="logo.png" alt="Sidebar Image"/>
+      </div>
+
+      <div className="sidebar-buttons">
+        <h1 className="sidebar-title">Tools</h1>
+        
       
+
+        <button className="sidebar-btn" onClick={() => setShowModal(true)}><i className="fas fa-plus"></i>Create Exam</button>
+          {showModal && (
+            <div className="modal">
+              <input
+                type="text"
+                placeholder="Enter exam title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+              <button onClick={handleCreate}>Confirm</button>
+              <button onClick={() => setShowModal(false)}>Cancel</button>
+            </div>
+          )}
+        <button className="sidebar-btn"><i className="fas fa-chart-bar"></i> Exam Analytics</button>
+        <LogoutButton />
+      </div>
+
+      <div className="profile-container">
+        <i className="fa-solid fa-user"></i>
+        <div className="profile-info">
+            <div className="profile-name">{user.nameFNfirst}</div>
+            <div className="profile-title">CSS Instructor</div>
+        </div>
+      </div>
+      
+    </div>
+
+
+
+
 
       <SelectField 
         label="Status" 
@@ -100,6 +130,7 @@ function HomeTeacher() {
         onClickDel={deleteExam} 
         onClickDupe={duplicateExam} 
       />}
+    
     </>
   );
 }
