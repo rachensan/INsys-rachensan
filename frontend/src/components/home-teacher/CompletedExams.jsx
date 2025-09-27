@@ -5,39 +5,47 @@ export const HomeCard = ({ data, title, subjCode, schedule, status, sections, on
 
   return (
     <div
-    onClick={() => onClickNav(data.exam_id)}   //goes to the specific exam when div is clicked
-    style={{ border: "1px solid black", margin: "10px", padding: "10px" }}>
+    onClick={() => onClickNav(data.exam_id)}> {/* goes to the specific exam when div is clicked */}
 
-    <Button 
-        label="Delete" 
-        type="button" 
-        onClick={(e) => { 
-          e.stopPropagation(); 
-          onClickDel(data.exam_id); 
-        }} 
-      />
-      <Button 
-        label="Duplicate" 
-        type="button" 
-        onClick={(e) => { 
-          e.stopPropagation(); 
-          onClickDupe(data.exam_id); 
-        }} 
-      />
+      <div className="kebab-menu" >
+        <i className="fas fa-ellipsis-v"></i>
+        <Button 
+          label="Delete" 
+          type="button" 
+          onClick={(e) => { 
+            e.stopPropagation(); 
+            onClickDel(data.exam_id); 
+          }} 
+        />
+        <Button 
+          label="Duplicate" 
+          type="button" 
+          onClick={(e) => { 
+            e.stopPropagation(); 
+            onClickDupe(data.exam_id); 
+          }} 
+        />
+      </div>
+        
+      <div className="exam-content">
+        <i className="fas fa-folder"></i>
+        <span>{title}</span>
+      </div>
 
-      <h2>{title}</h2>
-      <p>{subjCode}</p>
-      <p>{schedule}</p>
-      <p>{sections}</p>
-      <p>{status}</p>
+      <div className="taskbar">
+        <div className="taskbar-left">None</div>
+        <div className="taskbar-right">Status: <span className="done-text">{status}</span></div>
+      </div>
+
     </div>
   );
 };
 
-function CompletedExams({ exams, onClickDel, onClickDupe }) {
+function CompletedExams({ exams, onClickDel, onClickDupe, className }) {
   const navigate = useNavigate();
   return (
     <>
+    <div className={className}>
       {exams.map((e) => (
         <HomeCard //these from the database so use snake_case
           key={e.exam_id}
@@ -52,6 +60,7 @@ function CompletedExams({ exams, onClickDel, onClickDupe }) {
           onClickNav={() => navigate(`/update-exam/${e.exam_id}`)}
         />
       ))}
+    </div>
     </>
   )
 }

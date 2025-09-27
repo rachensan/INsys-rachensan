@@ -58,79 +58,100 @@ function HomeTeacher() {
 
   return (
     <>
-    <div className="sidebar">
-      <div className="sidebar-image">
-        <img src="logo.png" alt="Sidebar Image"/>
-      </div>
+    <div>
 
-      <div className="sidebar-buttons">
-        <h1 className="sidebar-title">Tools</h1>
+
+    
+  {/* <!-- sidebar -->
+      <!-- start-->   */}
+      <div className="sidebar">
+        <div className="sidebar-image">
+          <img src="logo.png" alt="Sidebar Image"/>
+        </div>
+
+        <div className="sidebar-buttons">
+          <h1 className="sidebar-title">Tools</h1>
+          <button className="sidebar-btn" onClick={() => setShowModal(true)}><i className="fas fa-plus"></i>Create Exam</button>
+            {showModal && (
+              <div className="modal">
+                <input
+                  type="text"
+                  placeholder="Enter exam title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+                <button onClick={handleCreate}>Confirm</button>
+                <button onClick={() => setShowModal(false)}>Cancel</button>
+              </div>
+            )}
+          <button className="sidebar-btn"><i className="fas fa-chart-bar"></i> Exam Analytics</button>
+          <LogoutButton className="sidebar-btn"/>
+        </div>
+
+        <div className="profile-container">
+          <i className="fa-solid fa-user"></i>
+          <div className="profile-info">
+              <div className="profile-name">{user.nameFNfirst}</div>
+              <div className="profile-title">Instructor</div>
+          </div>
+        </div>
         
+      </div>
+      {/* <!-- end sidebar --> */}
+
       
 
-        <button className="sidebar-btn" onClick={() => setShowModal(true)}><i className="fas fa-plus"></i>Create Exam</button>
-          {showModal && (
-            <div className="modal">
-              <input
-                type="text"
-                placeholder="Enter exam title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-              <button onClick={handleCreate}>Confirm</button>
-              <button onClick={() => setShowModal(false)}>Cancel</button>
-            </div>
-          )}
-        <button className="sidebar-btn"><i className="fas fa-chart-bar"></i> Exam Analytics</button>
-        <LogoutButton />
+{/* <!-- main home content -->
+    <!-- start --> */}
+    <div className="main-home-content">
+      <div className="search-bar">
+        <input type="text" className="search-input" placeholder="Search" />
+        <SelectField className="dropdown"
+          label="Status" 
+          name="status"
+          value={status}
+          onChange={(e) => setStatus(e.target.value)}
+          options={optionsArray}
+        />
       </div>
+      <h1 className="sidebar-title">Exams</h1>
 
-      <div className="profile-container">
-        <i className="fa-solid fa-user"></i>
-        <div className="profile-info">
-            <div className="profile-name">{user.nameFNfirst}</div>
-            <div className="profile-title">CSS Instructor</div>
+  {/* <!--  grid container -->
+      <!-- start grid container --> */}
+      <div className="grid-container">
+
+    {/* <!-- grid item-->
+        <!--start--> */}
+        <div>
+            {status === 'draft' && 
+            <DraftExams 
+              className="grid-item"
+              exams={exams.filter(e => e.status === 'draft')} 
+              onClickDel={deleteExam} 
+              onClickDupe={duplicateExam}
+            />}
+            {status === 'published' && 
+            <OngoingExams 
+              className="grid-item"
+              exams={exams.filter(e => e.status === 'published')} 
+              onClickDel={deleteExam} 
+              onClickDupe={duplicateExam} />}
+            {status === 'completed' && 
+            <CompletedExams 
+              className="grid-item"
+              exams={exams.filter(e => e.status === 'completed')} 
+              onClickDel={deleteExam} 
+              onClickDupe={duplicateExam} 
+            />}
         </div>
+
+        
       </div>
       
     </div>
 
-
-
-
-
-      <SelectField 
-        label="Status" 
-        name="status"
-        value={status}
-        onChange={(e) => setStatus(e.target.value)}
-        options={optionsArray}
-      />
-
-{/* 
-      <Button label="Drafts" onClick={() => setStatus('draft')} />
-      <Button label="Ongoing" onClick={() => setStatus('published')} />
-      <Button label="Completed" onClick={() => setStatus('completed')} /> 
-*/}
       
-      {status === 'draft' && 
-      <DraftExams 
-        exams={exams.filter(e => e.status === 'draft')} 
-        onClickDel={deleteExam} 
-        onClickDupe={duplicateExam}
-      />}
-      {status === 'published' && 
-      <OngoingExams 
-        exams={exams.filter(e => e.status === 'published')} 
-        onClickDel={deleteExam} 
-        onClickDupe={duplicateExam} />}
-      {status === 'completed' && 
-      <CompletedExams 
-        exams={exams.filter(e => e.status === 'completed')} 
-        onClickDel={deleteExam} 
-        onClickDupe={duplicateExam} 
-      />}
-    
+    </div>
     </>
   );
 }
