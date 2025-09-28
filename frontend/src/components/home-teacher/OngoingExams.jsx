@@ -5,7 +5,7 @@ export const HomeCard = ({ data, title, subjCode, schedule, status, sections, on
 
   return (
     <>
-    <div
+    <div className="grid-item"
     onClick={() => onClickNav(data.exam_id)}> {/*goes to the specific exam when div is clicked */}
 
       <div className="kebab-menu" >
@@ -47,7 +47,6 @@ function OngoingExams({ exams, onClickDel, onClickDupe, className }) {
   const navigate = useNavigate();
   return (
     <>
-    <div className={className}>
       {exams.map((e) => (
         <HomeCard //these from the database so use snake_case
           key={e.exam_id}
@@ -62,7 +61,6 @@ function OngoingExams({ exams, onClickDel, onClickDupe, className }) {
           onClickNav={() => navigate(`/update-exam/${e.exam_id}`)}
         />
       ))}
-    </div>
     </>
   )
 }

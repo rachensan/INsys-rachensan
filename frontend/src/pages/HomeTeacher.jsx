@@ -58,10 +58,9 @@ function HomeTeacher() {
 
   return (
     <>
-    <div>
-
-
-    
+{/* <!-- whole  -->
+    <!-- start --> */}
+    <div className="whole">
   {/* <!-- sidebar -->
       <!-- start-->   */}
       <div className="sidebar">
@@ -107,7 +106,6 @@ function HomeTeacher() {
       <div className="search-bar">
         <input type="text" className="search-input" placeholder="Search" />
         <SelectField className="dropdown"
-          label="Status" 
           name="status"
           value={status}
           onChange={(e) => setStatus(e.target.value)}
@@ -122,32 +120,31 @@ function HomeTeacher() {
 
     {/* <!-- grid item-->
         <!--start--> */}
-        <div>
             {status === 'draft' && 
             <DraftExams 
-              className="grid-item"
               exams={exams.filter(e => e.status === 'draft')} 
               onClickDel={deleteExam} 
               onClickDupe={duplicateExam}
             />}
             {status === 'published' && 
             <OngoingExams 
-              className="grid-item"
               exams={exams.filter(e => e.status === 'published')} 
               onClickDel={deleteExam} 
               onClickDupe={duplicateExam} />}
             {status === 'completed' && 
             <CompletedExams 
-              className="grid-item"
               exams={exams.filter(e => e.status === 'completed')} 
               onClickDel={deleteExam} 
               onClickDupe={duplicateExam} 
             />}
-        </div>
 
-        
+  {/* <!--  grid container -->
+      <!-- end grid container --> */}
       </div>
-      
+
+
+{/* <!-- main home content -->
+    <!-- end --> */}
     </div>
 
       
