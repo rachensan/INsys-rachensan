@@ -9,6 +9,7 @@ import { useExams } from '../hooks/useExams.js';
 import EnterExam from '../components/home-student/EnterExam.jsx';
 
 function HomeStudent() {
+  const navigate = useNavigate();
   const { accessToken } = useAuth();
   const [checkSession, setCheckSession] = useState(null);
   const [sessionExamId, setSessionExamId] = useState('');
@@ -28,7 +29,7 @@ function HomeStudent() {
           setSessionExamId(res.data.exam_id);
           setCheckSession(res.data);
           setShowPopup(true);
-          console.log(`there is an exam ongoing ${sessionExamId}`);
+          console.log(`there is an exam ongoing at exam_id: ${res.data.exam_id}`); //should be ${sessionExamId}, but console.log works first before it updates the useState
         }
       } catch (error) {
         console.log('wala nahanap');
@@ -42,6 +43,7 @@ function HomeStudent() {
   const handleEnterExam = () => {
     console.log("Entering exam", sessionExamId);
     setShowPopup(false);
+    navigate(`/exam/start/${sessionExamId}`);
   };
 
   //submitAll
