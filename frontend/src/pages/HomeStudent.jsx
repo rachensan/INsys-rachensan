@@ -12,7 +12,7 @@ function HomeStudent() {
   const navigate = useNavigate();
   const { accessToken } = useAuth();
   const [checkSession, setCheckSession] = useState(null);
-  const [sessionExamId, setSessionExamId] = useState('');
+  const [examId, setExamId] = useState('');
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ function HomeStudent() {
         const res = await axios.get('/student/session', config); //status, exam_id, current_index
         
         if(res.data) {
-          setSessionExamId(res.data.exam_id);
+          setExamId(res.data.exam_id);
           setCheckSession(res.data);
           setShowPopup(true);
           console.log(`there is an exam ongoing at exam_id: ${res.data.exam_id}`); //should be ${sessionExamId}, but console.log works first before it updates the useState
@@ -41,15 +41,31 @@ function HomeStudent() {
 
   // navigate to exam page
   const handleEnterExam = () => {
-    console.log("Entering exam", sessionExamId);
+    console.log("Entering exam", examId);
     setShowPopup(false);
-    navigate(`/exam/start/${sessionExamId}`);
+    navigate(`/exam/start/${examId}`);
   };
 
   //submitAll
-  const handleSubmitExam = () => {
-    console.log("Submit exam", sessionExamId);
+  const handleSubmitExam = async() => {
+    console.log("Submit exam", examId);
     setShowPopup(false);
+
+    try {
+      const config = {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        withCredentials: true
+      };
+
+      await axios.post(`/student/exams/${examId}/submit`, { examId }, config);
+    } catch (error) {
+      console.log(
+        error.response?.data?.error ||
+        error.response?.data ||
+        error.message
+      );
+      alert(error.response?.data?.error || "Failed to submit = true");
+    }
   };
 
   return (
