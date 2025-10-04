@@ -110,48 +110,6 @@ app.use('/api/teacher', teacherAuthRoutes);
 import { getQuestionsForStudent, getUnansweredQuestions } from "./controllers/questionControllers/GET.js";
 
 
-
-
-/* 
-//runs every minute
-cron.schedule("* * * * *", async () => { // * /10 * * * * *
-  console.log("⏰ Checking expired exam sessions...");
-
-  try {
-    //Fetch all active sessions(in-progress) that should have ended
-    const { rows: expiredSessions } = await db.query(`
-      SELECT s.exam_id, s.student_school_id
-      FROM exam_sessions s
-      JOIN examinations e ON s.exam_id = e.exam_id
-      WHERE s.status = 'in-progress'
-        AND e.end_datetime <= NOW()
-    `);
-
-    if (expiredSessions.length === 0) {
-      console.log("No expired sessions found.");
-      return;
-    }
-
-    // Submit all expired sessions in parallel
-    await Promise.all(expiredSessions.map(session => 
-      autoSubmitAllAnswers({ 
-          params: { examId: session.exam_id }, 
-          user: { schoolId: session.student_school_id } 
-        },
-        { status: () => ({ json: () => {} }) } // fake response
-      )
-    ));
-
-    console.log(`✅ Auto-submitted ${expiredSessions.length} expired exam sessions.`);
-
-  } catch (err) {
-    console.error("❌ Error running cron:", err);
-  }
-});
-*/ 
-
-
-
 // ========== TEST IF BACKEND WORKING ==========
   app.get('/', (req, res) => res.send('Backend is running UwU!'));
 
@@ -249,7 +207,7 @@ cron.schedule("* * * * *", async () => { // * /10 * * * * *
       //admin suspects incorrect scoring
       //wants to force re-check
 
-  
+
 
 // ========== TEACHER ROUTES ==========
   app.patch('/api/student-score/essay/:examId/:questionId', teacherOnly, manualEssayScoring);
