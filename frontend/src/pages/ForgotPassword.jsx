@@ -1,5 +1,6 @@
 import axios from "../utils/axiosConfig.js";
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 //components
 import Button from "../components/Buttons.jsx";
@@ -17,46 +18,54 @@ function ForgotPassword() {
 
   const [isVerified, setIsVerified] = useState(false);
   const [code, setCode] = useState(""); //otp
+  const [message, setMessage] = useState(""); // ✅ success message
+  const [error, setError] = useState(""); // ✅ error message
 
   const handleSendOtp = async () => {
     try {
       const res = await axios.post('/forgot-password/request-otp', { email: form.email });
-      alert(res.data.message);
+      setMessage(res.data.message);
+      setError("");
     } catch (err) {
-        console.error(err.message);
-        alert("Network or server error")
+      console.error(err.message);
+      setError("Network or server error");
+      setMessage("");
     }
   };
 
   const handleVerifyOtp = async () => {
     try {
       const res = await axios.post('/forgot-password/verify-otp', { email: form.email, code });
-      alert(res.data.message);
+      setMessage(res.data.message);
+      setError("");
       setIsVerified(true);
     } catch (err) {
       console.log(err.response?.data);
-      alert("Invalid OTP");
+      setError("Invalid OTP");
+      setMessage("");
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setMessage("");
+    setError("");
+
     if (!isVerified) return alert("Verify your email first");
+    if (form.password !== form.retypePassword) return setError("Passwords do not match");
 
-    if (form.password !== form.retypePassword) return alert("Passwords do not match");
-
-    axios.post('/forgot-password/reset', { 
-      email: form.email, 
-      newPassword: form.password })
-      .then(res => {
-        console.log(res.data.message);
-        alert(res.data.message);
-        setTimeout(() => navigate("/login"), 1000);//1 sec
-      })
-      .catch(err => {
-        console.log(err.response?.data);
-        alert(err.response?.data?.message);
+    try {
+      const res = axios.post('/forgot-password/reset', { 
+        email: form.email, 
+        newPassword: form.password 
       });
+      console.log(res.data.message);
+      setMessage(res.data.message);
+      setTimeout(() => navigate("/login"), 1000);//1 sec
+    } catch (err) {
+      console.log(err.response?.data);
+      setError(err.response?.data?.message);
+    }
   }
 
   const handleChange = (e) => {

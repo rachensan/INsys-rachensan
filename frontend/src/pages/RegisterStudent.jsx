@@ -1,6 +1,8 @@
 import axios from 'axios'; //did not use axiosConfig here so use the full url
 import { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
 import InputField from "../components/InputFields.jsx"
 import SelectField from "../components/SelectFields.jsx";
 import Button from '../components/Buttons.jsx';
@@ -57,11 +59,12 @@ function RegisterStudent() {
     axios.post("http://localhost:3000/api/student/register/user-info", formRegister)
       .then(res => {
         console.log(res.data.message);
-        alert(res.data.message);
-        navigate("/login");
+        toast.info(res.data.message);
+        setTimeout(() => navigate("/login"), 700);
       })
       .catch(err => {
         console.log(err.response?.data);
+        toast.info(err.response?.data?.error);
       });
   }
 

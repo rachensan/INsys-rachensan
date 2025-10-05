@@ -12,9 +12,9 @@ teacherAuthRoutes.post ('/register/email-otp', async(req, res) => { //email inpu
   const { username, schoolId } = req.body;
   const email = `${username}@pampangastateu.edu.ph`;
 
-  if (!username) return res.status(400).json({ message: 'Missing username' });
+  if (!username) return res.status(400).json({ error: 'Missing username' });
 
-  if (/^\d+$/.test(username)) return res.status(400).json({ message: "Students cannot use this route." }); //if username have number in it, not allowed to register here
+  if (/^\d+$/.test(username)) return res.status(400).json({ error: "Students cannot use this route." }); //if username have number in it, not allowed to register here
 
   try {
     //check email if used or not
@@ -22,8 +22,8 @@ teacherAuthRoutes.post ('/register/email-otp', async(req, res) => { //email inpu
     //check school_id if used or not
     const checkSchoolId = await db.query (`SELECT * FROM users WHERE school_id = $1`, [schoolId]);
 
-    if (checkEmail.rows.length > 0) return res.status(400).json({message: 'Email is already used. Proceed to Log-In'})
-    if (checkSchoolId.rows.length > 0) return res.status(400).json({message: 'School ID already used.'})
+    if (checkEmail.rows.length > 0) return res.status(400).json({error: 'Email is already used. Proceed to Log-In'})
+    if (checkSchoolId.rows.length > 0) return res.status(400).json({error: 'School ID already used.'})
 
     //generate OTP and send email
     const otp = await generateOTP(email, "register"); //wait for redis to store this
@@ -43,20 +43,20 @@ teacherAuthRoutes.post('/register/verify-otp', async (req, res) => { //verify co
   const { code, username } = req.body; //code from input ni user so we can compare sa generateOTP.js
   const email = `${username}@pampangastateu.edu.ph`;
   
-  if (!username || !code) return res.status(400).json({ message: 'Missing username or code' });
-  if (!email) return res.status(400).json({ message: 'Invalid or expired code' });
+  if (!username || !code) return res.status(400).json({ error: 'Missing username or code' });
+  if (!email) return res.status(400).json({ error: 'Invalid or expired code' });
 
   try {
     const isValid = await verifyOTP(email, code); //send to generateOTP.js
             console.log(`isValid: ${isValid}`)
-    if (!isValid) return res.status(400).json({ message: 'Invalid or expired code' })
+    if (!isValid) return res.status(400).json({ error: 'Invalid or expired code' })
 
     await redisClient.setEx(`verifiedEmail:${email}`, 300, "true");
     console.log(`verifiedEmail:${email}`)
     return res.status(200).json({ message: "Email verified." });
   } catch (err) {
     console.error('OTP Verification Error:', err);
-    return res.status(500).json({ message: 'Server error during verification' });
+    return res.status(500).json({ error: 'Server error during verification' });
   }
 });
 
@@ -66,26 +66,31 @@ teacherAuthRoutes.post ('/register/user-info', async(req, res) => { //complete i
   //optional
   const {userGender, college} = req.body;
 
-  if (!username) return res.status(400).json({ message: 'Missing username' });
-  if (!schoolId) return res.status(400).json({ message: 'Missing school ID' });
+  if (!username) return res.status(400).json({ error: 'Missing username' });
+  if (!schoolId) return res.status(400).json({ error: 'Missing school ID' });
 
   try {
     //check school_id if used or not
     const checkSchoolId = await db.query (`SELECT * FROM users WHERE school_id = $1`, [schoolId]);
-    if (checkSchoolId.rows.length > 0) return res.status(400).json({message: 'School ID already used.'})
+    if (checkSchoolId.rows.length > 0) return res.status(400).json({error: 'School ID already used.'})
 
     //check email if used or not
     const checkEmail = await db.query (`SELECT * FROM users WHERE email = $1`, [email]);
 
-    if (checkEmail.rows.length > 0) return res.status(400).json({message: 'Email is already used. Proceed to Log-In'})
+    if (checkEmail.rows.length > 0) return res.status(400).json({error: 'Email is already used. Proceed to Log-In'})
 
     const verified = await redisClient.get(`verifiedEmail:${email}`);
     if (!verified) {
-      return res.status(403).json({ message: "Email not verified. Try refreshing the page" });
+      return res.status(403).json({ error: "Email not verified. Try refreshing the page" });
     }
 
+    const strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/;
     //password hashing uwu
-    const hash = await bcrypt.hash(password, saltRounds) ;
+    if (!strongPassword.test(password)) {
+      return res.status(400).json({ error: "Password must be at least 8 characters long and contain uppercase, lowercase, number, and special character." });
+    }
+
+    const hash = await bcrypt.hash(password, saltRounds);
 
     //temporarily store user info in Redis (optional,, to auto-insert after verify)
     await redisClient.setEx(`pendingUser:${email}`, 300, JSON.stringify({ hash, firstName, lastName, userGender, college, schoolId }));

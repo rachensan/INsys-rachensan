@@ -1,6 +1,7 @@
 import axios from 'axios'; //did not use axiosConfig here so use the full url
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify';
 
 import InputField from "../components/InputFields.jsx"
 import SelectField from "../components/SelectFields.jsx";
@@ -28,21 +29,21 @@ function RegisterTeacher() {
   const handleSendOtp = async () => {
     try {
       const res = await axios.post("http://localhost:3000/api/teacher/register/email-otp", { username: username });
-      alert(res.data.message);
+      toast.info(res.data.message);
 
       if (res.data.isItSent) { //from backend res.json.. if message is sent
         setSentOTP(true);
       }
     } catch (err) {
       console.log(err.response?.data);
-      alert("Failed to send OTP");
+      toast.info(err.response?.data?.error);
     }
   };
 
   const handleVerifyOtp = async () => {
     try {
       const res = await axios.post("http://localhost:3000/api/teacher/register/verify-otp", { username, code });
-      alert(res.data.message);
+      toast.info(res.data.message);
       setIsVerified(true);
     } catch (err) {
       console.log(err.response?.data);
@@ -57,18 +58,14 @@ function RegisterTeacher() {
   
     axios.post("http://localhost:3000/api/teacher/register/user-info", formRegister)
       .then(res => {
-        if (res.status === 201) {
-          console.log(res.data.message);
-          alert(res.data.message);
-          navigate("/login");
-        } else { 
-          alert(res.data.message); //show error, no navigate
-        }
+        console.log(res.data.message);
+        toast.info(res.data.message);
+        setTimeout(() => navigate("/login"), 700);
       })
       .catch(err => {
         console.log(err.response?.data);
-        alert(err.response?.data?.message || "Something went wrong");
-      });
+        toast.info(err.response?.data?.error);
+      });  
   }
 
   const handleChange = (e) => {

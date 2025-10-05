@@ -152,7 +152,7 @@ authRoutes.post('/forgot-password/request-otp', async (req, res) => {
       FROM users 
       WHERE email = $1`, [email]);
     
-    if (result.rows.length === 0) return res.status(404).json({ message: "User not found." });
+    if (result.rows.length === 0) return res.status(404).json({ error: "User not found." });
 
     const user = result.rows[0];
 
@@ -213,7 +213,7 @@ authRoutes.post('/forgot-password/reset', async (req, res) => {
     }
 
     if (!strongPassword.test(newPassword)) {
-      return res.status(400).json({ message: "Password must be at least 8 characters long and contain uppercase, lowercase, number, and special character." });
+      return res.status(400).json({ error: "Password must be at least 8 characters long and contain uppercase, lowercase, number, and special character." });
     }
 
     //password hashing
@@ -229,7 +229,7 @@ authRoutes.post('/forgot-password/reset', async (req, res) => {
       
     await redisClient.del(`verifiedEmail:${email}`);
 
-    return res.status(201).json({ message: "Passowrd reset successfully" });
+    return res.status(200).json({ message: "Password reset successfully" });
   } catch (err) {
     console.error('OTP Verification Error:', err);
     return res.status(500).json({ message: 'Server error during verification' });
@@ -356,10 +356,11 @@ authRoutes.post('/change-password/:userId', async(req, res) => {
   const { userId } = req.params;
   const { currentPassword, newPassword } = req.body;
 
+  const strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/;
+
   if (!currentPassword) return res.status(400).json({ error: 'Please enter your current password' });
-
   if (!newPassword) return res.status(400).json({ error: 'Please enter your new password' });
-
+  
   try {
     const result = await db.query(`SELECT password FROM users WHERE user_id = $1`, [userId]);
 
@@ -369,18 +370,27 @@ authRoutes.post('/change-password/:userId', async(req, res) => {
     const passwordMatch = await bcrypt.compare(currentPassword, user.password ) //true or false
 
     if (!passwordMatch) { //if false (password did not match)
-      return res.status(401).json({error: `Incorrect Password`})
+      return res.status(401).json({error: `Password input did not match`});
     }
+
+    if (!strongPassword.test(newPassword)) {
+      return res.status(400).json({ error: "Password must be at least 8 characters long and contain uppercase, lowercase, number, and special character." });
+    }
+
+    if (await bcrypt.compare(newPassword, user.password)) {
+      return res.status(400).json({ error: "New password cannot be the same as your current password." });
+    }
+
     const hash = await bcrypt.hash(newPassword, saltRounds);
     
-    await db.query (`UPDATE users SET password = $1 WHERE user_id = $2 RETURNING *`, [hash, userId]);
+    await db.query (`UPDATE users SET password = $1 WHERE user_id = $2`, [hash, userId]);
 
-    return res.status(200).json({ message: "Password change successful"});
+    return res.status(200).json({ message: "Password changed successfully"});
   } catch (error) {
     console.error('Error changing password', error);
     res.status(500).json({ error: 'Failed to change password' });
   }
-})
+});
 
 
 export default authRoutes;
