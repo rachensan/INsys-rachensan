@@ -4,8 +4,10 @@ import { useState } from 'react';
 //components
 import Button from "../components/Buttons.jsx";
 import InputField from "../components/InputFields.jsx";
+import { useNavigate } from "react-router-dom";
 
 function ForgotPassword() {
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     email: "",
@@ -49,9 +51,11 @@ function ForgotPassword() {
       .then(res => {
         console.log(res.data.message);
         alert(res.data.message);
+        setTimeout(() => navigate("/login"), 1000);//1 sec
       })
       .catch(err => {
         console.log(err.response?.data);
+        alert(err.response?.data?.message);
       });
   }
 

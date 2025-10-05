@@ -201,9 +201,19 @@ authRoutes.post('/forgot-password/reset', async (req, res) => {
   try {
     //check if verified flag exists in Redis
     const verified = await redisClient.get(`verifiedEmail:${email}`);
+    const strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/;
+      //At least 8 characters
+      // At least one uppercase letter (A–Z)
+      // At least one lowercase letter (a–z)
+      // At least one number (0–9)
+      // At least one special character (!@#$%^&*)
 
     if (!verified) {
       return res.status(400).json({ message: "Email not verified" });
+    }
+
+    if (!strongPassword.test(newPassword)) {
+      return res.status(400).json({ message: "Password must be at least 8 characters long and contain uppercase, lowercase, number, and special character." });
     }
 
     //password hashing
