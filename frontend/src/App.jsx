@@ -1,5 +1,7 @@
 import {Routes, Route, Link, useNavigate, Navigate, Outlet } from 'react-router-dom'
 import { useEffect, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+
 import axios from './utils/axiosConfig.js';
 import { useAuth } from './context/AuthContext.jsx';
 
@@ -95,6 +97,7 @@ useEffect(() => {
 
   return(
     <>
+    <ToastContainer position="top-right" autoClose={3000} />
     <AuthLoader>
       <Routes>
         <Route element={<ProtectedRoute allowedRoles={["teacher"]} />}>

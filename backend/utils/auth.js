@@ -1,5 +1,6 @@
 import express from "express";
 import bcrypt from 'bcryptjs';
+
 import {db} from '../db.js';
 import { generateOTP, verifyOTP } from "./otp.js";
 import { sendUserEmail } from "./nodemailer.js";
@@ -326,7 +327,7 @@ authRoutes.post('/verify-password/:userId', async (req, res) => {
 
   try {
     const result = await db.query(`SELECT password FROM users WHERE user_id = $1`, [userId]);
-    console.log(result)
+    //console.log(result)
     if (result.rows.length === 0) return res.status(404).json({ error: 'User does not exist' });
 
     const user = result.rows[0];

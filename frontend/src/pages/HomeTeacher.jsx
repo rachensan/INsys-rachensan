@@ -12,6 +12,7 @@ import Button from '../components/Buttons.jsx';
 import LogoutButton from '../components/Logout.jsx'
 import SelectField from '../components/SelectFields.jsx';
 import DraftExams from '../components/home-teacher/DraftExams.jsx';
+import PublishedExams from '../components/home-teacher/PublishedExams.jsx';
 import OngoingExams from '../components/home-teacher/OngoingExams.jsx';
 import CompletedExams from '../components/home-teacher/CompletedExams.jsx';
 
@@ -52,7 +53,8 @@ function HomeTeacher() {
 
   const optionsArray = [
     { value: "draft", label: "Draft" },
-    { value: "published", label: "Ongoing" },
+    { value: "published", label: "Published" },
+    { value: "ongoing", label: "Ongoing" },
     { value: "completed", label: "Completed" }
   ];
 
@@ -72,16 +74,24 @@ function HomeTeacher() {
           <h1 className="sidebar-title">Tools</h1>
           <button className="sidebar-btn" onClick={() => setShowModal(true)}><i className="fas fa-plus"></i>Create Exam</button>
             {showModal && (
+              <>
+              <div className="overlay" onClick={() => setShowModal(false)}></div>
               <div className="modal">
-                <input
-                  type="text"
-                  placeholder="Enter exam title"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-                <button onClick={handleCreate}>Confirm</button>
-                <button onClick={() => setShowModal(false)}>Cancel</button>
+                <form onSubmit={(e) => {e.preventDefault(); handleCreate();}}>
+                  <h3>Create Exam</h3>
+                  <input
+                    type="text"
+                    placeholder="Enter exam title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                  />
+                  <div className="modal-actions">
+                    <button type="submit">Confirm</button>
+                  </div>
+                </form>
               </div>
+              </>
             )}
           <button className="sidebar-btn"><i className="fas fa-chart-bar"></i> Exam Analytics</button>
           <LogoutButton className="sidebar-btn"/>
@@ -127,10 +137,18 @@ function HomeTeacher() {
               onClickDupe={duplicateExam}
             />}
             {status === 'published' && 
-            <OngoingExams 
+            <PublishedExams 
               exams={exams.filter(e => e.status === 'published')} 
               onClickDel={deleteExam} 
-              onClickDupe={duplicateExam} />}
+              onClickDupe={duplicateExam} 
+            />}
+            {status === 'ongoing' && 
+            <OngoingExams 
+              exams={exams.filter(e => e.status === 'ongoing')} 
+              onClickDel={deleteExam} 
+              onClickDupe={duplicateExam} 
+            />}
+
             {status === 'completed' && 
             <CompletedExams 
               exams={exams.filter(e => e.status === 'completed')} 

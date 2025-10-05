@@ -170,7 +170,7 @@ export const startExam = async(req, res) => {
     `, [examId, studentSchoolId]);
 
     if (existingSession.rows.length > 0) {
-      console.log("🔎 Found existing session:", existingSession.rows[0]);
+      console.log("Found existing session:", existingSession.rows[0]);
       return res.status(200).json({ message: 'Exam already in progress', session: existingSession.rows[0] 
       });
     }
@@ -181,7 +181,7 @@ export const startExam = async(req, res) => {
       VALUES ($1, $2, $3, $4)
       RETURNING *
     `, [examId, studentSchoolId, 'in-progress', currentTimeUTC]);
-    //console.log("🆕 New session created:", newSession.rows[0]);
+    //console.log("New session created:", newSession.rows[0]);
 
     res.status(201).json({ 
       message: 'Exam session started', 

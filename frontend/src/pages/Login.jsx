@@ -1,5 +1,7 @@
 import axios from "../utils/axiosConfig.js";
 import { useEffect, useState } from "react";
+import { toast } from 'react-toastify';
+
 import InputField from "../components/InputFields.jsx"
 import Button from "../components/Buttons.jsx"
 import { useAuth } from "../context/AuthContext.jsx";
@@ -40,7 +42,7 @@ function Login() {
 
         setUser(user); //from backend login (auth.js).. but came from userPayload
 
-        alert(message); 
+        toast.info(message);
 
         if (user.role === "teacher") {
           navigate("/teacher-dashboard");
@@ -52,7 +54,7 @@ function Login() {
       })
       .catch(err => {
         console.log(err.response?.data);
-        alert("tingin ka sa console, andun error")
+        toast.info("testing onli: check console for error");
       })
 
       // 🚀 redirect after login
