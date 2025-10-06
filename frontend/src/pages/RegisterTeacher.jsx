@@ -47,14 +47,14 @@ function RegisterTeacher() {
       setIsVerified(true);
     } catch (err) {
       console.log(err.response?.data);
-      alert("Invalid OTP");
+      toast.info(err.response?.data?.error || "Invalid OTP");
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!isVerified) return alert("Verify your email first");
-    if (formRegister.password !== formRegister.retypePassword) return alert("Passwords do not match");
+    if (!isVerified) return toast.info("Verify your email first");
+    if (formRegister.password !== formRegister.retypePassword) return toast.info("Passwords do not match");
   
     axios.post("http://localhost:3000/api/teacher/register/user-info", formRegister)
       .then(res => {

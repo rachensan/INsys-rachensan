@@ -28,33 +28,34 @@ function RegisterStudent() {
   const handleSendOtp = async () => {
     try { //did not use axiosConfig here so it's the full url
       const res = await axios.post("http://localhost:3000/api/student/register/email-otp", { username: username });
-      alert(res.data.message);
+      
+      toast.info(res.data.message);
 
       if (res.data.isItSent) { //from backend res.json.. if message is sent
         setSentOTP(true);
       }
     } catch (err) {
       console.log(err.response?.data);
-      alert("Failed to send OTP");
+      toast.info(err.response?.data?.error || "Failed to send OTP");
     }
   };
 
   const handleVerifyOtp = async () => {
     try {
       const res = await axios.post("http://localhost:3000/api/student/register/verify-otp", { username, code });
-      alert(res.data.message);
+      toast.info(res.data.message);
       setIsVerified(true);
     } catch (err) {
       console.log(err.response?.data);
-      alert("Invalid OTP");
+      toast.info(err.response?.data?.error || "Invalid OTP");
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!isVerified) return alert("Verify your email first");
+    if (!isVerified) return toast.info("Verify your email first");
 
-    if (formRegister.password !== formRegister.retypePassword) return alert("Passwords do not match");
+    if (formRegister.password !== formRegister.retypePassword) return toast.info("Passwords do not match");
 
     axios.post("http://localhost:3000/api/student/register/user-info", formRegister)
       .then(res => {

@@ -29,27 +29,27 @@ function UpdateExam() {
 
   useEffect(() => {
     if (!accessToken || !examId) return;
-
-    const fetchData = async () => {
-      try {
-        const headers = { Authorization: `Bearer ${accessToken}` }
-        const config = {
-          headers,
-          withCredentials: true
-        };
-
-        const examInfo = await axios.get(`/exams/exam/${examId}`, config);
-        const examQuestions = await axios.get(`/exams/${examId}/questions`, config);
-
-        setExamInfo(examInfo.data);
-        setExamQues(examQuestions.data);
-      } catch (err) {
-        console.error("Error fetching exam data:", err);
-      }
-    };
-
     fetchData();
   }, [examId, accessToken]);
+
+  const fetchData = async () => {
+    try {
+      const headers = { Authorization: `Bearer ${accessToken}` }
+      const config = {
+        headers,
+        withCredentials: true
+      };
+
+      const examInfo = await axios.get(`/exams/exam/${examId}`, config);
+      const examQuestions = await axios.get(`/exams/${examId}/questions`, config);
+
+      setExamInfo(examInfo.data);
+      setExamQues(examQuestions.data);
+    } catch (err) {
+      console.error("Error fetching exam data:", err);
+    }
+  };
+  
 
   if (!examInfo) return <p>Loading exam... fetching exam info...</p>;
   if (!examQues) return <p>Loading exam... probably no questions yet...</p>;
@@ -72,6 +72,21 @@ function UpdateExam() {
       console.error("Failed to update exam info:", err);
     }
   };
+
+  const handleRandomizeCode = async() => {
+    const config = {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      withCredentials: true
+    };
+
+    try {
+      await axios.patch(`/exams/${examId}/code`, config);
+      console.log("Exam code updated");
+      fetchData(); //call to refresh the code automatically
+    } catch (err) {
+      console.error("Failed to update exam code:", err);
+    }
+  }
 
   const handlePublish = async () => {
     const config = {
@@ -176,7 +191,7 @@ function UpdateExam() {
             />
             <Button className="header-save-button" label="Save" onClick={handleSaveExamInfo} />
             <p className="exam-code" placeholder="Exam Code">{examInfo.exam_code}</p>
-            <Button className="randomize-button" label="Randomize"/>
+            <Button className="randomize-button" label="Randomize" onClick={handleRandomizeCode} />
           </div>
           <p>Status: {examInfo.status}</p>
           <Button className="publish-button" label="Publish" onClick={handlePublish} />
