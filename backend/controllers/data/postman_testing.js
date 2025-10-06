@@ -274,7 +274,7 @@ const postmanLinks = [
     link: "http://localhost:3000/api/student-scores/score" 
   }, 
   {
-    WHAT: "Viewing Scores and Name Per Section",
+    WHAT: "Viewing Scores and Name Per Section", //all scores per section and per exam
     FUNC: getAllScoresByExam,
     CRUD: "GET",
     path: "/api/exams/:examId/scores/:sectionTaker",

@@ -223,6 +223,8 @@ return (
         <FinishExamInfo 
           examTitle={examInfo.title}
           examAutomatedScore={examInfo.total_score}
+          examTotalPoints={examInfo.total_points}
+          examTotalQuestions={examInfo.total_questions}
         />
         ) : (
           <p>No exam info found.</p>

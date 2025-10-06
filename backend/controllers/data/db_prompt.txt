@@ -38,6 +38,7 @@ CREATE TABLE examinations (
   end_datetime TIMESTAMPTZ,   -- stores in UTC
   timer_question INT,
   exam_duration INT,
+  total_points INT DEFAULT 0,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
   -- 2.1 SECTION TAKER TABLE
