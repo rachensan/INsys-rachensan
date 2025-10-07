@@ -30,7 +30,22 @@ const ScoreDetails = () => {
     <>
     <div className="history-grids">
       <div className="student-home-scores">
-        <p>galing sayo laman neto no?</p>
+        <p>---</p>
+      </div>
+    </div>
+    <div className="history-grids">
+      <div className="student-home-scores">
+        <p>---</p>
+      </div>
+    </div>
+    <div className="history-grids">
+      <div className="student-home-scores">
+        <p>---</p>
+      </div>
+    </div>
+    <div className="history-grids">
+      <div className="student-home-scores">
+        <p>---</p>
       </div>
     </div>
     </>

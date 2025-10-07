@@ -57,7 +57,7 @@ function EnterExam() {
       <HeaderStudent />
       <div className="student-home-code-container">
         <div className = "student-home-container-logo" >
-          <img src="insys3.PNG" alt="logo" />
+          <img src="/images/insys-logo.webp" alt="logo" />
         </div>
 
         <div className="student-home-input">

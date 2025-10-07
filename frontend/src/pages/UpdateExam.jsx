@@ -202,26 +202,27 @@ function UpdateExam() {
         <div className="main-content">
           {/*<!-- Div 2.1 -->*/} {/*<!-- questions -->*/}
           <div className="question-container">
-            <label class="question-label">Question</label>
-            {examQues.map((q) => (
-              <EditableQuestionForm
-                key={q.question_id}
-                data={q}
-                onSave={handleSaveQuestion}
-                onDelete={handleDeleteQuestion}
-              />
-            ))}
-            {/* Adding of question FORM */}
-            {questionForms.map((form) => (
-              <AddQuestionForm
-                key={form.id}
-                formId={form.id}
-                exam={examQues}
-                setExam={setExamQues}
-                onSave={handleSaveQuestion}
-              />
-            ))}
-            
+            <div>
+              <label class="question-label">Question</label>
+              {examQues.map((q) => (
+                <EditableQuestionForm
+                  key={q.question_id}
+                  data={q}
+                  onSave={handleSaveQuestion}
+                  onDelete={handleDeleteQuestion}
+                />
+              ))}
+              {/* Adding of question FORM */}
+              {questionForms.map((form) => (
+                <AddQuestionForm
+                  key={form.id}
+                  formId={form.id}
+                  exam={examQues}
+                  setExam={setExamQues}
+                  onSave={handleSaveQuestion}
+                />
+              ))}
+            </div>
             <QuestionAdd onClick={handleQuestionAdd} />
           </div>
 
