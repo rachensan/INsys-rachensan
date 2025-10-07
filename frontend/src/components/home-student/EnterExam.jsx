@@ -5,9 +5,8 @@ import axios from '../../utils/axiosConfig.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 
 import InputField from '../InputFields.jsx';
-
-
-
+import ScoreHistory from './HistoryScores.jsx';
+import { HeaderStudent } from '../Header.jsx';
 
 
 function EnterExam() {
@@ -17,6 +16,7 @@ function EnterExam() {
   const [inputExamCode, setInputExamCode] = useState('');
   const [inputExamSection, setInputExamSection] = useState('');
   const [isVerified, setIsVerified] = useState(false);
+  const [agreed, setAgreed] = useState(false);
   const [examId, setExamId] = useState(null);
 
   const handleEnterCode = async () =>  {
@@ -56,31 +56,70 @@ function EnterExam() {
     <>
     {!isVerified ? (
       <>
-      <label>"Code: "</label>
-      <InputField
-        name="code"
-        value={inputExamCode} 
-        onChange={(e) => setInputExamCode(e.target.value)}
-        placeholder="Enter exam code"
-      />
-      <label>"Section: "</label>
-      <InputField 
-        name="section"
-        value={inputExamSection} 
-        onChange={(e) => setInputExamSection(e.target.value)}
-        placeholder="Enter your section"
-      />
-      <Button label="Enter" onClick={handleEnterCode} />
+      <HeaderStudent />
+      <div className="student-home-code-container">
+        <div className = "student-home-container-logo" >
+          <img src="insys3.PNG" alt="logo" />
+        </div>
+
+        <div className="student-home-input">
+          <label for="section">Section</label>
+          <InputField 
+            name="section"
+            id="section"
+            value={inputExamSection} 
+            onChange={(e) => setInputExamSection(e.target.value)}
+            placeholder="Enter your section"
+          />
+        </div>
+
+        <div className="student-home-input">
+          <label for="code">Code</label>
+          <InputField
+            name="code"
+            id="code"
+            value={inputExamCode} 
+            onChange={(e) => setInputExamCode(e.target.value)}
+            placeholder="Enter your exam code"
+          />
+        </div>
+        <Button className="student-home-exam-button" label="Take Exam" onClick={handleEnterCode} />
+      </div>
+      <ScoreHistory />
       </>
     ) : (
       <>
-      <div>
-        <h2>Exam Instructions</h2>
-        <p>Please read the following carefully before starting your exam:</p>
-        <Button label="START" onClick={handleStartClick} />
+      <div className="student-instructions-whole">
+        <div className="student-instructions-container">
+          <div className="student-instruction-icon-container">
+            <i className="fa-solid fa-file-contract"></i>
+          </div>
+          <label>Exam Instructions</label>
+          <p>
+            1. The exam consists of 30 questions: 10 multiple-choice, 10 identification, and 10 true-or-false questions.<br />
+            2. You have 30 seconds to answer each question.<br />
+            3. Ensure a stable internet connection throughout the exam.<br />
+            4. Switching tabs, opening new tabs, or accessing external resources is strictly prohibited.<br />
+            5. Your activity is monitored. Any violation will result in a warning.<br />
+            6. Three warnings will result in a red flag being issued for your exam.<br />
+            7. Submit your answers before the time expires to ensure they are recorded.<br />
+            8. Read each question carefully before answering.<br />
+            9. Use only the provided interface to submit your responses.<br />
+            10. Contact the proctor if you encounter technical issues.
+          </p>
+
+          <div className="student-instruction-bottom-stick">
+            <div className="student-instruction-checkbox-container">
+              <input type="checkbox" id="agree-checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
+              <label for="agree-checkbox">I have read and understand the instructions</label>
+            </div>
+            <button className="student-instruction-take-exam-btn" id="student-instruction-take-exam-btn" disabled={!agreed} onClick={handleStartClick}>Take Exam</button>
+          </div>
+        </div>
       </div>
       </>
     )}
+    
     </>
   )
 }
