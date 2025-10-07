@@ -98,13 +98,13 @@ function ExamQuestions() {
   const navigate = useNavigate();
 
   const { examId } = useParams(); //not params.,, dapat galing sa code
-  const [ examQuestions, setExamQuestions ] = useState([]);
+  const [examQuestions, setExamQuestions] = useState([]);
   const [current, setCurrent] = useState(0);
   const [examSession, setExamSession] = useState(null);
   const [loadingQuestions, setLoadingQuestions] = useState(true);
   const [loadingExamInfo, setLoadingExamInfo] = useState(false);
 
-  const [ selectedAnswer, setSelectedAnswer ] = useState('');
+  const [selectedAnswer, setSelectedAnswer] = useState('');
   const [examInfo, setExamInfo] = useState(null);
   const [submitted, setSubmitted] = useState(false);
 
@@ -120,6 +120,12 @@ function ExamQuestions() {
         //this will give us res.status(200).json({ objectives: objectives.rows, essays: essays.rows });
 
         const combined = [...res.data.objectives, ...res.data.essays];
+
+        if ((!res.data.objectives || res.data.objectives.length === 0) && (!res.data.essays || res.data.essays.length === 0)){//if no questions left
+          fetchExamInfo();
+          setSubmitted(true);
+          return; // stop further execution
+        }
 
         setExamQuestions(combined);
       } catch (error) {
@@ -312,7 +318,7 @@ return (
                     Previous
                   </button> */}
           <Button 
-            label={current === examQuestions.length - 1 ? "Submit Exam" : "NEXT question bij"}
+            label={current === examQuestions.length - 1 ? "Submit" : "Next"}
             onClick={async() => {
               await handleStudentAnswer();
 
