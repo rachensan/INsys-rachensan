@@ -1,235 +1,214 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    <link rel="stylesheet" href="home.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home</title>
+<link rel="stylesheet" href="home.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
-
-
-<!-- family tree, hahaha
-
-                whole ______________________________
-         _________|____________                     |
-         |                    |                     |
-    side bar        main home content __________    |
-                                 |              |   |         
-                            grid contaainer__   |   |      
-                                  |          |  |   |
-                              grid items     |  |   |
-                                             |  |   |
-        end__________________________________|  |   |                                     
-    end ________________________________________|   |
-end_________________________________________________|
-                                            
--->
-
-
-
 <body>
-    <!-- whole  -->
-    <!-- start -->
-    <div className="whole">
 
-        <!-- sidebar -->
-        <!-- start-->        
-         <div className="sidebar">
+<!-- whole start -->
+<div className="whole">
+
+
+
+
+    <!-- header start -->
+    <header className="student-home-main-header">
+
+        <div className = "teacher-home-header-logo" >
+            <img src="insys3.PNG" alt="logo">
+        </div>
+
+        <div className="teacher-home-spacer"></div>
+        <nav>
+            <ul>
+                <li className="nav-item">
+                    <a href="#">About</a>
+                    <ul className="teacher-home-header-dropdown">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Terms and Conditions</a></li>
+                    </ul>
+                </li>
+                <li className="nav-item">
+                    <a href="#">Settings</a>
+                    <ul className="teacher-home-header-dropdown">
+                        <li><a href="#">Account</a></li>
+                        <li><a href="#">Theme</a></li>
+                    </ul>
+                </li>
+                <li className="nav-item">
+                    <a href="#">Logout</a>
+                    <ul className="teacher-home-header-dropdown">
+                        <li><a href="#">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <!-- header end-->
+
+
+
+
+    <!-- nanay ni sidebar and main conintainer start -->
+    <div className="side-bar-and-main-container">
+
+
+
+
+        <!-- sidebar start-->
+        <div className="sidebar">
             <div className="sidebar-image">
-                <img src="logo.png" alt="Sidebar Image">
+                <img src="insys3.PNG" alt="Sidebar Image">
             </div>
-
             <div className="sidebar-buttons">
-                <h1 className="sidebar-title">Tools</h1>
+                <label className="sidebar-title">Tools </label>
                 <button className="sidebar-btn"><i className="fas fa-plus"></i> Create Exam</button>
                 <button className="sidebar-btn"><i className="fas fa-chart-bar"></i> Exam Analytics</button>
             </div>
-
             <div className="profile-container">
                 <i className="fa-solid fa-user"></i>
                 <div className="profile-info">
-                    <div className="profile-name">Eryan Tungol</div>
+                    <div className="profile-name">Harian Tungol</div>
                     <div className="profile-title">CSS Instructor</div>
                 </div>
             </div>
         </div>
-        <!-- end sidebar -->
+        <!-- sidebar end-->
 
 
 
 
-        <!-- main home content -->
-        <!-- start -->
+
+        <!-- main content start-->
         <div className="main-home-content">
-            <div className="search-bar">
-                <input type="text" className="search-input" placeholder="Search">
-                <select className="dropdown">
-                    <option value="completed">Completed</option>
-                    <option value="drafts">Drafts</option>
-                    <option value="ongoing">Ongoing</option>
-                </select>
+            <label className="main-container-title">Exams</label>
+            <select className="dropdown-main">
+              <option value="completed">Completed</option>
+              <option value="drafts">Drafts</option>
+              <option value="ongoing">Ongoing</option>
+            </select>
+
+  <!-- grid container start (nanay ng grids)-->
+      <div className="grid-container">
+
+    <!-- grid item start (gumamit ako ng span dito) --> 
+        <div className="grid-item" data-id="1">
+            <div className="teacher-home-grid-item-buttons">
+                <button className="teacher-home-duplicate-button">
+                    <i className="fa-solid fa-clone"></i>
+                    <span className="tooltip">Duplicate</span>
+                </button>
+                <button className="teacher-home-delete-button">
+                    <i className="fas fa-trash"></i>
+                    <span className="tooltip">Delete</span>
+                </button>
             </div>
-            <h1 className="sidebar-title">Exams</h1>
-
-
-
-            <!--  grid container -->
-            <!-- start grid container -->
-            <div className="grid-container">
-
-                
-
-                
-
-                <!-- grid item-->
-                <!--start-->
-                <div className="grid-item" data-id="1">    <!-- ikaw na bahala di alam kung lalagyan koba id yung grid-item, quiz, activity exam e -->
-                    <div className="kebab-menu">
-                        <i className="fas fa-ellipsis-v"></i>
-                        <ul className="kebab-options">
-                            <li>Rename</li>
-                            <li>Duplicate</li>
-                            <li>Delete</li>
-                        </ul>
-                    </div>
-                 
-                    <div className="exam-content">
-                        <i className="fas fa-folder"></i>
-                        <span>Anoto</span>
-                    </div>
-                    
-                    <div className="taskbar">
-                        <div className="taskbar-left">None</div>
-                        <div className="taskbar-right">Status: <span className="done-text">Done</span></div>
-                    </div>
-                </div>
-                <!-- end-->
-
-
-
-                  <div className="grid-item quiz-item" data-id="2">
-                    <div className="kebab-menu">
-                        <i className="fas fa-ellipsis-v"></i>
-                        <ul className="kebab-options">
-                            <li>Rename</li>
-                            <li>Duplicate</li>
-                            <li>Delete</li>
-                        </ul>
-                    </div>
-                 
-                    <div className="exam-content">
-                        <i className="fas fa-folder"></i>
-                        <span>Quiz 1</span>
-                    </div>
-                    
-                    <div className="taskbar">
-                        <div className="taskbar-left">Quiz</div>
-                        <div className="taskbar-right">Status: <span className="done-text">Done</span></div>
-                    </div>
-                </div>
-
-
-
-                <!-- grid item-->
-                <!--start-->
-                <div className="grid-item activity-item" data-id="3">
-                    <div className="kebab-menu">
-                        <i className="fas fa-ellipsis-v"></i>
-                        <ul className="kebab-options">
-                            <li>Rename</li>
-                            <li>Duplicate</li>
-                            <li>Delete</li>
-                        </ul>
-                    </div>
-                 
-                    <div className="exam-content">
-                        <i className="fas fa-folder"></i>
-                        <span>Activity 1</span>
-                    </div>
-                    
-                    <div className="taskbar">
-                        <div className="taskbar-left">Activity</div>
-                        <div className="taskbar-right">Status: <span className="done-text">Done</span></div>
-                    </div>
-                </div>
-                <!-- end-->
-
-
-                <!-- grid item-->
-                <!--start-->
-                <div className="grid-item exam-item" data-id="4">
-                    <div className="kebab-menu">
-                        <i className="fas fa-ellipsis-v"></i>
-                        <ul className="kebab-options">
-                            <li>Rename</li>
-                            <li>Duplicate</li>
-                            <li>Delete</li>
-                        </ul>
-                    </div>
-                 
-                    <div className="exam-content">
-                        <i className="fas fa-folder"></i>
-                        <span>Exam 1</span>
-                    </div>
-                    
-                    <div className="taskbar">
-                        <div className="taskbar-left">Exam</div>
-                        <div className="taskbar-right">Status: <span className="done-text">Done</span></div>
-                    </div>
-                </div>
-                <!-- end-->
-
-
-                <!-- grid item-->
-                <!--start-->
-                <div className="grid-item exam-item" data-id="5">
-                    <div className="kebab-menu">
-                        <i className="fas fa-ellipsis-v"></i>
-                        <ul className="kebab-options">
-                            <li>Rename</li>
-                            <li>Duplicate</li>
-                            <li>Delete</li>
-                        </ul>
-                    </div>
-                 
-                    <div className="exam-content">
-                        <i className="fas fa-folder"></i>
-                        <span>Exam 1</span>
-                    </div>
-                    
-                    <div className="taskbar">
-                        <div className="taskbar-left">Exam</div>
-                        <div className="taskbar-right">Status: <span className="done-text">Done</span></div>
-                    </div>
-                </div>
-                <!-- end-->
-
-
-                
-
-
-               
-               
+            <div className="exam-content">
+                <i className="fas fa-folder"></i>
+                <span>Anoto</span>
             </div>
-            <!-- end grid container -->
-
+            <div className="taskbar">
+                <div className="taskbar-left">None</div>
+                <div className="taskbar-right">Status: <span className="done-text">Done</span></div>
+            </div>
         </div>
-        <!-- end main home content-->
+        <!-- grid item end -->
 
+
+        <!-- grid item start (gumamit ako ng span dito) --> 
+        <div className="grid-item quiz-item" data-id="1">
+            <div className="teacher-home-grid-item-buttons">
+                <button className="teacher-home-duplicate-button">
+                    <i className="fa-solid fa-clone"></i>
+                    <span className="tooltip">Duplicate</span>
+                </button>
+                <button className="teacher-home-delete-button">
+                    <i className="fas fa-trash"></i>
+                    <span className="tooltip">Delete</span>
+                </button>
+            </div>
+            <div className="exam-content">
+                <i className="fas fa-folder"></i>
+                <span>Anoto</span>
+            </div>
+            <div className="taskbar">
+                <div className="taskbar-left">None</div>
+                <div className="taskbar-right">Status: <span className="done-text">Done</span></div>
+            </div>
+        </div>
+        <!-- grid item end -->
+
+        <!-- grid item start (gumamit ako ng span dito) --> 
+        <div className="grid-item activity-item" data-id="1">
+            <div className="teacher-home-grid-item-buttons">
+                <button className="teacher-home-duplicate-button">
+                    <i className="fa-solid fa-clone"></i>
+                    <span className="tooltip">Duplicate</span>
+                </button>
+                <button className="teacher-home-delete-button">
+                    <i className="fas fa-trash"></i>
+                    <span className="tooltip">Delete</span>
+                </button>
+            </div>
+            <div className="exam-content">
+                <i className="fas fa-folder"></i>
+                <span>Anoto</span>
+            </div>
+            <div className="taskbar">
+                <div className="taskbar-left">None</div>
+                <div className="taskbar-right">Status: <span className="done-text">Done</span></div>
+            </div>
+        </div>
+        <!-- grid item end -->
+
+        <!-- grid item start (gumamit ako ng span dito) --> 
+        <div className="grid-item exam-item" data-id="1">
+            <div className="teacher-home-grid-item-buttons">
+                <button className="teacher-home-duplicate-button">
+                    <i className="fa-solid fa-clone"></i>
+                    <span className="tooltip">Duplicate</span>
+                </button>
+                <button className="teacher-home-delete-button">
+                    <i className="fas fa-trash"></i>
+                    <span className="tooltip">Delete</span>
+                </button>
+            </div>
+            <div className="exam-content">
+                <i className="fas fa-folder"></i>
+                <span>Anoto</span>
+            </div>
+            <div className="taskbar">
+                <div className="taskbar-left">None</div>
+                <div className="taskbar-right">Status: <span className="done-text">Done</span></div>
+            </div>
+        </div>
+        <!-- grid item end -->
+
+        <!-- grid item end -->
+
+
+
+        
+
+
+
+
+
+
+
+            </div>
+            <!-- grid container end (nanay ng grids)-->
+        </div>
+        <!-- main content end-->
     </div>
-    <!--end whole div-->
-
-    
+    <!-- nanay ni sidebar and main conintainer end -->
+</div>
+<!-- whole end -->
 </body>
 </html>
 
-<!-- 
 
-    nilagyan ko siya kulay sa css
-     grey = default (grid- item)
-     green = quiz (grid-item quiz-item)
-     yellow = activity (grid-item activity-item)
-     blue = exam
-     
-     -->

@@ -1,0 +1,361 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background: #e5EAF4;
+    min-height: 100vh;
+    padding: 2rem 0;
+    
+}
+
+.whole {
+    display: flex;
+    align-items: flex-start; 
+    gap: 3rem; 
+    max-width: 1920px; 
+    margin: 0 auto; 
+    
+}
+
+.sidebar {
+    width: 100%;
+    max-width: 270px;
+    background-color: #ffffff;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: calc(100vh - 4rem);
+    margin-left: 3rem; 
+}
+
+.sidebar-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0.9rem;
+}
+
+.sidebar-image img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.sidebar-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    margin-bottom: 2rem;
+   ;
+}
+
+.sidebar-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color:#8a8585;
+    margin-bottom: 1rem;
+}
+
+.sidebar-btn {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.7rem;
+    background-color: #eeeeee;
+    color: rgb(14, 14, 14);
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.sidebar-btn i {
+    font-size: 1rem;
+}
+
+.sidebar-btn:hover,.profile-container:hover{
+    background-color: #9ac3ee;
+}
+
+.profile-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.6rem;
+    background-color: #eeeeee;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: auto;
+}
+
+
+
+.profile-container .fa-user {
+    font-size: 1.5rem;
+    color: #1d4e75;
+    background-color: rgba(166, 179, 194, 0.3);
+    border-radius: 50%;
+    padding: 0.75rem;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    flex-grow: 1;
+}
+
+.profile-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #000000;
+}
+
+.profile-title {
+    font-size: 0.8rem;
+    color: #777777;
+}
+
+.main-home-content { 
+    flex: 1;
+    max-width: 1500px;
+    padding: 1.5rem;
+    height: calc(100vh - 4rem);
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    margin-right: 2.5rem;
+}
+
+
+.grid-container::-webkit-scrollbar {
+    width: 9px;
+}
+
+.grid-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.grid-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+}
+
+.grid-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(67, 93, 210, 0.10);
+}
+
+.search-bar {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.search-input {
+    padding: 0.6rem;
+    background-color: #dee8f2;
+    border: 0.5px solid #e0d2d2;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    color: #000000;
+    width: 90%;
+}
+
+
+.search-input::placeholder {
+    color: #817979;
+    opacity: 1;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #2851d8;
+    box-shadow: 0 0 4px rgba(36, 117, 204, 0.7);
+}
+
+.dropdown {
+    padding: 0.6rem;
+    background-color: #dee8f2;
+    border: 0.5px solid #e0d2d2;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    color: #000000;
+    margin-left: 26.5rem;
+}
+
+.dropdown:focus {
+    outline: none;
+    border-color: #2851d8;
+    box-shadow: 0 0 4px rgba(36, 117, 204, 0.7);
+}
+
+
+
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    max-height: calc(100vh - 200px); 
+    overflow-y: auto;  
+    padding-right: 0.5rem; 
+}
+
+.grid-item {
+    background-color: #dee8f2;
+    border-radius: 5px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 150px;
+    position: relative;
+    border: 0.5px solid transparent;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.grid-item:hover {
+    border-color: #2851d8;
+    box-shadow: 0 0 4px rgba(36, 117, 204, 0.7);
+}
+
+.kebab-menu {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    cursor: pointer;
+    z-index: 200;
+}
+
+
+
+.kebab-menu i {
+    font-size: 16px;
+    color: #b1afaf;
+    padding: 4px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+
+.kebab-menu i:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.kebab-options {
+    display: none;
+    position: absolute;
+    top: 28px;
+    right: 0;
+    background: #ffffff;
+    border: 0.5px solid #e0d2d2;
+    border-radius: 8px;
+    list-style: none;
+    padding: 5px 0;
+    margin: 0;
+    width: 130px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    z-index: 201;
+}
+
+.kebab-options li {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #000000;
+    transition: background-color 0.2s;
+}
+
+.kebab-options li:hover {
+    background-color: #c9d8e8;
+}
+
+.kebab-menu.active .kebab-options {
+    display: block;
+}
+
+.exam-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+.exam-content i {
+    font-size: 3rem;
+    color: #ccc;
+    margin-left: 1rem;
+}
+
+.exam-content span {
+    font-size: 0.9rem;
+    color: #000000;
+}
+
+.taskbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    background-color: #3a3f42;
+    border-radius: 5px;
+    margin-top: auto;
+}
+
+.taskbar-left {
+    font-size: 0.8rem;
+    color: #fff;
+}
+
+.taskbar-right {
+    font-size: 0.8rem;
+    color: #fff;
+}
+
+.done-text {
+    font-weight: bold;
+}
+
+
+
+/* yung color coding*/
+.quiz-item .taskbar{
+    background-color: #28a745;  
+}
+.quiz-item .exam-content i.fa-folder{
+color: #28a745;
+}
+
+
+.activity-item .taskbar {
+    background-color: #ff9800;
+}
+.activity-item .exam-content i.fa-folder {
+    color: #ff9800; 
+}
+
+.exam-item .exam-content i.fa-folder {
+    color: #4baaf7;
+
+}
+.exam-item .taskbar{
+     background-color: #4baaf7
+
+}

@@ -25,4 +25,27 @@ function LogoutButton({className}) {
   )
 }
 
+export const LogoutSpan = ({className}) => {
+  
+  const navigate = useNavigate();
+  const { setAccessToken, setUser } = useAuth();
+
+  const handleLogout = () => {
+    axios.post("/logout", {}, { withCredentials: true })
+      .then(res => {
+        console.log(res.data.message);
+        setAccessToken(null); //clear token
+        setUser(null); //clear user
+        navigate("/login"); //redirect to login page
+      })
+      .catch(err => console.error(err));
+  };
+
+  return (
+    <>
+    <span className={className} onClick={handleLogout}>Logout</span>
+    </>
+  )
+}
+
 export default LogoutButton;

@@ -1,9 +1,9 @@
-function SelectField({ label, name, value, onChange, options, disabled, divClassName, className }) {
+function SelectField({ label, name, value, onChange, options, disabled, className }) {
   const safeValue = value ?? 'draft';
   //default to "draft" if nothing is set
   
   return (
-    <div className={divClassName}>
+    <>
       <label htmlFor={name}> {label} </label>
       <select id={name} 
         className={className}
@@ -19,7 +19,8 @@ function SelectField({ label, name, value, onChange, options, disabled, divClass
           </option>
         ))}
       </select>
-    </div>
+    </>
+    
   );
 }
 

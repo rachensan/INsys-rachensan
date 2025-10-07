@@ -9,24 +9,26 @@ export const HomeCard = ({ data, title, subjCode, schedule, status, sections, on
     <div className="grid-item"
       onClick={() => onClickNav(data.exam_id)}> {/* goes to the specific exam when div is clicked */}
 
-      <div className="kebab-menu" >
-        <i className="fas fa-ellipsis-v"></i>
-        <Button 
-          label="Delete" 
-          type="button" 
+      <div className="teacher-home-grid-item-buttons" >
+        <button 
+          className="teacher-home-duplicate-button"
+          onClick={(e) => { 
+            e.stopPropagation(); 
+            onClickDupe(data.exam_id); 
+          }}>
+          <i className="fa-solid fa-clone"></i>
+          <span className="tooltip">Duplicate</span>
+        </button>
+        <button 
+          className="teacher-home-delete-button"
           onClick={(e) => { 
             e.stopPropagation(); 
             onClickDel(data.exam_id); 
           }} 
-        />
-        <Button 
-          label="Duplicate" 
-          type="button" 
-          onClick={(e) => { 
-            e.stopPropagation(); 
-            onClickDupe(data.exam_id); 
-          }} 
-        />
+        >
+          <i className="fas fa-trash"></i>
+          <span className="tooltip">Delete</span>
+        </button>
       </div>
         
       <div className="exam-content">
@@ -40,10 +42,6 @@ export const HomeCard = ({ data, title, subjCode, schedule, status, sections, on
       </div>
       
     </div>
-      {/* no fetched info dito:  */}
-        {/* <p>{subjCode}</p>
-        <p>{schedule}</p>
-        <p>{sections}</p> */}
     </>
   );
 };
@@ -55,6 +53,7 @@ function DraftExams({ exams, onClickDel, onClickDupe, className }) {
     <>
       {exams.map((e) => (
         <HomeCard //these from the database so use snake_case
+          className={className}
           key={e.exam_id}
           title={e.title}
           subjCode={e.subj_code}

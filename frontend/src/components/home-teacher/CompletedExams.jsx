@@ -47,6 +47,7 @@ function CompletedExams({ exams, onClickDel, onClickDupe, className }) {
     <>
       {exams.map((e) => (
         <HomeCard //these from the database so use snake_case
+          className={className}
           key={e.exam_id}
           title={e.title}
           subjCode={e.subj_code}

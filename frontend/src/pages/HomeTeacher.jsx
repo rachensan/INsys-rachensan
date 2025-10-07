@@ -9,7 +9,7 @@ import { useExams } from '../hooks/useExams.js';
 
 //components
 import Button from '../components/Buttons.jsx';
-import LogoutButton from '../components/Logout.jsx'
+import LogoutButton, { LogoutSpan } from '../components/Logout.jsx'
 import SelectField from '../components/SelectFields.jsx';
 import DraftExams from '../components/home-teacher/DraftExams.jsx';
 import PublishedExams from '../components/home-teacher/PublishedExams.jsx';
@@ -63,11 +63,50 @@ function HomeTeacher() {
 {/* <!-- whole  -->
     <!-- start --> */}
     <div className="whole">
-  {/* <!-- sidebar -->
+    {/* <!-- header start --> */}
+      <header className="student-home-main-header">
+        <div className = "teacher-home-header-logo" >
+          <img src="insys3.PNG" alt="logo" />
+        </div>
+
+        <div className="teacher-home-spacer"></div>
+        <nav>
+          <ul>
+            <li className="nav-item">
+              <span>About</span>
+              <ul className="teacher-home-header-dropdown">
+                <li><span>About Us</span></li>
+                <li><span>Terms and Conditions</span></li>
+              </ul>
+            </li>
+            <li className="nav-item">
+              <span>Settings</span>
+              <ul className="teacher-home-header-dropdown">
+                <li><span>Account</span></li>
+                <li><span>Theme</span></li>
+              </ul>
+            </li>
+            <li className="nav-item">
+              <span>Logout</span>
+              <ul className="teacher-home-header-dropdown">
+                <li>
+                  <LogoutSpan className="dropdown-logout-btn"/>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+      </header>
+    {/* <!-- header end --> */}
+
+
+  <div className="side-bar-and-main-container">
+
+    {/* <!-- sidebar -->
       <!-- start-->   */}
       <div className="sidebar">
         <div className="sidebar-image">
-          <img src="logo.png" alt="Sidebar Image"/>
+          <img src="insys3.PNG" alt="Sidebar Image"/>
         </div>
 
         <div className="sidebar-buttons">
@@ -94,7 +133,7 @@ function HomeTeacher() {
               </>
             )}
           <button className="sidebar-btn"><i className="fas fa-chart-bar"></i> Exam Analytics</button>
-          <LogoutButton className="sidebar-btn"/>
+          
         </div>
 
         <div className="profile-container">
@@ -113,16 +152,13 @@ function HomeTeacher() {
 {/* <!-- main home content -->
     <!-- start --> */}
     <div className="main-home-content">
-      <div className="search-bar">
-        <input type="text" className="search-input" placeholder="Search" />
-        <SelectField className="dropdown"
-          name="status"
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-          options={optionsArray}
-        />
-      </div>
-      <h1 className="sidebar-title">Exams</h1>
+      <label className="main-container-title">Exams</label>
+      <SelectField className="dropdown-main"
+        name="status"
+        value={status}
+        onChange={(e) => setStatus(e.target.value)}
+        options={optionsArray}
+      />
 
   {/* <!--  grid container -->
       <!-- start grid container --> */}
@@ -130,41 +166,42 @@ function HomeTeacher() {
 
     {/* <!-- grid item-->
         <!--start--> */}
-            {status === 'draft' && 
-            <DraftExams 
-              exams={exams.filter(e => e.status === 'draft')} 
-              onClickDel={deleteExam} 
-              onClickDupe={duplicateExam}
-            />}
-            {status === 'published' && 
-            <PublishedExams 
-              exams={exams.filter(e => e.status === 'published')} 
-              onClickDel={deleteExam} 
-              onClickDupe={duplicateExam} 
-            />}
-            {status === 'ongoing' && 
-            <OngoingExams 
-              exams={exams.filter(e => e.status === 'ongoing')} 
-              onClickDel={deleteExam} 
-              onClickDupe={duplicateExam} 
-            />}
+          {status === 'draft' && 
+          <DraftExams 
+            exams={exams.filter(e => e.status === 'draft')} 
+            onClickDel={deleteExam} 
+            onClickDupe={duplicateExam}
+          />}
+          {status === 'published' && 
+          <PublishedExams 
+            exams={exams.filter(e => e.status === 'published')} 
+            onClickDel={deleteExam} 
+            onClickDupe={duplicateExam} 
+          />}
+          {status === 'ongoing' && 
+          <OngoingExams 
+            exams={exams.filter(e => e.status === 'ongoing')} 
+            onClickDel={deleteExam} 
+            onClickDupe={duplicateExam} 
+          />}
 
-            {status === 'completed' && 
-            <CompletedExams 
-              exams={exams.filter(e => e.status === 'completed')} 
-              onClickDel={deleteExam} 
-              onClickDupe={duplicateExam} 
-            />}
+          {status === 'completed' && 
+          <CompletedExams 
+            exams={exams.filter(e => e.status === 'completed')} 
+            onClickDel={deleteExam} 
+            onClickDupe={duplicateExam} 
+          />}
 
-  {/* <!--  grid container -->
-      <!-- end grid container --> */}
+      {/* <!--  grid container -->
+          <!-- end grid container --> */}
+          </div>
+
+
+    {/* <!-- main home content -->
+        <!-- end --> */}
+        </div>
+
       </div>
-
-
-{/* <!-- main home content -->
-    <!-- end --> */}
-    </div>
-
       
     </div>
     </>
