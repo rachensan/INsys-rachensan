@@ -178,7 +178,7 @@ function UpdateExam() {
         {/*<!-- 1 HEADER -->*/}
         <div className="header">
           <div className="left-group">
-            <Button className="back-button-exam" label="<" onClick={() => navigate(-1)} />
+            <Button className="back-button-exam" label="&lt;" onClick={() => navigate(-1)} />
             <InputField 
               className="exam-title"
               name="title"
@@ -191,7 +191,7 @@ function UpdateExam() {
             />
             <Button className="header-save-button" label="Save" onClick={handleSaveExamInfo} />
             <p className="exam-code" placeholder="Exam Code">{examInfo.exam_code}</p>
-            <Button className="randomize-button" label="Randomize" onClick={handleRandomizeCode} />
+            <button class="randomize-button" onClick={handleRandomizeCode}><i class="fa-solid fa-arrow-rotate-left"></i></button>
           </div>
           <p>Status: {examInfo.status}</p>
           <Button className="publish-button" label="Publish" onClick={handlePublish} />

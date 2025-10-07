@@ -13,19 +13,22 @@ import { FinishExamInfo } from "./FinishExamInfo";
 const MultiChoiceComp = ({mcqText, mcqOptions, name, divClassName, onChange, value}) => {
   return (
     <>
-      <div>
-        <div style={{ backgroundColor: 'lightgray' }}>
+      <div className="student-exam-container">
+        <div className="student-exam-back">
+          <button>bakk</button>
+        </div>
+
+        <div className="student-exam-box">
           <p>{mcqText}</p>
         </div>
-        <div style={{ backgroundColor: 'darkgreen' }}>
-          <RadioButtonOptions
-            name={name}
-            value={value}
-            onChange={onChange}
-            options={mcqOptions}
-            divClassName={divClassName}
-          />
-        </div>
+
+        <RadioButtonOptions
+          name={name}
+          value={value}
+          onChange={onChange}
+          options={mcqOptions}
+          divClassName = "student-exam-option-container"
+        />
       </div>
     </>
   )
@@ -238,7 +241,9 @@ return (
       </div>
     ): ( 
             //if no question remains (anu hah):(navigate to exam score/details page)
-      <div>
+      <>
+      <div className="student-exam-whole">
+
         <h2>Question {current + 1}</h2> 
         {!submitted && q && (
           <>
@@ -277,7 +282,6 @@ return (
                       value={selectedAnswer}
                       onChange={(e) => setSelectedAnswer(e.target.value)}
                       placeholder="... "
-                      divClassName="antok-ka-na-ba"
                     />
                   )
                 case "essay":
@@ -288,7 +292,6 @@ return (
                       value={'edit this answer container, bruh'} //save to db and clear the last selectedAnswer
                       onChange={(e) => setSelectedAnswer(e.target.value)}
                       placeholder="... "
-                      divClassName="antok-ka-na-ba"
                     />
                   )
                 case "truefalse":
@@ -307,16 +310,14 @@ return (
             })()}
           </>
         )}
-        <div>
+        <div className="student-exam-button-container">
           {/*q might be null if examQuestions empty*/}
-          <p>{q ? q.question_text : ""}</p> 
-          <br/><br/><br/>
-                  {/* <button
-                    disabled={current === 0}
-                    onClick={() => setCurrent((prev) => prev - 1)}
-                  >
-                    Previous
-                  </button> */}
+          {/* <button
+            disabled={current === 0}
+            onClick={() => setCurrent((prev) => prev - 1)}
+          >
+            Previous
+          </button> */}
           <Button 
             label={current === examQuestions.length - 1 ? "Submit" : "Next"}
             onClick={async() => {
@@ -334,6 +335,7 @@ return (
           />
         </div>
       </div>
+      </>
     )}
     
     </>

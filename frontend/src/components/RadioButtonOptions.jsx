@@ -5,12 +5,12 @@ function RadioButtonOptions({ label, name, value, onChange, options, divClassNam
   return (
     <div className={divClassName}>
       {label && <label>{label}</label>}
-      <div className="radio-group">
         {options.map((option, index) => {
           const id = `${name}-${index}`
 
           const safeValue = value ?? ''; 
           return (
+            <div className="option-pair">
             <React.Fragment key={index}>
               <input
                 type="radio"
@@ -23,9 +23,9 @@ function RadioButtonOptions({ label, name, value, onChange, options, divClassNam
               />
               <label htmlFor={id}>{option}</label>
             </React.Fragment>
+            </div>
           );
         })}
-      </div>
     </div>
   );
 }
