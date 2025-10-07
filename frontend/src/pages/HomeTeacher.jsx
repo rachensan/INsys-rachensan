@@ -75,7 +75,7 @@ function HomeTeacher() {
       <!-- start-->   */}
       <div className="sidebar">
         <div className="sidebar-image">
-          <img src="insys3.PNG" alt="Sidebar Image"/>
+          <img src="/images/insys3.webp" alt="Sidebar Image"/>
         </div>
 
         <div className="sidebar-buttons">

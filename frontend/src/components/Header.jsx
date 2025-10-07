@@ -7,7 +7,7 @@ function HeaderTeacher() {
         {/* <!-- header start --> */}
         <header className="teacher-home-main-header">
           <div className = "teacher-home-header-logo" >
-            <img src="insys3.PNG" alt="logo" />
+            <img src="/images/insys-logo.webp" alt="logo" />
           </div>
   
           <div className="teacher-home-spacer"></div>

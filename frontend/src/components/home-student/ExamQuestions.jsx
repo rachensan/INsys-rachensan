@@ -14,10 +14,6 @@ const MultiChoiceComp = ({mcqText, mcqOptions, name, divClassName, onChange, val
   return (
     <>
       <div className="student-exam-container">
-        <div className="student-exam-back">
-          <button>bakk</button>
-        </div>
-
         <div className="student-exam-box">
           <p>{mcqText}</p>
         </div>
@@ -57,17 +53,20 @@ const IdentificationComp = ({idenText, name, divClassName, placeholder, onChange
 const EssayComp = ({essayText, name, divClassName, placeholder, onChange, value}) => {
   return (
     <>
-      <div>
-        <div style={{ backgroundColor: 'lightgray' }}>
+      <div className="student-exam-container-essay">
+        <div className="student-exam-box-essay">
           <p>{essayText}</p>
         </div>
-        <div style={{ backgroundColor: 'lightgreen' }}>
-          <InputField 
-            name={name}
+
+        <div className="student-exam-option-container-essay">
+          <textarea
+            className="student-exam-input-essay" 
+            id="student-exam-identification-essay" 
+            name={name} 
             value={value || ""} //must be string or number
             onChange={onChange}
-            placeholder={placeholder}
-          />
+            placeholder="Enter your essay answer" 
+            rows="10" />
         </div>
       </div>
     </>
@@ -157,6 +156,28 @@ function ExamQuestions() {
     fetchSession();
   }, [examId]);
 
+  const exitExam = async() => {
+    const confirmExit = window.confirm("Are you sure you want to exit? Your answers will be submitted automatically.");
+    if (confirmExit) {
+      try {
+        const config = {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          withCredentials: true
+        };
+
+        await axios.post(`/student/exams/${examId}/submit`, { examId }, config);
+      } catch (error) {
+        console.log(
+        error.response?.data?.error ||
+        error.response?.data ||
+        error.message
+        );
+        alert(error.response?.data?.error || "Failed to submit = true");
+      }
+      navigate(-1);
+    }
+  }
+
   const fetchExamInfo = async() => {
     const config = {
       headers: { Authorization: `Bearer ${accessToken}` },
@@ -243,8 +264,11 @@ return (
             //if no question remains (anu hah):(navigate to exam score/details page)
       <>
       <div className="student-exam-whole">
+        <div className="student-exam-back">
+          <button onClick={exitExam}>&lt;</button>
+          <h2>Question {current + 1}</h2> 
+        </div>
 
-        <h2>Question {current + 1}</h2> 
         {!submitted && q && (
           <>
             {/* console.log(optionsArray) */}
@@ -288,10 +312,10 @@ return (
                   return (
                     <EssayComp
                       essayText={q.question_text}
-                      name={`q${current}`} 
-                      value={'edit this answer container, bruh'} //save to db and clear the last selectedAnswer
+                      name={`q${current}`}
+                      value={selectedAnswer || ""} 
                       onChange={(e) => setSelectedAnswer(e.target.value)}
-                      placeholder="... "
+                      placeholder="Enter your essay answer"
                     />
                   )
                 case "truefalse":

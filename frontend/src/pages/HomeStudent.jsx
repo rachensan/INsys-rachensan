@@ -90,7 +90,7 @@ function HomeStudent() {
               textAlign: "center",
               boxShadow: "0 2px 10px rgba(0,0,0,0.3)"}}
             >
-              <h2>⚠️ Ongoing Exam</h2>
+              <h2>Ongoing Exam</h2>
               <p>You already have an exam in progress. Continue or submit?</p>
               <div style={{ marginTop: "20px", display: "flex", justifyContent: "space-around" }}>
                 <button onClick={handleEnterExam}>Enter Exam</button>
