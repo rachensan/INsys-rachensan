@@ -26,7 +26,7 @@ function EnterExam() {
     };
     try {
       const res = await axios.post(`/student/verify`, {inputCode: inputExamCode, inputSection: inputExamSection}, config) //this post request still returns value, so we can use the data
-
+      
       setIsVerified(true);
       
       //if verified, it will proceed to this
@@ -43,9 +43,7 @@ function EnterExam() {
       withCredentials: true
     };
     try {
-      const res = await axios.post(`/student/exams/${examId}/start`, {}, config); 
-      console.log(res.status)
-      
+      const res = await axios.post(`/student/exams/${examId}/start`, {inputCode: inputExamCode, inputSection: inputExamSection}, config);   
       navigate(`/exam/start/${examId}`);
     } catch (error) {
       alert(error.response?.data?.error || "Something went wrong");

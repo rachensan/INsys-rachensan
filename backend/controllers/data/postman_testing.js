@@ -309,8 +309,8 @@ const postmanLinks = [
     WHAT: "Showing Exam History, Student POV",
     FUNC: getStudentExamHistory,
     CRUD: "GET",
-    path: "/api/students/:studentId/exam-history",
-    link: "http://localhost:3000/api/student/2021307605/exam-history" 
+    path: "/api/students/exam-history",
+    link: "http://localhost:3000/api/student/exam-history" 
   }, 
   {
     WHAT: "Setting/Updating the Schedule Exam per Section",

@@ -185,6 +185,7 @@ import { getQuestionsForStudent, getUnansweredQuestions } from "./controllers/qu
       //for checking existing on-going exams before entering another one
       
   app.get('/api/student/exams/:examId/info', studentOnly, getInfoPerExam);
+  app.get('/api/students/exam-history', studentOnly, getStudentExamHistory);
   app.get('/api/exams/session/:examId', studentOnly, getExamSession);
       //status, started_at, finished_at, current_index, time_remaining
   app.get('/api/student/:studentId/exam-history', studentOnly);
