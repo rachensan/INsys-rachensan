@@ -14,13 +14,13 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const redisClient = createClient({
-  url: process.env.REDIS_URL,
-  socket: { tls: true, rejectUnauthorized: false },
+  url: process.env.REDIS_URL, // plain TCP URL
+  // no socket.tls here
 });
 
 redisClient.on("error", (err) => console.error("Redis Client Error:", err));
+
 await redisClient.connect();
 
 export default redisClient;
-
 
