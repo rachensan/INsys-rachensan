@@ -27,7 +27,10 @@ app.use(cookieParser());
 
 //prep frontend:
 app.use(cors({ //allow frontend to access backend
-  origin: `http://localhost:5173`, //React frontend
+  origin: [
+    'http://localhost:5173', // dev
+    'https://your-frontend-name.onrender.com' // prod
+  ],
   credentials: true
 }));
 
