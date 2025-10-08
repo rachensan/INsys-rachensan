@@ -15,14 +15,10 @@ dotenv.config();
 
 const redisClient = createClient({
   url: process.env.REDIS_URL,
-  socket: {
-    tls: true,               // Required if using rediss:// or Render TLS
-    rejectUnauthorized: false
-  },
+  socket: { tls: true, rejectUnauthorized: false },
 });
 
 redisClient.on("error", (err) => console.error("Redis Client Error:", err));
-
 await redisClient.connect();
 
 export default redisClient;
