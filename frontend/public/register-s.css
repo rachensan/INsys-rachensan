@@ -10,7 +10,7 @@
 }
 
 .page-s-registration {
-    background-image: url('76f04dea3a8779f5fc26c2280a03c129.jpg'); 
+    background-image: url('/images/bg.webp'); 
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -152,21 +152,21 @@
 h1 {
     text-align: center;
     margin-bottom: 1.5rem;
-    color: #494949;
+    color: #ffffff;
 }
 
 #registration-container h1 {
-    color: #494949;
+    color: #ffffff;
     transition: color 0.2s;
 }
 
 #otp-container h1 {
-    color: #494949;
+    color: #ffffff;
     transition: color 0.2s;
 }
 
 #otp-code-container h1 {
-    color:#494949;
+    color:#ffffff;
     transition: color 0.2s;
 }
 
@@ -177,7 +177,7 @@ h1 {
 label {
     display: block;
     margin-bottom: 0.5rem;
-    color: #7c7c7c;
+    color: #ffffff;
 }
 
 input[type="email"],

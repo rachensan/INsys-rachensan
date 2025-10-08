@@ -125,6 +125,8 @@ function UpdateExam() {
 
       if (questionId) {//camelCase cuz it's from AllQuesType.jsx
         //if EXISTING --- UPDATE existing question
+        console.log("Payload being sent:", { ...data, exam_id: examId });
+
         await axios.patch(`/exams/${examId}/questions/${questionId}`, { ...data, exam_id: examId }, config);
         
         //update in place instead of refetching para di magulo yung sequence na showing sa frontend
@@ -202,8 +204,8 @@ function UpdateExam() {
         <div className="main-content">
           {/*<!-- Div 2.1 -->*/} {/*<!-- questions -->*/}
           <div className="question-container">
-            <div>
-              <label class="question-label">Question</label>
+            <div className="question-box">
+              {/* <label class="question-label">Question</label> */}
               {examQues.map((q) => (
                 <EditableQuestionForm
                   key={q.question_id}

@@ -62,7 +62,23 @@ function AuthLoader({ children }) {
   return children;
 }
 
+function RootRedirect() {
+  const { user } = useAuth();
 
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (user.role === 'teacher') {
+    return <Navigate to="/teacher-dashboard" replace />;
+  }
+
+  if (user.role === 'student') {
+    return <Navigate to="/student-entry" replace />;
+  }
+
+  return <Navigate to="/login" replace />;
+}
 
 
 function App() {
@@ -100,6 +116,9 @@ useEffect(() => {
     <ToastContainer position="top-right" autoClose={3000} />
     <AuthLoader>
       <Routes>
+        {/* Root redirect */}
+        <Route path="/" element={<RootRedirect />} />
+        
         <Route element={<ProtectedRoute allowedRoles={["teacher"]} />}>
           <Route path='/teacher-dashboard' element={<HomeTeacher />} />
           <Route path='/update-exam/:examId' element={<UpdateExam />} />
@@ -115,6 +134,9 @@ useEffect(() => {
         <Route path='/welcome-register' element={<Welcome />} /> 
         <Route path='/register/student' element={<RegisterStudent />} />
         <Route path='/register/teacher' element={<RegisterTeacher />} />
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </AuthLoader>
     

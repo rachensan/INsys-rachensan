@@ -9,7 +9,7 @@ import SelectField from "../../components/SelectFields";
 const questionTypes = [
   { label: "Identification", value: "identification" },
   { label: "Multiple Choice", value: "multiplechoice" },
-  { label: "True or False", value: "truefalse" },
+  // { label: "True or False", value: "truefalse" },
   { label: "Essay", value: "essay" }
 ];
 
@@ -69,7 +69,7 @@ export const EditableQuestionForm = ({ data, onSave, onDelete, defaultEditing = 
         options={questionTypes}
       />
       <div class="button-group">
-        <button className="delete-question-button" onClick={() => onDelete(data.question_id)}>Delete</button>
+        <button className="delete-button" onClick={() => onDelete(data.question_id)}>Delete</button>
       </div>
       
       {type === "identification" && (
@@ -176,7 +176,7 @@ function AddQuestionForm({ exam, onSave, formId, defaultEditing = false  }) { //
         options={[
           { label: "Identification", value: "identification" },
           { label: "Multiple Choice", value: "multiplechoice" },
-          { label: "True or False", value: "truefalse" },
+          // { label: "True or False", value: "truefalse" },
           { label: "Essay", value: "essay" }
         ]}
       />

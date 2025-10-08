@@ -1,6 +1,6 @@
 import React from "react";
 
-function RadioButtonOptions({ label, name, value, onChange, options, divClassName = ""
+function RadioButtonOptions({ label, name, value, onChange, options, divClassName = "", divClassName2 = ""
 }) {
   return (
     <div className={divClassName}>
@@ -10,7 +10,7 @@ function RadioButtonOptions({ label, name, value, onChange, options, divClassNam
 
           const safeValue = value ?? ''; 
           return (
-            <div className="option-pair">
+            <div className={divClassName2}>
             <React.Fragment key={index}>
               <input
                 type="radio"

@@ -108,8 +108,7 @@ CREATE TABLE questions (
 
         CONSTRAINT student_scores_student_school_id_fkey 
         FOREIGN KEY (student_school_id) REFERENCES users(school_id) ON DELETE CASCADE,
-         
-        student_name TEXT NOT NULL,
+
         total_score INT DEFAULT 0,
         objective_score INT DEFAULT 0,
         essay_score INT DEFAULT 0,

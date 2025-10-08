@@ -11,9 +11,9 @@ function Welcome() {
   return (
     <>
     <div>
-      welome page
+      welcome page
       <br/>
-      somethings here about sa school
+      ........
     </div>
     <div>
       <p>Role: </p>

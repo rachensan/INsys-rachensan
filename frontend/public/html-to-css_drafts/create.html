@@ -34,81 +34,85 @@
         <!-- Div 2.1 -->
         <!-- kabuuan ng question -->
         <div class="question-container"> <!-- start: question-container --> <!-- UpdateExam -->
-            <label class="question-label">Question</label> <!-- UpdateExam -->
-            <label class="question-type-label">Question Type:</label>
-            <select class="question-type-dropdown">
-            <option value="multiple-choice">Multiple Choice</option>
-            <option value="true-false">True or False</option>
-            <option value="identification">Identification</option>
-            </select>
-            <div class="button-group">
-                <button class="delete-button"><i class="fa-solid fa-trash"></i></button>
-            </div>
-<!-- end -->
-
-
-<!-- start: etong mga divs na to hiwalay -->
-    <!-- start -->
-            <!-- multiple choice -->
-            <div class="nested-container"> <!-- MultipleC -->
-                <button class="save-button"><i class="fa-solid fa-floppy-disk"></i></button>
-                <input class="points" type="number" />
-                <textarea class="exambox" placeholder="Enter Question"></textarea>
-
-                <label class="choices-label">Choices:</label>
-                <div class="option-inputs">
-                    <input type="text" class="option-input" placeholder="Option 1">
-                    <input type="text" class="option-input" placeholder="Option 2">
-                    <input type="text" class="option-input" placeholder="Option 3">
-                    <input type="text" class="option-input" placeholder="Option 4">
-                </div>
-                <label class="correct-answer-label">Correct Answer:</label>
-                <input type="text" class="correct-answer-input" placeholder="Set Correct Answer">
-            </div>
-    <!-- end -->
-
-
-
-    <!-- start -->
-            <!-- true or false -->
-            <div class="tf-container">
-                <button class="save-button"><i class="fa-solid fa-floppy-disk"></i></button>
-                <input class="points" type="number" />
-                <textarea class="exambox" placeholder="Enter Question"></textarea>
-
-                <label class="choices-label">True or False:</label>
-                <select class="tf-dropdown">
-                    <option value="true">True</option>
-                    <option value="false">False</option>
+            <div class="question-box">
+                <label class="question-label">Question</label> <!-- UpdateExam -->
+                <label class="question-type-label">Question Type:</label>
+                <select class="question-type-dropdown">
+                <option value="multiple-choice">Multiple Choice</option>
+                <option value="true-false">True or False</option>
+                <option value="identification">Identification</option>
                 </select>
-            </div>
+                <div class="button-group">
+                    <button class="delete-button"><i class="fa-solid fa-trash"></i></button>
+                </div>
+
+            
+                
     <!-- end -->
 
 
-    <!-- start -->
-            <!-- identification -->
-            <div class="identification-container">
-                <button class="save-button"><i class="fa-solid fa-floppy-disk"></i></button>
-                <input class="points" type="number" />
-                <textarea class="exambox" placeholder="Enter Question"></textarea>
+    <!-- start: etong mga divs na to hiwalay -->
+        <!-- start -->
+                <!-- multiple choice -->
+                <div class="nested-container"> <!-- MultipleC -->
+                    <button class="save-button"><i class="fa-solid fa-floppy-disk"></i></button>
+                    <input class="points" type="number" />
+                    <textarea class="exambox" placeholder="Enter Question"></textarea>
 
-                <label class="choices-label">Identification:</label> 
-                <input type="text" class="identification-input" placeholder="Enter Answer">
+                    <label class="choices-label">Choices:</label>
+                    <div class="option-inputs">
+                        <input type="text" class="option-input" placeholder="Option 1">
+                        <input type="text" class="option-input" placeholder="Option 2">
+                        <input type="text" class="option-input" placeholder="Option 3">
+                        <input type="text" class="option-input" placeholder="Option 4">
+                    </div>
+                    <label class="correct-answer-label">Correct Answer:</label>
+                    <input type="text" class="correct-answer-input" placeholder="Set Correct Answer">
+                </div>
+        <!-- end -->
+
+
+
+        <!-- start -->
+                <!-- true or false -->
+                <div class="tf-container">
+                    <button class="save-button"><i class="fa-solid fa-floppy-disk"></i></button>
+                    <input class="points" type="number" />
+                    <textarea class="exambox" placeholder="Enter Question"></textarea>
+
+                    <label class="choices-label">True or False:</label>
+                    <select class="tf-dropdown">
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                    </select>
+                </div>
+        <!-- end -->
+
+
+        <!-- start -->
+                <!-- identification -->
+                <div class="identification-container">
+                    <button class="save-button"><i class="fa-solid fa-floppy-disk"></i></button>
+                    <input class="points" type="number" />
+                    <textarea class="exambox" placeholder="Enter Question"></textarea>
+
+                    <label class="choices-label">Identification:</label> 
+                    <input type="text" class="identification-input" placeholder="Enter Answer">
+                </div>
+        <!-- end -->
+        
+
+        <!-- start -->
+                <!-- essay -->
+                <div class="essay-container">
+                    <button class="save-button"><i class="fa-solid fa-floppy-disk"></i></button>
+                    <input class="points" type="number" />
+                    <textarea class="exambox" placeholder="Enter Question"></textarea>
+                </div>
+        <!-- end -->
+
+                <button class="add-question-button"><i class="fa-solid fa-plus"></i> Add Question</button>
             </div>
-    <!-- end -->
-    
-
-    <!-- start -->
-            <!-- essay -->
-            <div class="essay-container">
-                <button class="save-button"><i class="fa-solid fa-floppy-disk"></i></button>
-                <input class="points" type="number" />
-                <textarea class="exambox" placeholder="Enter Question"></textarea>
-            </div>
-    <!-- end -->
-
-            <button class="add-question-button"><i class="fa-solid fa-plus"></i> Add Question</button>
-
         </div> <!-- end: question-container -->
 <!-- end: etong mga divs na to hiwalay -->
 

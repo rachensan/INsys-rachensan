@@ -32,7 +32,7 @@ function Essay({ questionId, questionText, points, onSave, defaultEditing = true
   return (
     <>
     <div className="essay-container">
-      <Button className="save-button" label={isEditing ? "Save" : "Edit"} onClick={handleClick} />=
+      <Button className="save-button" label={isEditing ? "Save" : "Edit"} onClick={handleClick} /> <br />
       <InputField className="points" 
         type="number"
         name="points"

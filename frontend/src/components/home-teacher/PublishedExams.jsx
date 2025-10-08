@@ -36,7 +36,7 @@ export const HomeCard = ({ data, title, subjCode, schedule, status, sections, on
       </div>
 
       <div className="taskbar">
-        <div className="taskbar-left">None</div>
+        <div className="taskbar-left"></div> {/* None */}
         <div className="taskbar-right">Status: <span className="done-text">{status}</span></div>
       </div>
       

@@ -71,44 +71,50 @@ function Login() {
   };
 
   return (
-    <>
-    <div className="page-login">
-      <div className="container" id="login-container">
-        <h1> Login </h1>
-        <div id="login-container-inner">
-          <form onSubmit={handleSubmit}>
-            <div className="email-group">
-              <label>Email</label>
-              <InputField 
-                name="email"
-                id="email"
-                type="email"
-                value={formLogin.email} 
-                onChange={handleChange}
-                placeholder="Enter your email" 
-              />
-            </div>
-            <div className="password-group">
-              <label>Password</label>
-              <InputField 
+   <>
+   <div className="login-whole">
+    <div className="container" id="login-container">
+      <h1>Login</h1>
+      <div id="login-container-inner">
+        <form onSubmit={handleSubmit}>
+          <div className="email-group">
+            <label>Email</label>
+            <InputField 
+              name="email"
+              id="email"
+              type="email"
+              value={formLogin.email}
+              onChange={handleChange}
+              placeholder="Enter your email"
+            />
+          </div>
+
+          <div className="password-group">
+            <label>Password</label>
+            <InputField 
               name="password"
               id="password"
               type="password"
-              value={formLogin.password} 
+              value={formLogin.password}
               onChange={handleChange}
-              placeholder="Enter your passowrd" 
+              placeholder="Enter your password"
             />
+            <div className="forgot-password-container">
+              <a className="forgot-password" href="/forgot-password">Forgot Password?</a>
             </div>
-            
-            
-            <a className="forgot-password" href="/forgot-password">Forgot Password?</a>
-            <Button className="login-btn" label="Login" type="submit" />
+          </div>
 
-            <a href="/welcome-register">Create account</a>
-          </form>
-        </div>
+          <Button className="login-btn" label="Login" type="submit" />
+
+          <div className="line">
+            <span>or</span>
+          </div>
+
+          <Button className="signup-btn" label="Sign Up" onClick={() => navigate('/welcome-register')} />
+        </form>
       </div>
     </div>
+   </div>
     
     </>
   )

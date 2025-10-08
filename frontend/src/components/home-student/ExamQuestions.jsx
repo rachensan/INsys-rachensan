@@ -24,6 +24,7 @@ const MultiChoiceComp = ({mcqText, mcqOptions, name, divClassName, onChange, val
           onChange={onChange}
           options={mcqOptions}
           divClassName = "student-exam-option-container"
+          divClassName2="option-pair"
         />
       </div>
     </>
@@ -33,12 +34,14 @@ const MultiChoiceComp = ({mcqText, mcqOptions, name, divClassName, onChange, val
 const IdentificationComp = ({idenText, name, divClassName, placeholder, onChange, value}) => {
   return (
     <>
-      <div>
-        <div style={{ backgroundColor: 'lightgray' }}>
+      <div className="student-exam-container-identification">
+        <div className="student-exam-box-identification">
           <p>{idenText}</p>
         </div>
-        <div style={{ backgroundColor: 'skyblue' }}>
+
+        <div className="student-exam-option-container-identification">
           <InputField 
+            className="student-exam-input-identification" 
             name={name}
             value={value || ""} //must be string or number
             onChange={onChange}
@@ -76,17 +79,18 @@ const EssayComp = ({essayText, name, divClassName, placeholder, onChange, value}
 const TrueFalseComp = ({tfText, tfOptions, name, divClassName, onChange, value}) => {
   return (
     <>
-      <div>
-        <div style={{ backgroundColor: 'lightgray' }}>
+      <div className="student-exam-container-tf">
+        <div className="student-exam-box-tf">
           <p>{tfText}</p>
         </div>
-        <div style={{ backgroundColor: 'pink' }}>
+        <div>
           <RadioButtonOptions
             name={name}
             value={value}
             onChange={onChange}
             options={tfOptions}
-            divClassName={divClassName}
+            divClassName="student-exam-option-container-tf"
+            divClassName2="student-exam-button option-pair-tf"
           />
         </div>
       </div>
@@ -305,7 +309,7 @@ return (
                       name={`q${current}`} 
                       value={selectedAnswer}
                       onChange={(e) => setSelectedAnswer(e.target.value)}
-                      placeholder="... "
+                       placeholder="Enter your answer"
                     />
                   )
                 case "essay":
