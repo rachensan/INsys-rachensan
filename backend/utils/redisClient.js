@@ -14,8 +14,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const redisClient = createClient({
-  url: process.env.REDIS_URL, // plain TCP URL
-  // no socket.tls here
+  url: process.env.REDIS_URL, // plain TCP
+  // DO NOT enable TLS here
 });
 
 redisClient.on("error", (err) => console.error("Redis Client Error:", err));
@@ -23,4 +23,5 @@ redisClient.on("error", (err) => console.error("Redis Client Error:", err));
 await redisClient.connect();
 
 export default redisClient;
+
 
