@@ -13,6 +13,8 @@ import studentAuthRoutes from "./utils/studentAuth.js";
 import authRoutes from "./utils/auth.js";
 import { verifyJWT, verifyRole, refreshAccessToken, clearToken } from "./utils/jwt.js";
 
+import { RedisStore } from "connect-redis";
+import redisClient from "./utils/redisClient.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -29,14 +31,38 @@ app.use(cors({ //allow frontend to access backend
   credentials: true
 }));
 
+
+//redis
+const redisStore = new RedisStore({
+  client: redisClient,
+  prefix: "sess:",
+});
+
 //authentication
 app.use(
   session({
-    secret: 'TOPSECRET-UWU',
-    resave: false, 
-    saveUninitialized: true,
+    store: redisStore, // ✅ Redis store instead of MemoryStore
+    secret: process.env.JWT_REFRESH_SECRET || "TOPSECRET-UWU",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: true,           // true in production (HTTPS)
+      httpOnly: true,         // prevent JS access
+      sameSite: "lax",
+      maxAge: 1000 * 60 * 60 * 24, // 1 day
+    },
   })
 );
+redisClient.on("connect", () => console.log("✅ Connected to Redis for sessions"));
+redisClient.on("error", (err) => console.error("❌ Redis session error:", err));
+
+// app.use(
+//   session({
+//     secret: 'TOPSECRET-UWU',
+//     resave: false, 
+//     saveUninitialized: true,
+//   })
+// );
 
 const teacherOnly = [verifyJWT, verifyRole('teacher')];
 const studentOnly = [verifyJWT, verifyRole('student')];
