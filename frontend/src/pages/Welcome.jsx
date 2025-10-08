@@ -10,15 +10,31 @@ function Welcome() {
   const navigate = useNavigate();
   return (
     <>
-    <div>
-      welcome page
-      <br/>
-      ........
-    </div>
-    <div>
-      <p>Role: </p>
-      <Button label="Teacher" onClick={() =>{ navigate("/register/teacher") }}/>
-      <Button label="Student" onClick={() =>{ navigate("/register/student") }}/>
+    <div class="welcome-page-body">
+    < div class="welcome-page-container">
+        <h1 class="welcome-page-title">Welcome To INsys</h1>
+      
+        <div class="welcome-page-greeting">Your Web-Based Examination Platform</div>
+
+        <div class="welcome-page-role-section">
+          <div class="welcome-page-role-label">Select your role to continue</div>
+          <div class="welcome-page-role-buttons">
+              
+              
+            <button onClick={() =>{ navigate("/register/teacher") }} class="welcome-page-role-button">
+              <i class="fa-solid fa-graduation-cap welcome-page-role-icon"></i>
+              <div class="welcome-page-role-text">Teacher</div>
+            </button>
+            
+            
+            <button onClick={() =>{ navigate("/register/student") }} class="welcome-page-role-button">
+              <i class="fa-solid fa-book-open welcome-page-role-icon"></i>
+              <div class="welcome-page-role-text">Student</div>
+            </button>
+
+          </div>
+        </div>
+      </div>
     </div>
     </>
   )

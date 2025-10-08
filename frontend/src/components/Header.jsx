@@ -1,6 +1,25 @@
 import React from "react";
 import { LogoutSpan } from "./Logout";
 
+export const AboutComponent = () => {
+  return (
+    <>
+    
+    </>
+  )
+}
+
+
+
+
+
+
+
+
+
+
+
+
 function HeaderTeacher() {
     return (
         <>
