@@ -14,8 +14,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const redisClient = createClient({
-  url: process.env.REDIS_URL, // plain TCP
-  // DO NOT enable TLS here
+  url: process.env.REDIS_URL,
+  socket: { tls: true, rejectUnauthorized: false }, // TLS required
 });
 
 redisClient.on("error", (err) => console.error("Redis Client Error:", err));
