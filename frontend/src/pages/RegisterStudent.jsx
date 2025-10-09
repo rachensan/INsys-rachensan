@@ -27,7 +27,7 @@ function RegisterStudent() {
   const username = formRegister.username;
 
   const handleSendOtp = async () => {
-    try { //did not use axiosConfig here so it's the full url
+    try { 
       const res = await axios.post("/student/register/email-otp", { username: username });
       
       toast.info(res.data.message);
