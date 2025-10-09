@@ -27,13 +27,13 @@ app.use(cors({ //allow frontend to access backend
   ],
   credentials: true
 }));
-app.options('*', cors({
-  origin: [
-    'http://localhost:5173',
-    'https://insys-front.onrender.com'
-  ],
-  credentials: true,
-}));
+// app.options('*', cors({
+//   origin: [
+//     'http://localhost:5173',
+//     'https://insys-front.onrender.com'
+//   ],
+//   credentials: true,
+// }));
 
 // import passport from "passport";
 // app.use(passport.initialize());
