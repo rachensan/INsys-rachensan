@@ -19,21 +19,27 @@ import redisClient from "./utils/redisClient.js";
 const app = express();
 const port = process.env.PORT || 3000;
 
+//prep frontend:
+app.use(cors({ //allow frontend to access backend
+  origin: [
+    'http://localhost:5173', // dev
+    'https://insys-front.onrender.com' // prod
+  ],
+  credentials: true
+}));
+app.options('*', cors({
+  origin: [
+    'http://localhost:5173',
+    'https://insys-front.onrender.com'
+  ],
+  credentials: true,
+}));
+
 // import passport from "passport";
 // app.use(passport.initialize());
 // app.use(passport.session());
 
 app.use(cookieParser());
-
-//prep frontend:
-app.use(cors({ //allow frontend to access backend
-  origin: [
-    'http://localhost:5173', // dev
-    'https://your-frontend-name.onrender.com' // prod
-  ],
-  credentials: true
-}));
-
 
 //redis
 const redisStore = new RedisStore({
