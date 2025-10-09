@@ -16,9 +16,15 @@ import { verifyJWT, verifyRole, refreshAccessToken, clearToken } from "./utils/j
 import { RedisStore } from "connect-redis";
 import redisClient from "./utils/redisClient.js";
 
+import http from 'http';
+import { WebSocketServer } from 'ws';
+
 const app = express();
 const port = process.env.PORT || 3000;
 
+              const server = http.createServer(app);
+              const wss = new WebSocketServer({ server, path: '/ws' });
+              server.listen(process.env.PORT || 3000, () => console.log('[[[[websocket and server running]]]]'));
 //prep frontend:
 app.use(cors({ //allow frontend to access backend
   origin: [
@@ -247,5 +253,5 @@ import { getQuestionsForStudent, getUnansweredQuestions } from "./controllers/qu
   app.patch('/api/student-score/essay/:examId/:questionId', teacherOnly, manualEssayScoring);
    
 app.listen(port, () => {
-  console.log(`Backend running at http://localhost:${port}`);
+  console.log(`Backend running at ${port}`);
 })
