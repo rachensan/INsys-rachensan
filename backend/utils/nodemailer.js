@@ -1,19 +1,11 @@
-import nodemailer from 'nodemailer';
+import sgMail from '@sendgrid/mail';
 import dotenv from 'dotenv';
 dotenv.config({ path: '../.env', quiet: true });
 
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-// Create a test account or replace with real credentials.
-export const sendUserEmail = async({email, token, context }) => {
-  const transporter = nodemailer.createTransport({
-    service:"SendGrid",
-    auth: {
-      user: 'apikey',
-      pass: process.env.SENDGRID_API_KEY
-    },
-  });
-
-  const mailOptions = {
+export const sendUserEmail = async({ email, token, context }) => {
+  const msg = {
     from: 'INsys <no-reply@insys.com>',
     to: email,
     subject: context === "forgot" 
@@ -46,10 +38,14 @@ export const sendUserEmail = async({email, token, context }) => {
       </div>
     </div>`,
   };
-  
-  const emailResponse = await transporter.sendMail(mailOptions);
-  console.log("Message sent:", emailResponse.messageId);
-}
+
+  try {
+    await sgMail.send(msg);
+    console.log("Message sent to:", email);
+  } catch (err) {
+    console.error("Error sending email:", err);
+  }
+};
 
 
   
