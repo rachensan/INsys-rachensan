@@ -223,7 +223,6 @@ import { getQuestionsForStudent, getUnansweredQuestions } from "./controllers/qu
   app.get('/api/students/exam-history', studentOnly, getStudentExamHistory);
   app.get('/api/exams/session/:examId', studentOnly, getExamSession);
       //status, started_at, finished_at, current_index, time_remaining
-  app.get('/api/student/:studentId/exam-history', studentOnly);
   app.get('/api/exams/questions/:examId', studentOnly, getQuestionsForStudent) 
       //not used because we use the unanswered route (below this)
       //questions by exam.. limited selection in db, for student only.
